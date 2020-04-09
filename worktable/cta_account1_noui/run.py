@@ -11,6 +11,7 @@ import multiprocessing
 from time import sleep
 from datetime import datetime, time
 from logging import INFO
+from vnpy.trader.utility import load_json
 
 from vnpy.event import EventEngine
 from vnpy.trader.setting import SETTINGS
@@ -25,17 +26,7 @@ SETTINGS["log.active"] = True
 SETTINGS["log.level"] = INFO
 SETTINGS["log.console"] = True
 
-
-ctp_setting = {
-    "用户名": "153753",
-    "密码": "bubiou123@s",
-    "经纪商代码": "9999",
-    "交易服务器": "218.202.237.33 :10102",
-    "行情服务器": "218.202.237.33 :10112",
-    "产品名称": "simnow_client_test",
-    "授权编码": "0000000000000000",
-    "产品信息": ""
-}
+ctp_setting = load_json("ctp_setting.json")
 
 
 def run_child():
@@ -94,7 +85,7 @@ def run_parent():
 
         # Check whether in trading period
         if (
-            (current_time >= DAY_START and current_time <= DAY_END)
+            (DAY_START <= current_time <= DAY_END)
             or (current_time >= NIGHT_START)
             or (current_time <= NIGHT_END)
         ):
