@@ -1,0 +1,602 @@
+{
+    "A": {
+        "underlying_symbol": "A",
+        "mi_symbol": "a2103",
+        "full_symbol": "A2103",
+        "exchange": "DCE",
+        "margin_rate": 0.05,
+        "symbol_size": 10,
+        "price_tick": 1.0
+    },
+    "AG": {
+        "underlying_symbol": "AG",
+        "mi_symbol": "ag2103",
+        "full_symbol": "AG2103",
+        "exchange": "SHFE",
+        "margin_rate": 0.08,
+        "symbol_size": 15,
+        "price_tick": 1.0
+    },
+    "AL": {
+        "underlying_symbol": "AL",
+        "mi_symbol": "al2103",
+        "full_symbol": "AL2103",
+        "exchange": "SHFE",
+        "margin_rate": 0.1,
+        "symbol_size": 5,
+        "price_tick": 5.0
+    },
+    "AP": {
+        "underlying_symbol": "AP",
+        "mi_symbol": "AP103",
+        "full_symbol": "AP2103",
+        "exchange": "CZCE",
+        "margin_rate": 0.07,
+        "symbol_size": 10,
+        "price_tick": 1.0
+    },
+    "AU": {
+        "underlying_symbol": "AU",
+        "mi_symbol": "au2104",
+        "full_symbol": "AU2104",
+        "exchange": "SHFE",
+        "margin_rate": 0.08,
+        "symbol_size": 1000,
+        "price_tick": 0.02
+    },
+    "B": {
+        "underlying_symbol": "B",
+        "mi_symbol": "b2103",
+        "full_symbol": "B2103",
+        "exchange": "DCE",
+        "margin_rate": 0.05,
+        "symbol_size": 10,
+        "price_tick": 1.0
+    },
+    "BB": {
+        "underlying_symbol": "BB",
+        "mi_symbol": "bb2103",
+        "full_symbol": "BB2103",
+        "exchange": "DCE",
+        "margin_rate": 0.2,
+        "symbol_size": 500,
+        "price_tick": 0.05
+    },
+    "BU": {
+        "underlying_symbol": "BU",
+        "mi_symbol": "bu2203",
+        "full_symbol": "BU2203",
+        "exchange": "SHFE",
+        "margin_rate": 0.1,
+        "symbol_size": 10,
+        "price_tick": 2.0
+    },
+    "C": {
+        "underlying_symbol": "C",
+        "mi_symbol": "c2103",
+        "full_symbol": "C2103",
+        "exchange": "DCE",
+        "margin_rate": 0.05,
+        "symbol_size": 10,
+        "price_tick": 1.0
+    },
+    "CF": {
+        "underlying_symbol": "CF",
+        "mi_symbol": "CF103",
+        "full_symbol": "CF2103",
+        "exchange": "CZCE",
+        "margin_rate": 0.05,
+        "symbol_size": 5,
+        "price_tick": 5.0
+    },
+    "CJ": {
+        "underlying_symbol": "CJ",
+        "mi_symbol": "CJ103",
+        "full_symbol": "CJ2103",
+        "exchange": "CZCE",
+        "margin_rate": 0.07,
+        "symbol_size": 5,
+        "price_tick": 5.0
+    },
+    "CS": {
+        "underlying_symbol": "CS",
+        "mi_symbol": "cs2103",
+        "full_symbol": "CS2103",
+        "exchange": "DCE",
+        "margin_rate": 0.05,
+        "symbol_size": 10,
+        "price_tick": 1.0
+    },
+    "CU": {
+        "underlying_symbol": "CU",
+        "mi_symbol": "cu2103",
+        "full_symbol": "CU2103",
+        "exchange": "SHFE",
+        "margin_rate": 0.09,
+        "symbol_size": 5,
+        "price_tick": 10.0
+    },
+    "CY": {
+        "underlying_symbol": "CY",
+        "mi_symbol": "CY103",
+        "full_symbol": "CY2103",
+        "exchange": "CZCE",
+        "margin_rate": 0.05,
+        "symbol_size": 5,
+        "price_tick": 5.0
+    },
+    "EB": {
+        "underlying_symbol": "EB",
+        "mi_symbol": "eb2103",
+        "full_symbol": "EB2103",
+        "exchange": "DCE",
+        "margin_rate": 0.05,
+        "symbol_size": 5,
+        "price_tick": 1.0
+    },
+    "EG": {
+        "underlying_symbol": "EG",
+        "mi_symbol": "eg2103",
+        "full_symbol": "EG2103",
+        "exchange": "DCE",
+        "margin_rate": 0.05,
+        "symbol_size": 10,
+        "price_tick": 1.0
+    },
+    "FB": {
+        "underlying_symbol": "FB",
+        "mi_symbol": "fb2103",
+        "full_symbol": "FB2103",
+        "exchange": "DCE",
+        "margin_rate": 0.2,
+        "symbol_size": 500,
+        "price_tick": 0.05
+    },
+    "FG": {
+        "underlying_symbol": "FG",
+        "mi_symbol": "FG103",
+        "full_symbol": "FG2103",
+        "exchange": "CZCE",
+        "margin_rate": 0.05,
+        "symbol_size": 20,
+        "price_tick": 1.0
+    },
+    "FU": {
+        "underlying_symbol": "FU",
+        "mi_symbol": "fu2104",
+        "full_symbol": "FU2104",
+        "exchange": "SHFE",
+        "margin_rate": 0.2,
+        "symbol_size": 10,
+        "price_tick": 1.0
+    },
+    "HC": {
+        "underlying_symbol": "HC",
+        "mi_symbol": "hc2103",
+        "full_symbol": "HC2103",
+        "exchange": "SHFE",
+        "margin_rate": 0.1,
+        "symbol_size": 10,
+        "price_tick": 1.0
+    },
+    "I": {
+        "underlying_symbol": "I",
+        "mi_symbol": "i2103",
+        "full_symbol": "I2103",
+        "exchange": "DCE",
+        "margin_rate": 0.05,
+        "symbol_size": 100,
+        "price_tick": 0.5
+    },
+    "IC": {
+        "underlying_symbol": "IC",
+        "mi_symbol": "IC2009",
+        "full_symbol": "IC2009",
+        "exchange": "CFFEX",
+        "margin_rate": 0.1,
+        "symbol_size": 200,
+        "price_tick": 0.2
+    },
+    "IF": {
+        "underlying_symbol": "IF",
+        "mi_symbol": "IF2009",
+        "full_symbol": "IF2009",
+        "exchange": "CFFEX",
+        "margin_rate": 0.1,
+        "symbol_size": 300,
+        "price_tick": 0.2
+    },
+    "IH": {
+        "underlying_symbol": "IH",
+        "mi_symbol": "IH2009",
+        "full_symbol": "IH2009",
+        "exchange": "CFFEX",
+        "margin_rate": 0.1,
+        "symbol_size": 300,
+        "price_tick": 0.2
+    },
+    "J": {
+        "underlying_symbol": "J",
+        "mi_symbol": "j2103",
+        "full_symbol": "J2103",
+        "exchange": "DCE",
+        "margin_rate": 0.05,
+        "symbol_size": 100,
+        "price_tick": 0.5
+    },
+    "JD": {
+        "underlying_symbol": "JD",
+        "mi_symbol": "jd2103",
+        "full_symbol": "JD2103",
+        "exchange": "DCE",
+        "margin_rate": 0.08,
+        "symbol_size": 10,
+        "price_tick": 1.0
+    },
+    "JM": {
+        "underlying_symbol": "JM",
+        "mi_symbol": "jm2103",
+        "full_symbol": "JM2103",
+        "exchange": "DCE",
+        "margin_rate": 0.05,
+        "symbol_size": 60,
+        "price_tick": 0.5
+    },
+    "JR": {
+        "underlying_symbol": "JR",
+        "mi_symbol": "JR103",
+        "full_symbol": "JR2103",
+        "exchange": "CZCE",
+        "margin_rate": 0.05,
+        "symbol_size": 20,
+        "price_tick": 1.0
+    },
+    "L": {
+        "underlying_symbol": "L",
+        "mi_symbol": "l2103",
+        "full_symbol": "L2103",
+        "exchange": "DCE",
+        "margin_rate": 0.05,
+        "symbol_size": 5,
+        "price_tick": 5.0
+    },
+    "LR": {
+        "underlying_symbol": "LR",
+        "mi_symbol": "LR007",
+        "full_symbol": "LR2007",
+        "exchange": "CZCE",
+        "margin_rate": 0.05,
+        "symbol_size": 20,
+        "price_tick": 1.0
+    },
+    "M": {
+        "underlying_symbol": "M",
+        "mi_symbol": "m2103",
+        "full_symbol": "M2103",
+        "exchange": "DCE",
+        "margin_rate": 0.05,
+        "symbol_size": 10,
+        "price_tick": 1.0
+    },
+    "MA": {
+        "underlying_symbol": "MA",
+        "mi_symbol": "MA103",
+        "full_symbol": "MA2103",
+        "exchange": "CZCE",
+        "margin_rate": 0.07,
+        "symbol_size": 10,
+        "price_tick": 1.0
+    },
+    "NI": {
+        "underlying_symbol": "NI",
+        "mi_symbol": "ni2103",
+        "full_symbol": "NI2103",
+        "exchange": "SHFE",
+        "margin_rate": 0.1,
+        "symbol_size": 1,
+        "price_tick": 10.0
+    },
+    "NR": {
+        "underlying_symbol": "NR",
+        "mi_symbol": "nr2103",
+        "full_symbol": "NR2103",
+        "exchange": "INE",
+        "margin_rate": 0.09,
+        "symbol_size": 10,
+        "price_tick": 5.0
+    },
+    "OI": {
+        "underlying_symbol": "OI",
+        "mi_symbol": "OI103",
+        "full_symbol": "OI2103",
+        "exchange": "CZCE",
+        "margin_rate": 0.05,
+        "symbol_size": 10,
+        "price_tick": 1.0
+    },
+    "P": {
+        "underlying_symbol": "P",
+        "mi_symbol": "p2103",
+        "full_symbol": "P2103",
+        "exchange": "DCE",
+        "margin_rate": 0.05,
+        "symbol_size": 10,
+        "price_tick": 2.0
+    },
+    "PB": {
+        "underlying_symbol": "PB",
+        "mi_symbol": "pb2103",
+        "full_symbol": "PB2103",
+        "exchange": "SHFE",
+        "margin_rate": 0.1,
+        "symbol_size": 5,
+        "price_tick": 5.0
+    },
+    "PM": {
+        "underlying_symbol": "PM",
+        "mi_symbol": "PM103",
+        "full_symbol": "PM2103",
+        "exchange": "CZCE",
+        "margin_rate": 0.05,
+        "symbol_size": 50,
+        "price_tick": 1.0
+    },
+    "PP": {
+        "underlying_symbol": "PP",
+        "mi_symbol": "pp2103",
+        "full_symbol": "PP2103",
+        "exchange": "DCE",
+        "margin_rate": 0.05,
+        "symbol_size": 5,
+        "price_tick": 1.0
+    },
+    "RB": {
+        "underlying_symbol": "RB",
+        "mi_symbol": "rb2103",
+        "full_symbol": "RB2103",
+        "exchange": "SHFE",
+        "margin_rate": 0.1,
+        "symbol_size": 10,
+        "price_tick": 1.0
+    },
+    "RI": {
+        "underlying_symbol": "RI",
+        "mi_symbol": "RI103",
+        "full_symbol": "RI2103",
+        "exchange": "CZCE",
+        "margin_rate": 0.05,
+        "symbol_size": 20,
+        "price_tick": 1.0
+    },
+    "RM": {
+        "underlying_symbol": "RM",
+        "mi_symbol": "RM103",
+        "full_symbol": "RM2103",
+        "exchange": "CZCE",
+        "margin_rate": 0.05,
+        "symbol_size": 10,
+        "price_tick": 1.0
+    },
+    "RR": {
+        "underlying_symbol": "RR",
+        "mi_symbol": "rr2103",
+        "full_symbol": "RR2103",
+        "exchange": "DCE",
+        "margin_rate": 0.05,
+        "symbol_size": 10,
+        "price_tick": 1.0
+    },
+    "RS": {
+        "underlying_symbol": "RS",
+        "mi_symbol": "RS011",
+        "full_symbol": "RS2011",
+        "exchange": "CZCE",
+        "margin_rate": 0.05,
+        "symbol_size": 10,
+        "price_tick": 1.0
+    },
+    "RU": {
+        "underlying_symbol": "RU",
+        "mi_symbol": "ru2103",
+        "full_symbol": "RU2103",
+        "exchange": "SHFE",
+        "margin_rate": 0.1,
+        "symbol_size": 10,
+        "price_tick": 5.0
+    },
+    "SA": {
+        "underlying_symbol": "SA",
+        "mi_symbol": "SA103",
+        "full_symbol": "SA2103",
+        "exchange": "CZCE",
+        "margin_rate": 0.05,
+        "symbol_size": 20,
+        "price_tick": 1.0
+    },
+    "SC": {
+        "underlying_symbol": "SC",
+        "mi_symbol": "sc2303",
+        "full_symbol": "SC2303",
+        "exchange": "INE",
+        "margin_rate": 0.05,
+        "symbol_size": 1000,
+        "price_tick": 0.1
+    },
+    "SF": {
+        "underlying_symbol": "SF",
+        "mi_symbol": "SF103",
+        "full_symbol": "SF2103",
+        "exchange": "CZCE",
+        "margin_rate": 0.05,
+        "symbol_size": 5,
+        "price_tick": 2.0
+    },
+    "SM": {
+        "underlying_symbol": "SM",
+        "mi_symbol": "SM103",
+        "full_symbol": "SM2103",
+        "exchange": "CZCE",
+        "margin_rate": 0.05,
+        "symbol_size": 5,
+        "price_tick": 2.0
+    },
+    "SN": {
+        "underlying_symbol": "SN",
+        "mi_symbol": "sn2103",
+        "full_symbol": "SN2103",
+        "exchange": "SHFE",
+        "margin_rate": 0.09,
+        "symbol_size": 1,
+        "price_tick": 10.0
+    },
+    "SP": {
+        "underlying_symbol": "SP",
+        "mi_symbol": "sp2103",
+        "full_symbol": "SP2103",
+        "exchange": "SHFE",
+        "margin_rate": 0.07,
+        "symbol_size": 10,
+        "price_tick": 2.0
+    },
+    "SR": {
+        "underlying_symbol": "SR",
+        "mi_symbol": "SR103",
+        "full_symbol": "SR2103",
+        "exchange": "CZCE",
+        "margin_rate": 0.05,
+        "symbol_size": 10,
+        "price_tick": 1.0
+    },
+    "SS": {
+        "underlying_symbol": "SS",
+        "mi_symbol": "ss2103",
+        "full_symbol": "SS2103",
+        "exchange": "SHFE",
+        "margin_rate": 0.08,
+        "symbol_size": 5,
+        "price_tick": 5.0
+    },
+    "T": {
+        "underlying_symbol": "T",
+        "mi_symbol": "T2012",
+        "full_symbol": "T2012",
+        "exchange": "CFFEX",
+        "margin_rate": 0.02,
+        "symbol_size": 10000,
+        "price_tick": 0.005
+    },
+    "TA": {
+        "underlying_symbol": "TA",
+        "mi_symbol": "TA103",
+        "full_symbol": "TA2103",
+        "exchange": "CZCE",
+        "margin_rate": 0.05,
+        "symbol_size": 5,
+        "price_tick": 2.0
+    },
+    "TF": {
+        "underlying_symbol": "TF",
+        "mi_symbol": "TF2012",
+        "full_symbol": "TF2012",
+        "exchange": "CFFEX",
+        "margin_rate": 0.012,
+        "symbol_size": 10000,
+        "price_tick": 0.005
+    },
+    "TS": {
+        "underlying_symbol": "TS",
+        "mi_symbol": "TS2012",
+        "full_symbol": "TS2012",
+        "exchange": "CFFEX",
+        "margin_rate": 0.005,
+        "symbol_size": 20000,
+        "price_tick": 0.005
+    },
+    "UR": {
+        "underlying_symbol": "UR",
+        "mi_symbol": "UR103",
+        "full_symbol": "UR2103",
+        "exchange": "CZCE",
+        "margin_rate": 0.05,
+        "symbol_size": 20,
+        "price_tick": 1.0
+    },
+    "V": {
+        "underlying_symbol": "V",
+        "mi_symbol": "v2103",
+        "full_symbol": "V2103",
+        "exchange": "DCE",
+        "margin_rate": 0.05,
+        "symbol_size": 5,
+        "price_tick": 5.0
+    },
+    "WH": {
+        "underlying_symbol": "WH",
+        "mi_symbol": "WH103",
+        "full_symbol": "WH2103",
+        "exchange": "CZCE",
+        "margin_rate": 0.05,
+        "symbol_size": 20,
+        "price_tick": 1.0
+    },
+    "WR": {
+        "underlying_symbol": "WR",
+        "mi_symbol": "wr2103",
+        "full_symbol": "WR2103",
+        "exchange": "SHFE",
+        "margin_rate": 0.2,
+        "symbol_size": 10,
+        "price_tick": 1.0
+    },
+    "Y": {
+        "underlying_symbol": "Y",
+        "mi_symbol": "y2103",
+        "full_symbol": "Y2103",
+        "exchange": "DCE",
+        "margin_rate": 0.05,
+        "symbol_size": 10,
+        "price_tick": 2.0
+    },
+    "ZC": {
+        "underlying_symbol": "ZC",
+        "mi_symbol": "ZC104",
+        "full_symbol": "ZC2104",
+        "exchange": "CZCE",
+        "margin_rate": 0.05,
+        "symbol_size": 100,
+        "price_tick": 0.2
+    },
+    "ZN": {
+        "underlying_symbol": "ZN",
+        "mi_symbol": "zn2103",
+        "full_symbol": "ZN2103",
+        "exchange": "SHFE",
+        "margin_rate": 0.1,
+        "symbol_size": 5,
+        "price_tick": 5.0
+    },
+    "AF": {
+        "underlying_symbol": "AF",
+        "mi_symbol": "AF2009",
+        "full_symbol": "AF2009",
+        "exchange": "CFFEX"
+    },
+    "EF": {
+        "underlying_symbol": "EF",
+        "mi_symbol": "EF2009",
+        "full_symbol": "EF2009",
+        "exchange": "CFFEX"
+    },
+    "TL": {
+        "underlying_symbol": "TL",
+        "mi_symbol": "TL2009",
+        "full_symbol": "TL2009",
+        "exchange": "CFFEX"
+    },
+    "PG": {
+        "underlying_symbol": "PG",
+        "mi_symbol": "pg2103",
+        "full_symbol": "PG2103",
+        "exchange": "DCE"
+    }
+}
