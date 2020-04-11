@@ -31,8 +31,9 @@ class RqdataClient:
 
     def __init__(self):
         """"""
-        self.username: str = SETTINGS["rqdata.username"]
-        self.password: str = SETTINGS["rqdata.password"]
+        # JinAdd:增加数据源
+        self.username: str = SETTINGS["data.username"]
+        self.password: str = SETTINGS["data.password"]
 
         self.inited: bool = False
         self.symbols: set = set()

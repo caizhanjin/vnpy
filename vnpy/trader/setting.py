@@ -23,8 +23,10 @@ SETTINGS: Dict[str, Any] = {
     "email.sender": "",
     "email.receiver": "",
 
-    "rqdata.username": "",
-    "rqdata.password": "",
+    # JinAdd : 增加数据源 type:tdxdata\jqdata\rqdata
+    "data.source": "tdxdata",
+    "data.username": "",
+    "data.password": "",
 
     "database.driver": "sqlite",  # see database.Driver
     "database.database": "database.db",  # for sqlite, use this as filepath

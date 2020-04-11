@@ -16,7 +16,7 @@ class BarData(BaseData):
     symbol: str
     exchange: Exchange
     datetime: datetime  # bar的开始时间
-    trading_day: str = ""  # '%Y-%m-%d'
+    trading_day: str = ""   # JinAdd: '%Y-%m-%d'
 
     interval: Interval = None  # constant.py Internal 1m, 1h, 1d, 1w .etc
     volume: float = 0

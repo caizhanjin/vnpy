@@ -10,7 +10,7 @@ if not os.path.exists(".vntrader"):
 import multiprocessing
 from time import sleep
 from datetime import datetime, time
-from logging import INFO
+from logging import INFO, DEBUG
 from vnpy.trader.utility import load_json
 
 from vnpy.event import EventEngine
@@ -23,7 +23,7 @@ from vnpy.app.cta_strategy.base import EVENT_CTA_LOG
 
 
 SETTINGS["log.active"] = True
-SETTINGS["log.level"] = INFO
+SETTINGS["log.level"] = DEBUG
 SETTINGS["log.console"] = True
 
 ctp_setting = load_json("ctp_setting.json")

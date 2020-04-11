@@ -23,7 +23,7 @@ from pandas import to_datetime
 from pytdx.exhq import TdxExHq_API
 
 from vnpy.trader.constant import Exchange
-from vnpy.trader.object import BarData
+from vnpy_pro.trader.object import BarData
 from vnpy_pro.trader.utility import (
     get_underlying_symbol,
     get_full_symbol,
@@ -151,7 +151,8 @@ class TdxFutureData(object):
                     #    self.qryInstrument()
         except Exception as ex:
             self.write_log(u'连接服务器tdx异常:{},{}'.format(str(ex), traceback.format_exc()))
-            return
+            return False
+        return True
 
     # ----------------------------------------------------------------------
     def ping(self,
