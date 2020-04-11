@@ -305,7 +305,7 @@ class TdxFutureData(object):
                 if _res is not None and len(_res) > 0:
                     _start_date = _res[0]['datetime']
                     _start_date = datetime.strptime(_start_date, '%Y-%m-%d %H:%M')
-                    self.write_log(u'分段取数据开始:{}'.format(_start_date))
+                    # self.write_log(u'分段取数据开始:{}'.format(_start_date))
                 else:
                     break
             if len(_bars) == 0:

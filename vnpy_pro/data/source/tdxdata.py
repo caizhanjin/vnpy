@@ -59,18 +59,17 @@ class TdxdataClient(SourceDataApi):
 
         if bar_data is not None:
             for row in bar_data:
-                row_datetime = row.datetime - adjustment
                 bar = BarData(
                     symbol=symbol,
                     exchange=exchange,
                     interval=interval,
-                    datetime=datetime.strptime(row_datetime._repr_base, '%Y-%m-%d %H:%M:%S'),
+                    datetime=row.datetime.to_pydatetime() - adjustment,
                     open_price=row.open_price,
                     high_price=row.high_price,
                     low_price=row.low_price,
                     close_price=row.close_price,
                     volume=row.volume,
-                    open_interest=1.002,
+                    open_interest=row.open_interest,
                     gateway_name=row.gateway_name
                 )
                 data.append(bar)
