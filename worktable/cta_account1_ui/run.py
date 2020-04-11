@@ -55,9 +55,9 @@ from vnpy.app.risk_manager import RiskManagerApp
 # from vnpy.app.script_trader import ScriptTraderApp
 # from vnpy.app.rpc_service import RpcServiceApp
 # from vnpy.app.spread_trading import SpreadTradingApp
-# from vnpy.app.portfolio_manager import PortfolioManagerApp
+from vnpy.app.portfolio_manager import PortfolioManagerApp
 # from vnpy.app.option_master import OptionMasterApp
-# from vnpy.app.chart_wizard import ChartWizardApp
+from vnpy.app.chart_wizard import ChartWizardApp
 # from vnpy.app.excel_rtd import ExcelRtdApp
 from vnpy.app.data_manager import DataManagerApp
 
@@ -108,13 +108,13 @@ def main():
     # main_engine.add_app(CsvLoaderApp)
     # main_engine.add_app(AlgoTradingApp)
     # main_engine.add_app(DataRecorderApp)
-    # main_engine.add_app(RiskManagerApp)
+    main_engine.add_app(RiskManagerApp)
     # main_engine.add_app(ScriptTraderApp)
     # main_engine.add_app(RpcServiceApp)
     # main_engine.add_app(SpreadTradingApp)
-    # main_engine.add_app(PortfolioManagerApp)
+    main_engine.add_app(PortfolioManagerApp)
     # main_engine.add_app(OptionMasterApp)
-    # main_engine.add_app(ChartWizardApp)
+    main_engine.add_app(ChartWizardApp)
     # main_engine.add_app(ExcelRtdApp)
     main_engine.add_app(DataManagerApp)
 
