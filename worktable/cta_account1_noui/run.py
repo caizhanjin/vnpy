@@ -91,6 +91,8 @@ def run_parent():
         ):
             trading = True
 
+        trading = True
+
         # Start child process in trading period
         if trading and child_process is None:
             print("启动子进程")

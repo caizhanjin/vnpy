@@ -64,7 +64,7 @@ class TdxdataClient(SourceDataApi):
                     symbol=symbol,
                     exchange=exchange,
                     interval=interval,
-                    datetime=datetime.fromtimestamp(row_datetime.value/1000000000),
+                    datetime=datetime.strptime(row_datetime._repr_base, '%Y-%m-%d %H:%M:%S'),
                     open_price=row.open_price,
                     high_price=row.high_price,
                     low_price=row.low_price,
