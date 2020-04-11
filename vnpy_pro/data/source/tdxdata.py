@@ -58,19 +58,22 @@ class TdxdataClient(SourceDataApi):
         data: List[BarData] = []
 
         if bar_data is not None:
+
             for row in bar_data:
+
+                datetime_test = row.datetime - adjustment
+                print(datetime_test.value/1000000000)
                 bar = BarData(
                     symbol=symbol,
                     exchange=exchange,
                     interval=interval,
-                    # datetime=row["datetime"] - adjustment,
-                    datetime=row.datetime - adjustment,
+                    datetime=datetime.fromtimestamp(datetime_test.value/1000000000),
                     open_price=row.open_price,
                     high_price=row.high_price,
                     low_price=row.low_price,
                     close_price=row.close_price,
                     volume=row.volume,
-                    open_interest=row.open_interest if row.open_interest else 0,
+                    open_interest=1.002,
                     gateway_name=row.gateway_name
                 )
                 data.append(bar)
