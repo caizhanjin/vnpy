@@ -29,7 +29,7 @@ SETTINGS: Dict[str, Any] = {
     "data.password": "",
 
     "database.driver": "sqlite",  # see database.Driver
-    "database.database": "database.db",  # for sqlite, use this as filepath
+    "database.database": r"D:\vnpy\vnpy2_pro\worktable\cta_account1_ui\.vntrader\database.db",  # for sqlite, use this as filepath
     "database.host": "localhost",
     "database.port": 3306,
     "database.user": "root",
