@@ -1,0 +1,102 @@
+{
+  "RB": {
+    "name": "螺纹钢",
+    "exchange_name": "上期所",
+    "exchange_code": "SHFE",
+    "multiplier": 10,
+    "minimum_change": 1
+  },
+  "bu": {
+    "name": "沥青",
+    "exchange_name": "上期所",
+    "exchange_code": "SHFE",
+    "multiplier": 10,
+    "minimum_change": 1
+  },
+  "ru": {
+    "name": "橡胶",
+    "exchange_name": "上期所",
+    "exchange_code": "SHFE",
+    "multiplier": 10,
+    "minimum_change": 1
+  },
+  "fu": {
+    "name": "燃油",
+    "exchange_name": "上期所",
+    "exchange_code": "SHFE",
+    "multiplier": 10,
+    "minimum_change": 1
+  },
+  "au": {
+    "name": "黄金",
+    "exchange_name": "上期所",
+    "exchange_code": "SHFE",
+    "multiplier": 10,
+    "minimum_change": 1
+  },
+  "ag": {
+    "name": "白银",
+    "exchange_name": "上期所",
+    "exchange_code": "SHFE",
+    "multiplier": 10,
+    "minimum_change": 1
+  },
+  "cu": {
+    "name": "铜",
+    "exchange_name": "上期所",
+    "exchange_code": "SHFE",
+    "multiplier": 10,
+    "minimum_change": 1
+  },
+
+  "p": {
+    "name": "棕榈油",
+    "exchange_name": "大商所",
+    "exchange_code": "DCE",
+    "multiplier": 10,
+    "minimum_change": 1
+  },
+  "y": {
+    "name": "豆油",
+    "exchange_name": "大商所",
+    "exchange_code": "DCE",
+    "multiplier": 10,
+    "minimum_change": 1
+  },
+  "jd": {
+    "name": "鸡蛋",
+    "exchange_name": "大商所",
+    "exchange_code": "DCE",
+    "multiplier": 10,
+    "minimum_change": 1
+  },
+
+  "SR": {
+    "name": "白糖",
+    "exchange_name": "上期所",
+    "exchange_code": "CZCE",
+    "multiplier": 10,
+    "minimum_change": 1
+  },
+  "TA": {
+    "name": "PTA",
+    "exchange_name": "郑商所",
+    "exchange_code": "CZCE",
+    "multiplier": 10,
+    "minimum_change": 1
+  },
+  "CF": {
+    "name": "棉花",
+    "exchange_name": "郑商所",
+    "exchange_code": "CZCE",
+    "multiplier": 10,
+    "minimum_change": 1
+  },
+  "MA": {
+    "name": "甲醇",
+    "exchange_name": "郑商所",
+    "exchange_code": "CZCE",
+    "multiplier": 10,
+    "minimum_change": 1
+  }
+}

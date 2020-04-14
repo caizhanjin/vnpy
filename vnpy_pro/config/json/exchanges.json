@@ -1,0 +1,11 @@
+{
+  "SHFE": {
+    "futures": ["rb", "bu", "ru", "fu", "au", "ag", "cu"]
+  },
+  "DCE": {
+    "futures": ["p", "y", "jd"]
+  },
+  "CZCE": {
+    "futures": ["SR", "TA", "CF", "MA"]
+  }
+}
