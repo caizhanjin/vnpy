@@ -3,7 +3,7 @@ from vnpy.app.cta_strategy.backtesting import BacktestingEngine
 #     AtrRsiStrategy,
 # )
 from datetime import datetime
-from worktable.backtest.strategies.trend_strategy import AtrRsiStrategy
+from worktable.backtest.strategies.trend_strategy import TrendStrategy
 
 from vnpy_pro.config import load_futures
 
@@ -15,7 +15,7 @@ engine = BacktestingEngine()
 engine.set_parameters(
     vt_symbol=test_future + "99." + FUTURES[test_future]["exchange_code"],
     interval="1m",
-    start=datetime(2019, 1, 1),
+    start=datetime(2020, 1, 1),
     end=datetime(2020, 4, 30),
     rate=0.3/10000,
     slippage=FUTURES[test_future]["minimum_change"],
@@ -23,7 +23,7 @@ engine.set_parameters(
     pricetick=FUTURES[test_future]["minimum_change"],
     capital=1_000_000,
 )
-engine.add_strategy(AtrRsiStrategy, {})
+engine.add_strategy(TrendStrategy, {})
 
 engine.load_data()
 engine.run_backtesting()
