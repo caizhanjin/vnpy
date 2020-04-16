@@ -5,12 +5,65 @@ import sys
 import os
 import csv
 import re
+import talib
 from time import time
 from datetime import datetime, timedelta
 from functools import wraps, lru_cache
+from typing import Callable, Dict, Tuple, Union
+import numpy as np
+
+from vnpy.trader.utility import ArrayManager
+from vnpy.trader.constant import Exchange, Interval
 
 from vnpy_pro.trader.object import BarData
-from vnpy.trader.constant import Exchange, Interval
+
+
+class ArrayManagerPro(ArrayManager):
+
+    def __init__(self, size: int = 100):
+        super().__init__(size)
+
+    def sar(self, array=False):
+        result = talib.SAR(self.high, self.low)
+        if array:
+            return result
+        return result[-1]
+
+    def boll_pro(self, n: int, dev: float, array: bool = False):
+        mid = self.sma(n, array)
+        std = self.std(n, array)
+
+        up = mid + std * dev
+        down = mid - std * dev
+
+        return up, mid, down
+
+    def bbi(self, n: int, array: bool = False):
+        ma3 = self.sma(3 * n, array)
+        ma6 = self.sma(6 * n, array)
+        ma12 = self.sma(12 * n, array)
+        ma24 = self.sma(24 * n, array)
+
+        bbi = (ma3 + ma6 + ma12 + ma24) / 4
+
+        return bbi
+
+    def boll_low(self, n: int, dev: float, array: bool = False):
+        mid = talib.SMA(self.low, n)
+        std = talib.STDDEV(self.low, n)
+
+        up = mid + std * dev
+        down = mid - std * dev
+
+        if array:
+            return up, down
+        return up[-1], down[-1]
+
+    def sma_low(self, n: int, array: bool = False) -> Union[float, np.ndarray]:
+        result = talib.SMA(self.low, n)
+        if array:
+            return result
+        return result[-1]
 
 
 def func_time(over_ms: int = 0):
