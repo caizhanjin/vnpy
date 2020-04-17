@@ -59,12 +59,6 @@ class ArrayManagerPro(ArrayManager):
             return up, down
         return up[-1], down[-1]
 
-    def sma_low(self, n: int, array: bool = False) -> Union[float, np.ndarray]:
-        result = talib.SMA(self.low, n)
-        if array:
-            return result
-        return result[-1]
-
 
 def func_time(over_ms: int = 0):
     """
