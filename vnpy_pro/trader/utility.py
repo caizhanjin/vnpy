@@ -60,6 +60,17 @@ class ArrayManagerPro(ArrayManager):
         return up[-1], down[-1]
 
 
+class SampleBarData(object):
+    """简单记录bar数据使用"""
+    symbol: str
+    open_price: float = 0
+    high_price: float = 0
+    low_price: float = 0
+    close_price: float = 0
+    volume: float = 0
+    open_interest: float = 0
+
+
 def func_time(over_ms: int = 0):
     """
     简单记录执行时间

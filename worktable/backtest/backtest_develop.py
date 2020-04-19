@@ -4,26 +4,29 @@ from vnpy.app.cta_strategy.backtesting import BacktestingEngine
 # )
 from datetime import datetime
 from worktable.backtest.strategies.trend_strategy import TrendStrategy
+from worktable.backtest.strategies.break_strategy_4 import BreakStrategy
 
 from vnpy_pro.config import load_futures
 
 FUTURES = load_futures()
 
-test_future = "RB"
+test_future = "bu"
+
+# test_future.upper() + "99." + FUTURES[test_future]["exchange_code"]
 
 engine = BacktestingEngine()
 engine.set_parameters(
-    vt_symbol=test_future + "99." + FUTURES[test_future]["exchange_code"],
+    vt_symbol="BU99.SHFE",
     interval="1m",
-    start=datetime(2020, 1, 1),
+    start=datetime(2016, 1, 1),
     end=datetime(2020, 4, 30),
     rate=0.3/10000,
-    slippage=FUTURES[test_future]["minimum_change"],
+    slippage=0,
     size=FUTURES[test_future]["multiplier"],
     pricetick=FUTURES[test_future]["minimum_change"],
-    capital=1_000_000,
+    capital=10_000,
 )
-engine.add_strategy(TrendStrategy, {})
+engine.add_strategy(BreakStrategy, {})
 
 engine.load_data()
 engine.run_backtesting()
