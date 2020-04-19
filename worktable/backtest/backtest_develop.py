@@ -1,12 +1,13 @@
-from vnpy.app.cta_strategy.backtesting import BacktestingEngine
-# from vnpy.app.cta_strategy.strategies.atr_rsi_strategy import (
-#     AtrRsiStrategy,
-# )
 from datetime import datetime
+import pandas as pd
+
+from vnpy.trader.constant import Interval
+from vnpy_pro.app.cta_strategy.backtesting import BacktestingEnginePro
+from vnpy_pro.config import load_futures
+
 from worktable.backtest.strategies.trend_strategy import TrendStrategy
 from worktable.backtest.strategies.break_strategy_4 import BreakStrategy
 
-from vnpy_pro.config import load_futures
 
 FUTURES = load_futures()
 
@@ -14,23 +15,25 @@ test_future = "bu"
 
 # test_future.upper() + "99." + FUTURES[test_future]["exchange_code"]
 
-engine = BacktestingEngine()
+engine = BacktestingEnginePro()
 engine.set_parameters(
     vt_symbol="BU99.SHFE",
-    interval="1m",
-    start=datetime(2016, 1, 1),
+    interval=Interval.MINUTE,
+    start=datetime(2020, 1, 1),
     end=datetime(2020, 4, 30),
     rate=0.3/10000,
     slippage=0,
     size=FUTURES[test_future]["multiplier"],
     pricetick=FUTURES[test_future]["minimum_change"],
     capital=10_000,
+    log_path=r"D:\vnpy\vnpy2_pro\worktable\backtest\backtest_result",
 )
 engine.add_strategy(BreakStrategy, {})
 
 engine.load_data()
 engine.run_backtesting()
-df = engine.calculate_result()
+engine.calculate_result()
 engine.calculate_statistics()
-engine.show_chart()
+
+engine.export_all()
 
