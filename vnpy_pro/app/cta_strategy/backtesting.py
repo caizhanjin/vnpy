@@ -13,7 +13,9 @@ class BacktestingEnginePro(BacktestingEngine):
     def __init__(self):
         super().__init__()
 
-        self.log_path = ""
+        self.root_log_path = ""
+        self.strategy_log_path = ""
+        self.backtest_log_path = ""
 
     def set_parameters(
         self,
@@ -28,7 +30,7 @@ class BacktestingEnginePro(BacktestingEngine):
         end: datetime = None,
         mode: BacktestingMode = BacktestingMode.BAR,
         inverse: bool = False,
-        log_path: str = r""
+        log_path: str = None
     ):
         """"""
         super().set_parameters(
@@ -44,8 +46,23 @@ class BacktestingEnginePro(BacktestingEngine):
             mode,
             inverse
         )
-        # JinAdd:
-        self.log_path = log_path
+        self.root_log_path = os.path.join(log_path, "backtest_result")
+
+    def add_strategy(self, strategy_class: type, setting: dict):
+        """"""
+        super().add_strategy(strategy_class, setting)
+
+        self.strategy_log_path = os.path.join(self.root_log_path, self.strategy.strategy_name)
+        backtest_log_name = str(datetime.now().strftime("%Y%m%d%H%M%S")) + "_" + \
+                            self.symbol + "_" + \
+                            self.interval.value + "_" + \
+                            self.start.strftime("%Y%m%d") + "_" + \
+                            self.end.strftime("%Y%m%d")
+        self.backtest_log_path = os.path.join(self.strategy_log_path, backtest_log_name)
+        if not os.path.exists(self.strategy_log_path):
+            os.mkdir(self.strategy_log_path)
+        if not os.path.exists(self.backtest_log_path):
+            os.mkdir(self.backtest_log_path)
 
     def export_all(self):
         self.export_daily_results()
@@ -53,11 +70,11 @@ class BacktestingEnginePro(BacktestingEngine):
         self.export_orders()
 
     def export_daily_results(self):
-        # JinAdd: 导出daily_results到csv
-        self.daily_df.to_csv(os.path.join(self.log_path, "daily_results.csv"))
+        # 导出daily_results到csv
+        self.daily_df.to_csv(os.path.join(self.backtest_log_path, "daily_results.csv"))
 
     def export_trades(self):
-        # JinAdd: 导出trades到csv
+        # 导出trades到csv
         trades_results = self.get_all_trades()
         trades_results = [
             [
@@ -84,10 +101,10 @@ class BacktestingEnginePro(BacktestingEngine):
                      "symbol", "time", "tradeid", "volume", "vt_orderid", "vt_symbol", "vt_tradeid"]
         ).set_index("datetime")
 
-        trades_results_df.to_csv(os.path.join(self.log_path, "trades.csv"))
+        trades_results_df.to_csv(os.path.join(self.backtest_log_path, "trades.csv"))
 
     def export_orders(self):
-        # JinAdd: 导出orders到csv
+        # 导出orders到csv
         trades_orders = self.get_all_orders()
         trades_orders = [
             [
@@ -115,4 +132,4 @@ class BacktestingEnginePro(BacktestingEngine):
                      "status", "symbol", "time", "traded", "type", "volume", "vt_orderid", "vt_symbol"]
         ).set_index("datetime")
 
-        trades_orders_df.to_csv(os.path.join(self.log_path, "orders.csv"))
+        trades_orders_df.to_csv(os.path.join(self.backtest_log_path, "orders.csv"))

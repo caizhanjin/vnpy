@@ -1,5 +1,6 @@
 from datetime import datetime
 import pandas as pd
+import os
 
 from vnpy.trader.constant import Interval
 from vnpy_pro.app.cta_strategy.backtesting import BacktestingEnginePro
@@ -26,7 +27,7 @@ engine.set_parameters(
     size=FUTURES[test_future]["multiplier"],
     pricetick=FUTURES[test_future]["minimum_change"],
     capital=10_000,
-    log_path=r"D:\vnpy\vnpy2_pro\worktable\backtest\backtest_result",
+    log_path=os.path.dirname(__file__),
 )
 engine.add_strategy(BreakStrategy, {})
 

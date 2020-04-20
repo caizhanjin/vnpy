@@ -40,3 +40,4 @@ _templates
 tdx_future_config.json
 strategies
 example_strategies
+backtest_result
