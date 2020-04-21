@@ -1,11 +1,39 @@
 from datetime import datetime
 import pandas as pd
 import os
+from functools import wraps
+import logging
 
 from vnpy.app.cta_strategy.backtesting import BacktestingEngine
 from vnpy.trader.constant import (Direction, Offset, Exchange,
                                   Interval, Status)
 from vnpy.app.cta_strategy.base import BacktestingMode
+from vnpy.trader.utility import get_file_logger
+
+
+def add_log_path_wrapper(func):
+    """
+    回测结果路径获取装饰器
+    """
+    @wraps
+    def inner(self, *args, **kwargs):
+        if not self.strategy_log_path:
+            self.strategy_log_path = os.path.join(self.root_log_path, self.strategy.strategy_name)
+            if not os.path.exists(self.strategy_log_path):
+                os.mkdir(self.strategy_log_path)
+
+        if not self.backtest_log_path:
+            backtest_log_name = str(datetime.now().strftime("%Y%m%d%H%M%S")) + "_" + \
+                                self.symbol + "_" + \
+                                self.interval.value + "_" + \
+                                self.start.strftime("%Y%m%d") + "_" + \
+                                self.end.strftime("%Y%m%d")
+            self.backtest_log_path = os.path.join(self.strategy_log_path, backtest_log_name)
+
+            if not os.path.exists(self.backtest_log_path):
+                os.mkdir(self.backtest_log_path)
+        return func(self, *args, **kwargs)
+    return inner
 
 
 class BacktestingEnginePro(BacktestingEngine):
@@ -16,6 +44,7 @@ class BacktestingEnginePro(BacktestingEngine):
         self.root_log_path = ""
         self.strategy_log_path = ""
         self.backtest_log_path = ""
+        self.output_list = []
 
     def set_parameters(
         self,
@@ -52,27 +81,30 @@ class BacktestingEnginePro(BacktestingEngine):
         """"""
         super().add_strategy(strategy_class, setting)
 
-        self.strategy_log_path = os.path.join(self.root_log_path, self.strategy.strategy_name)
-        backtest_log_name = str(datetime.now().strftime("%Y%m%d%H%M%S")) + "_" + \
-                            self.symbol + "_" + \
-                            self.interval.value + "_" + \
-                            self.start.strftime("%Y%m%d") + "_" + \
-                            self.end.strftime("%Y%m%d")
-        self.backtest_log_path = os.path.join(self.strategy_log_path, backtest_log_name)
-        if not os.path.exists(self.strategy_log_path):
-            os.mkdir(self.strategy_log_path)
-        if not os.path.exists(self.backtest_log_path):
-            os.mkdir(self.backtest_log_path)
+        # self.strategy_log_path = os.path.join(self.root_log_path, self.strategy.strategy_name)
+        # backtest_log_name = str(datetime.now().strftime("%Y%m%d%H%M%S")) + "_" + \
+        #                     self.symbol + "_" + \
+        #                     self.interval.value + "_" + \
+        #                     self.start.strftime("%Y%m%d") + "_" + \
+        #                     self.end.strftime("%Y%m%d")
+        # self.backtest_log_path = os.path.join(self.strategy_log_path, backtest_log_name)
+        # if not os.path.exists(self.strategy_log_path):
+        #     os.mkdir(self.strategy_log_path)
+        # if not os.path.exists(self.backtest_log_path):
+        #     os.mkdir(self.backtest_log_path)
 
     def export_all(self):
         self.export_daily_results()
         self.export_trades()
         self.export_orders()
+        self.save_output()
 
+    @add_log_path_wrapper
     def export_daily_results(self):
         # 导出daily_results到csv
         self.daily_df.to_csv(os.path.join(self.backtest_log_path, "daily_results.csv"))
 
+    @add_log_path_wrapper
     def export_trades(self):
         # 导出trades到csv
         trades_results = self.get_all_trades()
@@ -103,6 +135,7 @@ class BacktestingEnginePro(BacktestingEngine):
 
         trades_results_df.to_csv(os.path.join(self.backtest_log_path, "trades.csv"))
 
+    @add_log_path_wrapper
     def export_orders(self):
         # 导出orders到csv
         trades_orders = self.get_all_orders()
@@ -133,3 +166,16 @@ class BacktestingEnginePro(BacktestingEngine):
         ).set_index("datetime")
 
         trades_orders_df.to_csv(os.path.join(self.backtest_log_path, "orders.csv"))
+
+    @add_log_path_wrapper
+    def save_output(self):
+        """保存输出日志"""
+        logger = get_file_logger(os.path.join(self.backtest_log_path, "output.log"))
+        logger.setLevel(logging.INFO)
+        logger.info(self.output_list)
+
+    def output(self, msg):
+        super().output(msg)
+
+        self.output_list.append(f"{datetime.now()}\t{msg}")
+
