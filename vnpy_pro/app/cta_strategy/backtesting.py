@@ -15,13 +15,14 @@ def add_log_path_wrapper(func):
     """
     回测结果路径获取装饰器
     """
-    @wraps
+    @wraps(func)
     def inner(self, *args, **kwargs):
+        if not os.path.exists(self.root_log_path):
+            os.mkdir(self.root_log_path)
         if not self.strategy_log_path:
             self.strategy_log_path = os.path.join(self.root_log_path, self.strategy.strategy_name)
             if not os.path.exists(self.strategy_log_path):
                 os.mkdir(self.strategy_log_path)
-
         if not self.backtest_log_path:
             backtest_log_name = str(datetime.now().strftime("%Y%m%d%H%M%S")) + "_" + \
                                 self.symbol + "_" + \
@@ -32,7 +33,8 @@ def add_log_path_wrapper(func):
 
             if not os.path.exists(self.backtest_log_path):
                 os.mkdir(self.backtest_log_path)
-        return func(self, *args, **kwargs)
+
+        return func(self)
     return inner
 
 
@@ -77,27 +79,11 @@ class BacktestingEnginePro(BacktestingEngine):
         )
         self.root_log_path = os.path.join(log_path, "backtest_result")
 
-    def add_strategy(self, strategy_class: type, setting: dict):
-        """"""
-        super().add_strategy(strategy_class, setting)
-
-        # self.strategy_log_path = os.path.join(self.root_log_path, self.strategy.strategy_name)
-        # backtest_log_name = str(datetime.now().strftime("%Y%m%d%H%M%S")) + "_" + \
-        #                     self.symbol + "_" + \
-        #                     self.interval.value + "_" + \
-        #                     self.start.strftime("%Y%m%d") + "_" + \
-        #                     self.end.strftime("%Y%m%d")
-        # self.backtest_log_path = os.path.join(self.strategy_log_path, backtest_log_name)
-        # if not os.path.exists(self.strategy_log_path):
-        #     os.mkdir(self.strategy_log_path)
-        # if not os.path.exists(self.backtest_log_path):
-        #     os.mkdir(self.backtest_log_path)
-
     def export_all(self):
-        self.export_daily_results()
-        self.export_trades()
-        self.export_orders()
-        self.save_output()
+        self.export_daily_results(self)
+        self.export_trades(self)
+        self.export_orders(self)
+        self.save_output(self)
 
     @add_log_path_wrapper
     def export_daily_results(self):
@@ -172,10 +158,11 @@ class BacktestingEnginePro(BacktestingEngine):
         """保存输出日志"""
         logger = get_file_logger(os.path.join(self.backtest_log_path, "output.log"))
         logger.setLevel(logging.INFO)
-        logger.info(self.output_list)
+        for i in self.output_list:
+            logger.info(i)
 
     def output(self, msg):
         super().output(msg)
 
-        self.output_list.append(f"{datetime.now()}\t{msg}")
+        self.output_list.append(msg)
 

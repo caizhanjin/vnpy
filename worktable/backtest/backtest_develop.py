@@ -1,12 +1,10 @@
 from datetime import datetime
-import pandas as pd
 import os
 
 from vnpy.trader.constant import Interval
 from vnpy_pro.app.cta_strategy.backtesting import BacktestingEnginePro
 from vnpy_pro.config import load_futures
 
-from worktable.backtest.strategies.trend_strategy import TrendStrategy
 from worktable.backtest.strategies.break_strategy_4 import BreakStrategy
 
 

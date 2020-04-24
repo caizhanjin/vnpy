@@ -802,7 +802,8 @@ file_handlers: Dict[str, logging.FileHandler] = {}
 def _get_file_logger_handler(filename: str) -> logging.FileHandler:
     handler = file_handlers.get(filename, None)
     if handler is None:
-        handler = logging.FileHandler(filename)
+        # JinAdd : 设置日志默认格式
+        handler = logging.FileHandler(filename, encoding="utf8")
         file_handlers[filename] = handler  # Am i need a lock?
     return handler
 
