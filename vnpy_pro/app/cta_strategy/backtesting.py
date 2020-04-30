@@ -1,8 +1,12 @@
 from datetime import datetime
 import pandas as pd
+from pandas import DataFrame
 import os
 from functools import wraps
 import logging
+import matplotlib.pyplot as plt
+import pyecharts.options as opts
+from pyecharts.charts import Line, Grid, Bar
 
 from vnpy.app.cta_strategy.backtesting import BacktestingEngine
 from vnpy.trader.constant import (Direction, Offset, Exchange,
@@ -84,11 +88,14 @@ class BacktestingEnginePro(BacktestingEngine):
         self.export_trades(self)
         self.export_orders(self)
         self.save_output(self)
+        self.save_daily_chart(self)
 
     @add_log_path_wrapper
     def export_daily_results(self):
         # 导出daily_results到csv
-        self.daily_df.to_csv(os.path.join(self.backtest_log_path, "daily_results.csv"))
+        if self.daily_df is None:
+            return
+        self.daily_df.to_csv(os.path.join(self.backtest_log_path, "daily_results.csv"), encoding="utf_8_sig")
 
     @add_log_path_wrapper
     def export_trades(self):
@@ -97,10 +104,10 @@ class BacktestingEnginePro(BacktestingEngine):
         trades_results = [
             [
                 i.datetime,
-                i.direction,
-                i.exchange,
+                i.direction.value,
+                i.exchange.value,
                 i.gateway_name,
-                i.offset,
+                i.offset.value,
                 i.orderid,
                 i.price,
                 i.symbol,
@@ -119,7 +126,7 @@ class BacktestingEnginePro(BacktestingEngine):
                      "symbol", "time", "tradeid", "volume", "vt_orderid", "vt_symbol", "vt_tradeid"]
         ).set_index("datetime")
 
-        trades_results_df.to_csv(os.path.join(self.backtest_log_path, "trades.csv"))
+        trades_results_df.to_csv(os.path.join(self.backtest_log_path, "trades.csv"), encoding="utf_8_sig")
 
     @add_log_path_wrapper
     def export_orders(self):
@@ -128,17 +135,17 @@ class BacktestingEnginePro(BacktestingEngine):
         trades_orders = [
             [
                 i.datetime,
-                i.direction,
-                i.exchange,
+                i.direction.value,
+                i.exchange.value,
                 i.gateway_name,
-                i.offset,
+                i.offset.value,
                 i.orderid,
                 i.price,
-                i.status,
+                i.status.value,
                 i.symbol,
                 i.time,
                 i.traded,
-                i.type,
+                i.type.value,
                 i.volume,
                 i.vt_orderid,
                 i.vt_symbol,
@@ -151,7 +158,7 @@ class BacktestingEnginePro(BacktestingEngine):
                      "status", "symbol", "time", "traded", "type", "volume", "vt_orderid", "vt_symbol"]
         ).set_index("datetime")
 
-        trades_orders_df.to_csv(os.path.join(self.backtest_log_path, "orders.csv"))
+        trades_orders_df.to_csv(os.path.join(self.backtest_log_path, "orders.csv"), encoding="utf_8_sig")
 
     @add_log_path_wrapper
     def save_output(self):
@@ -165,4 +172,124 @@ class BacktestingEnginePro(BacktestingEngine):
         super().output(msg)
 
         self.output_list.append(msg)
+
+    @add_log_path_wrapper
+    def save_daily_chart(self):
+        if self.daily_df is None:
+            return
+
+        date_list = self.daily_df.index.values.tolist()
+        balance_list = self.daily_df.balance.values.tolist()
+        draw_down_list = self.daily_df.drawdown.values.tolist()
+        net_pnl_list = self.daily_df.net_pnl.values.tolist()
+
+        line1 = (
+            Line()
+            .set_global_opts(
+                title_opts=opts.TitleOpts(title="回测资金曲线", pos_left="center"),
+                tooltip_opts=opts.TooltipOpts(trigger="axis", axis_pointer_type="cross"),
+                xaxis_opts=opts.AxisOpts(
+                    type_="category",
+                    boundary_gap=False,
+                    axisline_opts=opts.AxisLineOpts(is_on_zero=True),
+                ),
+                legend_opts=opts.LegendOpts(pos_left="1%"),
+                yaxis_opts=opts.AxisOpts(
+                    type_="value",
+                    is_scale=True,
+                    splitline_opts=opts.SplitLineOpts(is_show=True),
+                ),
+                axispointer_opts=opts.AxisPointerOpts(
+                    is_show=True, link=[{"xAxisIndex": "all"}]
+                ),
+                datazoom_opts=[
+                    opts.DataZoomOpts(range_start=0, range_end=100),
+                    opts.DataZoomOpts(type_="inside", range_start=0, range_end=100, xaxis_index=[0, 1, 2]),
+                ],
+            )
+            .add_xaxis(xaxis_data=date_list)
+            .add_yaxis(
+                series_name="Balance",
+                y_axis=balance_list,
+                label_opts=opts.LabelOpts(is_show=False),
+                linestyle_opts=opts.LineStyleOpts(width=2),
+            )
+        )
+
+        line2 = (
+            Line()
+            .set_global_opts(
+                tooltip_opts=opts.TooltipOpts(trigger="axis", axis_pointer_type="cross"),
+                xaxis_opts=opts.AxisOpts(
+                    type_="category",
+                    boundary_gap=False,
+                    axisline_opts=opts.AxisLineOpts(is_on_zero=True),
+                    position="top",
+                ),
+                legend_opts=opts.LegendOpts(pos_left="9%"),
+                yaxis_opts=opts.AxisOpts(
+                    type_="value",
+                    is_scale=True,
+                    splitline_opts=opts.SplitLineOpts(is_show=True),
+                ),
+                axispointer_opts=opts.AxisPointerOpts(
+                    is_show=True,
+                    link=[{"xAxisIndex": "all"}]
+                ),
+                datazoom_opts=[
+                    opts.DataZoomOpts(range_start=0, range_end=100),
+                    opts.DataZoomOpts(type_="inside", range_start=0, range_end=100, xaxis_index=[0, 1, 2]),
+                ],
+            )
+            .add_xaxis(xaxis_data=date_list)
+            .add_yaxis(
+                series_name="Draw Down",
+                y_axis=draw_down_list,
+                label_opts=opts.LabelOpts(is_show=False),
+                areastyle_opts=opts.AreaStyleOpts(opacity=0.5),
+            )
+        )
+
+        bar3 = (
+            Bar()
+            .set_global_opts(
+                tooltip_opts=opts.TooltipOpts(trigger="axis", axis_pointer_type="cross"),
+                xaxis_opts=opts.AxisOpts(
+                    type_="category",
+                    boundary_gap=False,
+                    axisline_opts=opts.AxisLineOpts(is_on_zero=True),
+                ),
+                legend_opts=opts.LegendOpts(pos_left="19%"),
+                yaxis_opts=opts.AxisOpts(
+                    type_="value",
+                    is_scale=True,
+                    splitline_opts=opts.SplitLineOpts(is_show=True),
+                ),
+                axispointer_opts=opts.AxisPointerOpts(
+                    is_show=True,
+                    link=[{"xAxisIndex": "all"}]
+                ),
+                datazoom_opts=[
+                    opts.DataZoomOpts(range_start=0, range_end=100),
+                    opts.DataZoomOpts(type_="inside", range_start=0, range_end=100, xaxis_index=[0, 1, 2]),
+                ],
+            )
+            .add_xaxis(xaxis_data=date_list)
+            .add_yaxis(series_name="Daily Pnl", yaxis_data=net_pnl_list, label_opts=opts.LabelOpts(is_show=False))
+        )
+
+        (
+            Grid(init_opts=opts.InitOpts(width="1024px", height="800px"))
+            .add(chart=line1, grid_opts=opts.GridOpts(pos_left=50, pos_right=50, height="35%"))
+            .add(
+                chart=line2,
+                grid_opts=opts.GridOpts(pos_left=50, pos_right=50, pos_top="48%", height="20%"),
+            )
+            .add(
+                chart=bar3,
+                grid_opts=opts.GridOpts(pos_left=50, pos_right=50, pos_top="71%", height="20%"),
+            )
+            .render(os.path.join(self.backtest_log_path, "daily_results.html"))
+        )
+
 

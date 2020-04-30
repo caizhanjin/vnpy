@@ -10,7 +10,7 @@ from vnpy_pro.data.source.tdxdata import tdxdata_client
 
 # 设置配置参数
 interval = Interval.MINUTE
-symbol = "IF2005"
+symbol = "IF99"
 exchange = Exchange.CFFEX
 
 # 查询数据库中的最新数据

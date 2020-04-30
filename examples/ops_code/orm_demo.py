@@ -55,6 +55,7 @@ def save_strategy_data(name: str, variables: dict):
     }
     DbStrategyData.insert(d).on_conflict_replace().execute()
 
+
 def load_strategy_data(name: str) -> dict:
     """"""
     # 数据库读取

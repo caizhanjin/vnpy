@@ -9,7 +9,7 @@ from vnpy.app.cta_strategy import (
     ArrayManager,
 )
 
-from orm_demo import save_strategy_data, load_strategy_data
+from .orm_demo import save_strategy_data, load_strategy_data
 
 
 class OrmStrategy(CtaTemplate):
