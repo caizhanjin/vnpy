@@ -5,7 +5,7 @@ from vnpy.trader.constant import Interval
 from vnpy_pro.app.cta_strategy.backtesting import BacktestingEnginePro
 from vnpy_pro.config import load_futures
 
-# from worktable.backtest.strategies.break_strategy_4 import BreakStrategy
+# from accounts.backtest.strategies.break_strategy_4 import BreakStrategy
 from vnpy.app.cta_strategy.strategies.atr_rsi_strategy import AtrRsiStrategy
 
 FUTURES = load_futures()
@@ -18,7 +18,7 @@ engine = BacktestingEnginePro()
 engine.set_parameters(
     vt_symbol="IF99.CFFEX",
     interval=Interval.MINUTE,
-    start=datetime(2019, 1, 1),
+    start=datetime(2018, 1, 1),
     end=datetime(2020, 4, 30),
     rate=0.3/10000,
     slippage=0,
