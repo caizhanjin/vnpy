@@ -10,15 +10,16 @@ from vnpy_pro.data.source.tdxdata import tdxdata_client
 
 # 设置配置参数
 interval = Interval.MINUTE
-symbol = "IF99"
-exchange = Exchange.CFFEX
+symbol = "RB99"
+exchange = Exchange.SHFE
 
 # 查询数据库中的最新数据
-bar = database_manager.get_newest_bar_data(symbol, exchange, interval)
-if bar:
-    start = bar.datetime
-else:
-    start = datetime(2017, 1, 1)
+start = datetime(2017, 1, 1)
+# bar = database_manager.get_newest_bar_data(symbol, exchange, interval)
+# if bar:
+#     start = bar.datetime
+# else:
+#     start = datetime(2017, 1, 1)
 
 if tdxdata_client.init():
     print("RQData登录成功")

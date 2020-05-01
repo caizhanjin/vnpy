@@ -5,20 +5,20 @@ from vnpy.trader.constant import Interval
 from vnpy_pro.app.cta_strategy.backtesting import BacktestingEnginePro
 from vnpy_pro.config import load_futures
 
-# from accounts.backtest.strategies.break_strategy_4 import BreakStrategy
-from vnpy.app.cta_strategy.strategies.atr_rsi_strategy import AtrRsiStrategy
+# from vnpy.app.cta_strategy.strategies.atr_rsi_strategy import AtrRsiStrategy
+from worktable.strategies_example.atr_rsi_strategy import AtrRsiStrategy
 
 FUTURES = load_futures()
 
-test_future = "bu"
+test_future = "RB"
 
 # test_future.upper() + "99." + FUTURES[test_future]["exchange_code"]
 
 engine = BacktestingEnginePro()
 engine.set_parameters(
-    vt_symbol="IF99.CFFEX",
+    vt_symbol="RB99.SHFE",
     interval=Interval.MINUTE,
-    start=datetime(2018, 1, 1),
+    start=datetime(2020, 1, 1),
     end=datetime(2020, 4, 30),
     rate=0.3/10000,
     slippage=0,

@@ -41,3 +41,5 @@ tdx_future_config.json
 strategies
 example_strategies
 backtest_result
+worktable/strategies
+worktable/strategies_example

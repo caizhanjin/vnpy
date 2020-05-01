@@ -38,7 +38,7 @@ class ArrayManagerPro(ArrayManager):
 
         return up, mid, down
 
-    def bbi(self, n: int, array: bool = False):
+    def bbi(self, n: int = 1, array: bool = False):
         ma3 = self.sma(3 * n, array)
         ma6 = self.sma(6 * n, array)
         ma12 = self.sma(12 * n, array)
@@ -47,6 +47,17 @@ class ArrayManagerPro(ArrayManager):
         bbi = (ma3 + ma6 + ma12 + ma24) / 4
 
         return bbi
+
+    def bbi_boll(self, bbi_len=1, n: int = 11, m: int = 6, array: bool = False):
+        bbi = self.bbi(n=bbi_len, array=True)
+        std = talib.STDDEV(bbi, n)
+
+        up = bbi + std * m
+        down = bbi - std * m
+
+        if array:
+            return up, bbi, down
+        return up[-1], bbi[-1], down[-1]
 
     def boll_low(self, n: int, dev: float, array: bool = False):
         mid = talib.SMA(self.low, n)

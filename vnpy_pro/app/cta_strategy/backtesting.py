@@ -4,7 +4,6 @@ from pandas import DataFrame
 import os
 from functools import wraps
 import logging
-import matplotlib.pyplot as plt
 import pyecharts.options as opts
 from pyecharts.charts import Line, Grid, Bar
 
@@ -89,6 +88,7 @@ class BacktestingEnginePro(BacktestingEngine):
         self.export_orders(self)
         self.save_output(self)
         self.save_daily_chart(self)
+        self.save_k_line_chart(self)
 
     @add_log_path_wrapper
     def export_daily_results(self):
@@ -292,4 +292,11 @@ class BacktestingEnginePro(BacktestingEngine):
             .render(os.path.join(self.backtest_log_path, "daily_results.html"))
         )
 
-
+    @add_log_path_wrapper
+    def save_k_line_chart(self):
+        if self.strategy.chart_dict is None:
+            return
+        self.strategy.chart_dict.draw_chart(
+            save_path=self.backtest_log_path,
+            kline_title=self.strategy.strategy_name + "K线图"
+        )
