@@ -37,7 +37,7 @@ def add_log_path_wrapper(func):
             if not os.path.exists(self.backtest_log_path):
                 os.mkdir(self.backtest_log_path)
 
-        return func(self)
+        return func(self, *args, **kwargs)
     return inner
 
 
@@ -83,12 +83,12 @@ class BacktestingEnginePro(BacktestingEngine):
         self.root_log_path = os.path.join(log_path, "backtest_result")
 
     def export_all(self):
-        self.export_daily_results(self)
-        self.export_trades(self)
-        self.export_orders(self)
-        self.save_output(self)
-        self.save_daily_chart(self)
-        self.save_k_line_chart(self)
+        self.export_daily_results()
+        self.export_trades()
+        self.export_orders()
+        self.save_output()
+        self.save_daily_chart()
+        self.save_k_line_chart()
 
     @add_log_path_wrapper
     def export_daily_results(self):
@@ -185,9 +185,23 @@ class BacktestingEnginePro(BacktestingEngine):
 
         line1 = (
             Line()
+            .add_xaxis(xaxis_data=date_list)
+            .add_yaxis(
+                series_name="Balance",
+                y_axis=balance_list,
+                label_opts=opts.LabelOpts(is_show=False),
+                linestyle_opts=opts.LineStyleOpts(width=2),
+            )
             .set_global_opts(
                 title_opts=opts.TitleOpts(title="回测资金曲线", pos_left="center"),
-                tooltip_opts=opts.TooltipOpts(trigger="axis", axis_pointer_type="cross"),
+                tooltip_opts=opts.TooltipOpts(
+                    trigger="axis",
+                    axis_pointer_type="cross",
+                    background_color="rgba(245, 245, 245, 0.8)",
+                    border_width=1,
+                    border_color="#ccc",
+                    textstyle_opts=opts.TextStyleOpts(color="#000"),
+                ),
                 xaxis_opts=opts.AxisOpts(
                     type_="category",
                     boundary_gap=False,
@@ -200,19 +214,14 @@ class BacktestingEnginePro(BacktestingEngine):
                     splitline_opts=opts.SplitLineOpts(is_show=True),
                 ),
                 axispointer_opts=opts.AxisPointerOpts(
-                    is_show=True, link=[{"xAxisIndex": "all"}]
+                    is_show=True,
+                    link=[{"xAxisIndex": "all"}],
+                    label=opts.LabelOpts(background_color="#777"),
                 ),
                 datazoom_opts=[
                     opts.DataZoomOpts(range_start=0, range_end=100),
                     opts.DataZoomOpts(type_="inside", range_start=0, range_end=100, xaxis_index=[0, 1, 2]),
                 ],
-            )
-            .add_xaxis(xaxis_data=date_list)
-            .add_yaxis(
-                series_name="Balance",
-                y_axis=balance_list,
-                label_opts=opts.LabelOpts(is_show=False),
-                linestyle_opts=opts.LineStyleOpts(width=2),
             )
         )
 
@@ -225,6 +234,7 @@ class BacktestingEnginePro(BacktestingEngine):
                     boundary_gap=False,
                     axisline_opts=opts.AxisLineOpts(is_on_zero=True),
                     position="top",
+                    axislabel_opts=opts.LabelOpts(is_show=False),
                 ),
                 legend_opts=opts.LegendOpts(pos_left="9%"),
                 yaxis_opts=opts.AxisOpts(
@@ -234,12 +244,9 @@ class BacktestingEnginePro(BacktestingEngine):
                 ),
                 axispointer_opts=opts.AxisPointerOpts(
                     is_show=True,
-                    link=[{"xAxisIndex": "all"}]
+                    link=[{"xAxisIndex": "all"}],
+                    label=opts.LabelOpts(background_color="#777"),
                 ),
-                datazoom_opts=[
-                    opts.DataZoomOpts(range_start=0, range_end=100),
-                    opts.DataZoomOpts(type_="inside", range_start=0, range_end=100, xaxis_index=[0, 1, 2]),
-                ],
             )
             .add_xaxis(xaxis_data=date_list)
             .add_yaxis(
@@ -258,6 +265,7 @@ class BacktestingEnginePro(BacktestingEngine):
                     type_="category",
                     boundary_gap=False,
                     axisline_opts=opts.AxisLineOpts(is_on_zero=True),
+                    axislabel_opts=opts.LabelOpts(is_show=False),
                 ),
                 legend_opts=opts.LegendOpts(pos_left="19%"),
                 yaxis_opts=opts.AxisOpts(
@@ -267,19 +275,16 @@ class BacktestingEnginePro(BacktestingEngine):
                 ),
                 axispointer_opts=opts.AxisPointerOpts(
                     is_show=True,
-                    link=[{"xAxisIndex": "all"}]
+                    link=[{"xAxisIndex": "all"}],
+                    label=opts.LabelOpts(background_color="#777"),
                 ),
-                datazoom_opts=[
-                    opts.DataZoomOpts(range_start=0, range_end=100),
-                    opts.DataZoomOpts(type_="inside", range_start=0, range_end=100, xaxis_index=[0, 1, 2]),
-                ],
             )
             .add_xaxis(xaxis_data=date_list)
             .add_yaxis(series_name="Daily Pnl", yaxis_data=net_pnl_list, label_opts=opts.LabelOpts(is_show=False))
         )
 
         (
-            Grid(init_opts=opts.InitOpts(width="1024px", height="800px"))
+            Grid(init_opts=opts.InitOpts(width="100%", height="720px"))
             .add(chart=line1, grid_opts=opts.GridOpts(pos_left=50, pos_right=50, height="35%"))
             .add(
                 chart=line2,
@@ -298,5 +303,5 @@ class BacktestingEnginePro(BacktestingEngine):
             return
         self.strategy.chart_dict.draw_chart(
             save_path=self.backtest_log_path,
-            kline_title=self.strategy.strategy_name + "K线图"
+            kline_title=self.strategy.strategy_name + "_" + self.symbol
         )

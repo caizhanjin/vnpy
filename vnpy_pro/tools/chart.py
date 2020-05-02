@@ -7,7 +7,7 @@ from functools import wraps
 
 
 def chart_data_to_df(func):
-    """"""
+    """获取df"""
     @wraps(func)
     def inner(self, *args, **kwargs):
         if self.df.empty:
@@ -30,7 +30,7 @@ class KLineChart(object):
         self.trade_list = []
         if self.is_fixed_size:
             self.list_dict = {
-                "datetime": self.return_empty_array(fixed_size, ""),
+                "datetime": ["" for i in range(fixed_size)],
                 "open": np.zeros(fixed_size),
                 "high": np.zeros(fixed_size),
                 "low": np.zeros(fixed_size),
@@ -87,12 +87,6 @@ class KLineChart(object):
 
     def read_csv_to_df(self, path: str):
         self.df = pd.read_csv(path)
-
-    @staticmethod
-    def return_empty_array(size: int, fill=None):
-        if fill is None:
-            fill = 0.
-        return [fill for i in range(size)]
 
     @chart_data_to_df
     def draw_chart(self, save_path="", kline_title="买卖点K线图"):
@@ -272,7 +266,7 @@ class KLineChart(object):
         # Grid Overlap + Bar
         grid_chart = Grid(
             init_opts=opts.InitOpts(
-                width="1500px",
+                width="100%",
                 height="760px",
                 animation_opts=opts.AnimationOpts(animation=False),
             )
