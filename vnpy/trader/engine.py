@@ -2,6 +2,7 @@
 """
 
 import logging
+from email.mime.text import MIMEText
 from logging import Logger
 import smtplib
 import os
@@ -514,6 +515,7 @@ class EmailEngine(BaseEngine):
         self.active: bool = False
 
         self.main_engine.send_email = self.send_email
+        self.main_engine.send_email_html = self.send_email_html
 
     def send_email(self, subject: str, content: str, receiver: str = "") -> None:
         """"""
@@ -530,6 +532,24 @@ class EmailEngine(BaseEngine):
         msg["To"] = receiver
         msg["Subject"] = subject
         msg.set_content(content)
+
+        self.queue.put(msg)
+
+    # JinAdd：新增发送html邮件
+    def send_email_html(self, subject: str, content: str, receiver: str = "") -> None:
+        """"""
+        # Start email engine when sending first email.
+        if not self.active:
+            self.start()
+
+        # Use default receiver if not specified.
+        if not receiver:
+            receiver = SETTINGS["email.receiver"]
+
+        msg = MIMEText(content, 'html', 'utf-8')
+        msg['From'] = SETTINGS["email.sender"]
+        msg['To'] = receiver
+        msg["Subject"] = subject
 
         self.queue.put(msg)
 

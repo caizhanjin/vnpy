@@ -20,10 +20,11 @@ from vnpy.trader.engine import MainEngine
 from vnpy.gateway.ctp import CtpGateway
 from vnpy.app.cta_strategy import CtaStrategyApp
 from vnpy.app.cta_strategy.base import EVENT_CTA_LOG
+from vnpy_pro.app.cta_strategy import CtaStrategyAppPro
 
 
 SETTINGS["log.active"] = True
-SETTINGS["log.level"] = DEBUG
+SETTINGS["log.level"] = INFO
 SETTINGS["log.console"] = True
 
 ctp_setting = load_json("connect_ctp.json")
@@ -38,7 +39,7 @@ def run_child():
     event_engine = EventEngine()
     main_engine = MainEngine(event_engine)
     main_engine.add_gateway(CtpGateway)
-    cta_engine = main_engine.add_app(CtaStrategyApp)
+    cta_engine = main_engine.add_app(CtaStrategyAppPro)
     main_engine.write_log("主引擎创建成功")
 
     log_engine = main_engine.get_engine("log")
@@ -54,11 +55,14 @@ def run_child():
     main_engine.write_log("CTA策略初始化完成")
 
     cta_engine.init_all_strategies()
-    sleep(60)   # Leave enough time to complete strategy initialization
+    sleep(20)
+    # sleep(60)   # Leave enough time to complete strategy initialization
     main_engine.write_log("CTA策略全部初始化")
 
     cta_engine.start_all_strategies()
     main_engine.write_log("CTA策略全部启动")
+
+    cta_engine.send_report_email("账号1初始化早报")
 
     while True:
         sleep(1)
@@ -90,7 +94,7 @@ def run_parent():
             or (current_time <= NIGHT_END)
         ):
             trading = True
-
+        trading = True
         # Start child process in trading period
         if trading and child_process is None:
             print("启动子进程")
