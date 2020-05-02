@@ -545,12 +545,14 @@ class CtaEngine(BaseEngine):
         start = end - timedelta(days)
         bars = []
 
+        data_source = ""
         # Pass gateway and RQData if use_database set to True
         if not use_database:
             # Query bars from gateway if available
             contract = self.main_engine.get_contract(vt_symbol)
 
             if contract and contract.history_data:
+                data_source = "行情服务器"
                 req = HistoryRequest(
                     symbol=symbol,
                     exchange=exchange,
@@ -562,9 +564,11 @@ class CtaEngine(BaseEngine):
 
             # Try to query bars from RQData, if not found, load from database.
             else:
+                data_source = "tdx数据源"
                 bars = self.query_bar_from_rq(symbol, exchange, interval, start, end)
 
         if not bars:
+            data_source = "本地数据库"
             bars = database_manager.load_bar_data(
                 symbol=symbol,
                 exchange=exchange,
@@ -573,6 +577,8 @@ class CtaEngine(BaseEngine):
                 end=end,
             )
 
+        # JinAdd : 添加日志
+        self.write_log(f"从{data_source}加载{len(bars)}条数据")
         for bar in bars:
             callback(bar)
 
@@ -683,7 +689,11 @@ class CtaEngine(BaseEngine):
         # Put event to update init completed status.
         strategy.inited = True
         self.put_strategy_event(strategy)
-        self.write_log(f"{strategy_name}初始化完成")
+        if strategy.am.inited:
+            msg = "，am初始化完成，策略正常交易"
+        else:
+            msg = "，am初始化没完成，策略不能正常交易"
+        self.write_log(f"{strategy_name}初始化完成" + msg)
 
     def start_strategy(self, strategy_name: str):
         """

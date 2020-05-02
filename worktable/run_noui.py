@@ -26,7 +26,7 @@ SETTINGS["log.active"] = True
 SETTINGS["log.level"] = DEBUG
 SETTINGS["log.console"] = True
 
-ctp_setting = load_json("ctp_setting.json")
+ctp_setting = load_json("connect_ctp.json")
 
 
 def run_child():
@@ -90,8 +90,6 @@ def run_parent():
             or (current_time <= NIGHT_END)
         ):
             trading = True
-
-        trading = True
 
         # Start child process in trading period
         if trading and child_process is None:
