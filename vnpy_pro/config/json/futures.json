@@ -3,100 +3,114 @@
     "name": "螺纹钢",
     "exchange_name": "上期所",
     "exchange_code": "SHFE",
-    "multiplier": 10,
-    "minimum_change": 1
+    "margin_rate": 1.0,
+    "symbol_size": 10,
+    "price_tick": 1.0
   },
-  "bu": {
+  "BU": {
     "name": "沥青",
     "exchange_name": "上期所",
     "exchange_code": "SHFE",
-    "multiplier": 10,
-    "minimum_change": 1
+    "margin_rate": 1.0,
+    "symbol_size": 10,
+    "price_tick": 1.0
   },
-  "ru": {
+  "RU": {
     "name": "橡胶",
     "exchange_name": "上期所",
     "exchange_code": "SHFE",
-    "multiplier": 10,
-    "minimum_change": 1
+    "margin_rate": 1.0,
+    "symbol_size": 10,
+    "price_tick": 1.0
   },
-  "fu": {
+  "FU": {
     "name": "燃油",
     "exchange_name": "上期所",
     "exchange_code": "SHFE",
-    "multiplier": 10,
-    "minimum_change": 1
+    "margin_rate": 1.0,
+    "symbol_size": 10,
+    "price_tick": 1.0
   },
-  "au": {
+  "AU": {
     "name": "黄金",
     "exchange_name": "上期所",
     "exchange_code": "SHFE",
-    "multiplier": 10,
-    "minimum_change": 1
+    "margin_rate": 1.0,
+    "symbol_size": 10,
+    "price_tick": 1.0
   },
-  "ag": {
+  "AG": {
     "name": "白银",
     "exchange_name": "上期所",
     "exchange_code": "SHFE",
-    "multiplier": 10,
-    "minimum_change": 1
+    "margin_rate": 1.0,
+    "symbol_size": 10,
+    "price_tick": 1.0
   },
-  "cu": {
+  "CU": {
     "name": "铜",
     "exchange_name": "上期所",
     "exchange_code": "SHFE",
-    "multiplier": 10,
-    "minimum_change": 1
+    "margin_rate": 1.0,
+    "symbol_size": 10,
+    "price_tick": 1.0
   },
 
-  "p": {
+  "P": {
     "name": "棕榈油",
     "exchange_name": "大商所",
     "exchange_code": "DCE",
-    "multiplier": 10,
-    "minimum_change": 1
+    "margin_rate": 1.0,
+    "symbol_size": 10,
+    "price_tick": 1.0
   },
-  "y": {
+  "Y": {
     "name": "豆油",
     "exchange_name": "大商所",
     "exchange_code": "DCE",
-    "multiplier": 10,
-    "minimum_change": 1
+    "margin_rate": 1.0,
+    "symbol_size": 10,
+    "price_tick": 1.0
   },
-  "jd": {
+  "JD": {
     "name": "鸡蛋",
     "exchange_name": "大商所",
     "exchange_code": "DCE",
-    "multiplier": 10,
-    "minimum_change": 1
+    "margin_rate": 1.0,
+    "symbol_size": 10,
+    "price_tick": 1.0
   },
 
   "SR": {
     "name": "白糖",
     "exchange_name": "上期所",
     "exchange_code": "CZCE",
-    "multiplier": 10,
-    "minimum_change": 1
+    "margin_rate": 1.0,
+    "symbol_size": 10,
+    "price_tick": 1.0
   },
   "TA": {
     "name": "PTA",
     "exchange_name": "郑商所",
     "exchange_code": "CZCE",
-    "multiplier": 10,
-    "minimum_change": 1
+    "margin_rate": 1.0,
+    "symbol_size": 10,
+    "price_tick": 1.0
   },
   "CF": {
     "name": "棉花",
     "exchange_name": "郑商所",
     "exchange_code": "CZCE",
-    "multiplier": 10,
-    "minimum_change": 1
+    "margin_rate": 1.0,
+    "symbol_size": 10,
+    "price_tick": 1.0
   },
   "MA": {
     "name": "甲醇",
     "exchange_name": "郑商所",
     "exchange_code": "CZCE",
-    "multiplier": 10,
-    "minimum_change": 1
+    "margin_rate": 1.0,
+    "symbol_size": 10,
+    "price_tick": 1.0
   }
 }
