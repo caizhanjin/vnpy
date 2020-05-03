@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime, timedelta
 import pandas as pd
 from pandas import DataFrame
 import os
@@ -7,11 +7,75 @@ import logging
 import pyecharts.options as opts
 from pyecharts.charts import Line, Grid, Bar
 
-from vnpy.app.cta_strategy.backtesting import BacktestingEngine
+from vnpy.app.cta_strategy.backtesting import BacktestingEngine, DailyResult
 from vnpy.trader.constant import (Direction, Offset, Exchange,
                                   Interval, Status)
 from vnpy.app.cta_strategy.base import BacktestingMode
 from vnpy.trader.utility import get_file_logger
+
+
+class DailyResultPro(DailyResult):
+    def __init__(self, date: date, close_price: float):
+        super().__init__(date, close_price)
+
+    def calculate_pnl2(
+        self,
+        pre_close: float,
+        start_pos: float,
+        size: int,
+        rate: float,
+        slippage: float,
+        inverse: bool
+    ):
+        """给从csv读取的数据使用"""
+        # If no pre_close provided on the first day,
+        # use value 1 to avoid zero division error
+        if pre_close:
+            self.pre_close = pre_close
+        else:
+            self.pre_close = 1
+
+        # Holding pnl is the pnl from holding position at day start
+        self.start_pos = start_pos
+        self.end_pos = start_pos
+
+        if not inverse:     # For normal contract
+            self.holding_pnl = self.start_pos * \
+                (self.close_price - self.pre_close) * size
+        else:               # For crypto currency inverse contract
+            self.holding_pnl = self.start_pos * \
+                (1 / self.pre_close - 1 / self.close_price) * size
+
+        # Trading pnl is the pnl from new trade during the day
+        self.trade_count = len(self.trades)
+
+        for trade in self.trades:
+            if trade["direction"] == Direction.LONG.value:
+                pos_change = trade["volume"]
+            else:
+                pos_change = -trade["volume"]
+
+            self.end_pos += pos_change
+
+            # For normal contract
+            if not inverse:
+                turnover = trade["volume"] * size * trade["price"]
+                self.trading_pnl += pos_change * \
+                    (self.close_price - trade["price"]) * size
+                self.slippage += trade["volume"] * size * slippage
+            # For crypto currency inverse contract
+            else:
+                turnover = trade["volume"] * size / trade["price"]
+                self.trading_pnl += pos_change * \
+                    (1 / trade["price"] - 1 / self.close_price) * size
+                self.slippage += trade["volume"] * size * slippage / (trade["price"] ** 2)
+
+            self.turnover += turnover
+            self.commission += turnover * rate
+
+        # Net pnl takes account of commission and slippage cost
+        self.total_pnl = self.trading_pnl + self.holding_pnl
+        self.net_pnl = self.total_pnl - self.commission - self.slippage
 
 
 def add_log_path_wrapper(func):

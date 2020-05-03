@@ -1,4 +1,6 @@
+import csv
 import logging
+import os
 from datetime import datetime
 from logging import INFO, DEBUG
 from typing import Dict
@@ -42,8 +44,22 @@ def get_logger(logger_name="default_logger", file_path=None,
     return current_logger
 
 
+def csv_add_rows(data_list, header, csv_path):
+    """csv末尾追加形式内容"""
+    is_exist = os.path.exists(csv_path)
+
+    with open(file=csv_path, mode="a+", newline="", encoding="utf8") as f:
+        csv_file = csv.writer(f)
+        if not is_exist:
+            csv_file.writerow(header)
+        csv_file.writerows(data_list)
+
+
 if __name__ == '__main__':
-    default_logger = get_logger()
-    default_logger2 = get_logger()
-    default_logger.info("hello world.")
+    dict_list2 = [
+        {"test": 55, "test3": 5533},
+        {"test": 55, "test3": 5533},
+    ]
+    csv_add_rows(dict_list2, ["test3", "test"], "tests.csv")
+
     pass

@@ -22,8 +22,8 @@ engine.set_parameters(
     end=datetime(2020, 4, 30),
     rate=0.3/10000,
     slippage=0,
-    size=FUTURES[test_future]["multiplier"],
-    pricetick=FUTURES[test_future]["minimum_change"],
+    size=FUTURES[test_future]["symbol_size"] * FUTURES[test_future]["margin_rate"],
+    pricetick=FUTURES[test_future]["price_tick"],
     capital=10_000,
     log_path=os.path.dirname(__file__)
 )
@@ -36,5 +36,5 @@ engine.calculate_statistics()
 
 # engine.show_chart()
 
-engine.export_all()
+# engine.export_all()
 
