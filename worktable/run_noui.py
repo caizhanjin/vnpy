@@ -20,20 +20,22 @@ from vnpy.trader.engine import MainEngine
 from vnpy.gateway.ctp import CtpGateway
 from vnpy.app.cta_strategy import CtaStrategyApp
 from vnpy.app.cta_strategy.base import EVENT_CTA_LOG
-from vnpy_pro.app.cta_strategy import CtaStrategyAppPro
 
+from vnpy_pro.app.cta_strategy import CtaStrategyAppPro
+from vnpy_pro.tools.widget import get_logger
 
 SETTINGS["log.active"] = True
 SETTINGS["log.level"] = INFO
 SETTINGS["log.console"] = True
 
+default_logger = get_logger(
+    level=SETTINGS["log.level"],
+    is_console=SETTINGS["log.console"]
+)
 ctp_setting = load_json("connect_ctp.json")
 
 
 def run_child():
-    """
-    Running in the child process.
-    """
     SETTINGS["log.file"] = True
 
     event_engine = EventEngine()
@@ -69,12 +71,8 @@ def run_child():
 
 
 def run_parent():
-    """
-    Running in the parent process.
-    """
-    print("启动CTA策略守护父进程")
+    default_logger.info("[主进程]启动CTA策略守护父进程")
 
-    # Chinese futures market trading period (day/night)
     DAY_START = time(8, 45)
     DAY_END = time(15, 30)
 
@@ -87,7 +85,6 @@ def run_parent():
         current_time = datetime.now().time()
         trading = False
 
-        # Check whether in trading period
         if (
             (DAY_START <= current_time <= DAY_END)
             or (current_time >= NIGHT_START)
@@ -95,20 +92,20 @@ def run_parent():
         ):
             trading = True
         trading = True
-        # Start child process in trading period
+
         if trading and child_process is None:
-            print("启动子进程")
+            default_logger.info("[主进程]启动子进程")
             child_process = multiprocessing.Process(target=run_child)
             child_process.start()
-            print("子进程启动成功")
+            default_logger.info("[主进程]子进程启动成功")
 
         # 非记录时间则退出子进程
         if not trading and child_process is not None:
-            print("关闭子进程")
+            default_logger.info("[主进程]关闭子进程")
             child_process.terminate()
             child_process.join()
             child_process = None
-            print("子进程关闭成功")
+            default_logger.info("[主进程]子进程关闭成功")
 
         sleep(5)
 
