@@ -108,5 +108,25 @@ class CtaEnginePro(CtaEngine):
             content=content
         )
 
+    def save_all_trade_data(self):
+        for strategy_name in self.strategies.keys():
+            try:
+                self.save_trade_data(strategy_name)
+            except Exception as error:
+                self.write_log(f"{strategy_name}策略交易数据保存失败，error：{error}")
 
+    def save_trade_data(self, strategy_name):
+        """保存实例交易数据"""
+        strategy = self.strategies[strategy_name]
+        strategy.save_trade_data()
 
+    def update_all_daily_results(self):
+        for strategy_name in self.strategies.keys():
+            try:
+                self.save_trade_data(strategy_name)
+            except Exception as error:
+                self.write_log(f"{strategy_name}策略交易数据保存失败，error：{error}")
+
+    def update_daily_results(self, strategy_name):
+        strategy = self.strategies[strategy_name]
+        strategy.calculate_and_chart_daily_results()

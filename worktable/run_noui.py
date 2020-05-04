@@ -51,20 +51,26 @@ def run_child():
     main_engine.connect(ctp_setting, "CTP")
     main_engine.write_log("连接CTP接口")
 
-    sleep(10)
+    # sleep(10)
+    sleep(5)
 
     cta_engine.init_engine()
     main_engine.write_log("CTA策略初始化完成")
 
     cta_engine.init_all_strategies()
-    sleep(20)
+    sleep(5)
     # sleep(60)   # Leave enough time to complete strategy initialization
     main_engine.write_log("CTA策略全部初始化")
 
     cta_engine.start_all_strategies()
     main_engine.write_log("CTA策略全部启动")
 
-    cta_engine.send_report_email("账号1初始化早报")
+    # cta_engine.send_report_email("账号1初始化早报")
+
+    # cta_engine.save_all_trade_data()
+    # main_engine.write_log("CTA策略实例交易数据保存成功")
+    # cta_engine.update_all_daily_results()
+    # main_engine.write_log("CTA策略实例资金曲线绘制成功")
 
     while True:
         sleep(1)

@@ -11,13 +11,16 @@ import numpy as np
 
 from vnpy.app.cta_strategy import CtaTemplate
 from vnpy.trader.object import BarData, TickData, TradeData, OrderData
-from vnpy.trader.utility import get_folder_path, TEMP_DIR, get_file_logger, load_json, save_json, BarGenerator, \
+from vnpy.trader.utility import (
+    get_folder_path, TEMP_DIR, get_file_logger, load_json, save_json, BarGenerator,
     ArrayManager
+)
 
 from vnpy_pro.tools.widget import csv_add_rows
 from vnpy_pro.data.tdx.tdx_common import get_future_contracts
 from vnpy_pro.app.cta_strategy.backtesting import DailyResultPro
 from vnpy_pro.tools.chart import draw_daily_results_chart
+from vnpy_pro.tools.chart import KLineChart
 
 
 class CtaTemplatePro(CtaTemplate):
@@ -27,27 +30,45 @@ class CtaTemplatePro(CtaTemplate):
         cta_engine: Any,
         strategy_name: str,
         vt_symbol: str,
-        setting: dict,
+        setting: dict
     ):
         super().__init__(cta_engine, strategy_name, vt_symbol, setting)
-        # self.bg = BarGenerator(self.on_bar)
-        # self.am = ArrayManager()
-
+        # 回测不保存数据
+        strategy_name = "TEST1"
+        if strategy_name == self.__class__.__name__:
+            self.instance_name = None
+        else:
+            self.instance_name = strategy_name + "_" + self.__class__.__name__ + "_" + self.vt_symbol.split(".")[0]
+            self.save_path = os.path.join(
+                TEMP_DIR,
+                "trade_data",
+                self.instance_name
+            )
         self.order_list = []
         self.trade_list = []
         self.daily_close_dict = {}  # 用于计算daily_result和策略监控指标
         self.output_list = []
         self.last_datetime = None
+        self.KLine_chart_dict = KLineChart()
 
     def on_bar(self, bar: BarData):
         self.last_datetime = bar.datetime
+        if self.instance_name is None:
+            return
         self.update_daily_close(bar.close_price)
 
     def on_tick(self, tick: TickData):
         self.last_datetime = tick.datetime
+        if self.instance_name is None:
+            return
         self.update_daily_close(tick.last_price)
 
     def on_trade(self, trade: TradeData):
+        if self.instance_name is None:
+            return
+        self.append_trade_list(trade)
+
+    def append_trade_list(self, trade: TradeData):
         self.trade_list.append([
             self.last_datetime,
             trade.direction.value,
@@ -66,6 +87,8 @@ class CtaTemplatePro(CtaTemplate):
         ])
 
     def on_order(self, order: OrderData):
+        if self.instance_name is None:
+            return
         self.order_list.append([
             self.last_datetime,
             order.direction.value,
@@ -86,29 +109,28 @@ class CtaTemplatePro(CtaTemplate):
 
     def write_log(self, msg: str):
         super().write_log(msg)
+        if self.instance_name is None:
+            return
         self.output_list.append(msg)
 
     def update_daily_close(self, last_price):
         if self.trading:
             self.daily_close_dict[self.last_datetime.strftime("%Y-%m-%d")] = last_price
 
-    def save_trade_data(self, instance_name):
+    def save_trade_data(self):
         """保存策略实盘数据
         tips: 实盘时调用"""
-        save_path = os.path.join(
-            TEMP_DIR,
-            "trade_data",
-            instance_name + "_" + self.strategy_name + "_" + self.vt_symbol.split(".")[0]
-        )
-        if not os.path.exists(save_path):
-            os.makedirs(save_path)
+        if self.instance_name is None:
+            return
+        if not os.path.exists(self.save_path):
+            os.makedirs(self.save_path)
 
         if len(self.order_list) != 0:
             csv_add_rows(
                 data_list=self.order_list,
                 header=["datetime", "direction", "exchange", "gateway_name", "offset", "orderid", "price",
                         "status", "symbol", "time", "traded", "type", "volume", "vt_orderid", "vt_symbol"],
-                csv_path=os.path.join(save_path, "orders.csv")
+                csv_path=os.path.join(self.save_path, "orders.csv")
             )
             self.order_list = []
 
@@ -117,37 +139,36 @@ class CtaTemplatePro(CtaTemplate):
                 data_list=self.trade_list,
                 header=["datetime", "direction", "exchange", "gateway_name", "offset", "orderid", "price",
                         "symbol", "time", "tradeid", "volume", "vt_orderid", "vt_symbol", "vt_tradeid"],
-                csv_path=os.path.join(save_path, "trades.csv")
+                csv_path=os.path.join(self.save_path, "trades.csv")
             )
             self.trade_list = []
 
         if len(self.output_list) != 0:
-            logger = get_file_logger(os.path.join(save_path, "output.log"))
+            logger = get_file_logger(os.path.join(self.save_path, "output.log"))
             logger.setLevel(logging.INFO)
             for output in self.output_list:
                 logger.info(output)
             self.output_list = []
 
         if len(self.daily_close_dict) != 0:
-            daily_close_file = os.path.join(save_path, "daily_close.json")
+            daily_close_file = os.path.join(self.save_path, "daily_close.json")
             pre_close_dict = load_json(daily_close_file)
             pre_close_dict.update(self.daily_close_dict)
             save_json(daily_close_file, pre_close_dict)
 
-    def calculate_and_chart_daily_results(self, instance_name, capital=10_000):
-        """逐日盯市，并绘制资金曲线图"""
-        save_path = os.path.join(
-            TEMP_DIR,
-            "trade_data",
-            instance_name + "_" + self.strategy_name + "_" + self.vt_symbol.split(".")[0]
-        )
-        if not os.path.exists(save_path):
-            self.write_log(f"{instance_name} 不存在交易数据，无法绘制资金曲线图")
+        self.KLine_chart_dict.update_csv(self.save_path)
+
+    def calculate_and_chart_daily_results(self, capital=10_000):
+        """update daily_results，并绘制资金曲线图"""
+        if self.instance_name is None:
             return
-        daily_results_file = os.path.join(save_path, "daily_results.csv")
-        trades_df = pd.read_csv(os.path.join(save_path, "trades.csv"))
+        if not os.path.exists(self.save_path):
+            self.write_log(f"实例{self.instance_name} 不存在交易数据，无法update daily_results，并绘制资金曲线图")
+            return
+        daily_results_file = os.path.join(self.save_path, "daily_results.csv")
+        trades_df = pd.read_csv(os.path.join(self.save_path, "trades.csv"))
         trades_dict = trades_df.to_dict(orient="records")
-        close_dict = load_json(os.path.join(save_path, "daily_close.json"))
+        close_dict = load_json(os.path.join(self.save_path, "daily_close.json"))
 
         daily_results = {}
         for daily_date, daily_close in close_dict.items():
@@ -186,10 +207,11 @@ class CtaTemplatePro(CtaTemplate):
                     results[key].append(value)
 
             daily_df = DataFrame.from_dict(results).set_index("date")
-            self.calculate_statistics_and_save(daily_df, save_path, capital)
+            statistics = self.calculate_statistics_and_save(daily_df, self.save_path, capital)
             daily_df.to_csv(daily_results_file, encoding="utf_8_sig")
-            draw_daily_results_chart(daily_df=daily_df, save_path=save_path)
-            self.write_log(f"逐日盯市，并绘制资金曲线图成功")
+            draw_daily_results_chart(daily_df=daily_df, save_path=self.save_path)
+            # self.write_log(f"实例{self.instance_name} update daily_results，并绘制资金曲线图成功")
+            return statistics
 
     @staticmethod
     def calculate_statistics_and_save(df, save_path, capital):
@@ -285,3 +307,10 @@ class CtaTemplatePro(CtaTemplate):
 
         save_json(os.path.join(save_path, "statistics.json"), statistics)
         return statistics
+
+    def draw_k_line(self):
+        """绘制K线图"""
+        self.KLine_chart_dict.draw_chart_from_csv(
+            save_path=self.save_path,
+            kline_title=self.instance_name
+        )

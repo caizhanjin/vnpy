@@ -163,9 +163,7 @@ class BacktestingEnginePro(BacktestingEngine):
             return
         self.daily_df.to_csv(os.path.join(self.backtest_log_path, "daily_results.csv"), encoding="utf_8_sig")
 
-    @add_log_path_wrapper
-    def export_trades(self):
-        # 导出trades到csv
+    def get_trades_list(self):
         trades_results = self.get_all_trades()
         trades_results = [
             [
@@ -186,6 +184,12 @@ class BacktestingEnginePro(BacktestingEngine):
             ]
             for i in trades_results
         ]
+        return trades_results
+
+    @add_log_path_wrapper
+    def export_trades(self):
+        # 导出trades到csv
+        trades_results = self.get_trades_list()
         trades_results_df = pd.DataFrame(
             trades_results,
             columns=["datetime", "direction", "exchange", "gateway_name", "offset", "orderid", "price",
@@ -247,9 +251,11 @@ class BacktestingEnginePro(BacktestingEngine):
 
     @add_log_path_wrapper
     def save_k_line_chart(self):
-        if self.strategy.chart_dict is None:
+        if len(self.strategy.KLine_chart_dict.list_dict) == 0:
             return
-        self.strategy.chart_dict.draw_chart(
+        trades_results = self.get_trades_list()
+        self.strategy.KLine_chart_dict.draw_chart_backtest(
             save_path=self.backtest_log_path,
-            kline_title=self.strategy.strategy_name + "_" + self.symbol
+            trade_list=trades_results,
+            kline_title=self.strategy.strategy_name + "_" + self.symbol,
         )

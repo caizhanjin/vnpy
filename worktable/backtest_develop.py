@@ -35,5 +35,5 @@ engine.calculate_result()
 engine.calculate_statistics()
 
 # engine.show_chart()
-engine.export_all()
+# engine.export_all()
 

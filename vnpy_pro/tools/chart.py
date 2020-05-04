@@ -140,27 +140,41 @@ def chart_data_to_df(func):
 
 
 class KLineChart(object):
-    """K线数据可视化"""
+    """K线数据可视化
+    默认扩展为常规bar，直接在策略中更新数据即可：
+        self.chart_dict.update_bar(bar)
+
+    扩展用法：
+        self.chart_dict = KLineChart(extend_field=["MA5", "BBI"])  # 添加extend_field
+        self.chart_dict.update_bar(bar, MA5=self.am.sma(5), BBI=self.am.sma(10))  # 更新bar，出来bar外，还需传入扩展字段的数据
+    """
     def __init__(self, extend_field=None, is_fixed_size=False, fixed_size: int = 200):
         if extend_field is None:
             extend_field = []
-
         self.extend_field = extend_field
-        self.is_fixed_size = is_fixed_size
-        self.df = pd.DataFrame()
 
-        self.trade_list = []
+        self.default_field = ["datetime", "open", "high", "low", "close", "volume"]
+        self.all_field = self.default_field if len(self.extend_field) == 0 else self.default_field + self.extend_field
+
+        self.is_fixed_size = is_fixed_size
+        self.fixed_size = fixed_size
+
+        self.df = pd.DataFrame()
+        self.list_dict = {}
+        self.init_list_dict()
+
+    def init_list_dict(self):
         if self.is_fixed_size:
             self.list_dict = {
-                "datetime": ["" for i in range(fixed_size)],
-                "open": np.zeros(fixed_size),
-                "high": np.zeros(fixed_size),
-                "low": np.zeros(fixed_size),
-                "close": np.zeros(fixed_size),
-                "volume": np.zeros(fixed_size)
+                "datetime": ["" for i in range(self.fixed_size)],
+                "open": np.zeros(self.fixed_size),
+                "high": np.zeros(self.fixed_size),
+                "low": np.zeros(self.fixed_size),
+                "close": np.zeros(self.fixed_size),
+                "volume": np.zeros(self.fixed_size)
             }
-            for field in extend_field:
-                self.list_dict.setdefault(field, np.zeros(fixed_size))
+            for field in self.extend_field:
+                self.list_dict.setdefault(field, np.zeros(self.fixed_size))
         else:
             self.list_dict = {
                 "datetime": [],
@@ -204,56 +218,93 @@ class KLineChart(object):
                 self.list_dict[field].append(kwargs[field])
 
     @chart_data_to_df
-    def save_csv(self, save_path=""):
-        self.df.to_csv(os.path.join(save_path, "KLineChart.csv"), encoding="utf_8_sig")
+    def update_csv(self, save_path):
+        if len(self.list_dict["datetime"]) == 0:
+            return
+        save_file = os.path.join(save_path, "KLineChart.csv")
+
+        if os.path.exists(save_file):
+            old_df = pd.read_csv(save_file)
+            self.df = pd.concat([old_df, self.df])
+
+        self.df.sort_values(by="datetime", inplace=True, ascending=True)
+        self.df.drop_duplicates(subset=["datetime"], keep='last', inplace=True)
+        self.df.to_csv(os.path.join(save_file), index=False, encoding="utf_8_sig")
+        self.df = pd.DataFrame()
+        self.init_list_dict()
 
     def read_csv_to_df(self, path: str):
         self.df = pd.read_csv(path)
 
     @chart_data_to_df
-    def draw_chart(self, save_path="", kline_title="买卖点K线图"):
-        datetime_array = self.df.datetime.tolist()
-        volume_array = self.df.volume.tolist()
-        # open close low high
-        kline_data = self.df[["open", "close", "low", "high"]].values.tolist()
-        point_list = []
+    def draw_chart_backtest(self, save_path="", trade_list=None, kline_title="买卖点K线图"):
+        self.draw_chart(self.df, self.extend_field, save_path, trade_list, kline_title)
 
-        for trade in self.trade_list:
+    def draw_chart_from_csv(self, save_path, kline_title):
+        df = pd.read_csv(os.path.join(save_path, "KLineChart.csv"))
+        trade_list_df = pd.read_csv(os.path.join(save_path, "trades.csv"))
+        trade_list_df.sort_values(by="datetime", inplace=True, ascending=True)
+        trade_list_df.drop_duplicates(keep='last', inplace=True)
+        trade_list = trade_list_df.values.tolist()
+        self.draw_chart(
+            df=df,
+            extend_field=self.extend_field,
+            trade_list=trade_list,
+            save_path=save_path,
+            kline_title=kline_title
+        )
+
+    @staticmethod
+    def draw_chart(df, extend_field, save_path="", trade_list=None, kline_title="买卖点K线图"):
+        df.sort_values(by="datetime", inplace=True, ascending=True)
+        df.drop_duplicates(subset=["datetime"], keep='last', inplace=True)
+
+        point_list = []
+        if trade_list is None:
+            trade_list = []
+        for trade in trade_list:
             # 开多
-            trade_datetime = trade.datetime.strftime("%Y-%m-%d %H:%M:%S")
-            if trade.direction.value == "多" and trade.offset.value == "开":
+            if type(trade[0]) == str:
+                trade_datetime = trade[0]
+            else:
+                trade_datetime = trade[0].strftime("%Y-%m-%d %H:%M:%S")
+
+            if trade[1] == "多" and trade[4] == "开":
                 point_list.append(opts.MarkPointItem(
                     name="开多",
-                    coord=[trade_datetime, trade.price],
+                    coord=[trade_datetime, trade[6]],
                     value="开多",
                     itemstyle_opts=opts.ItemStyleOpts(color="#ef232a")
                 ))
             # 开空
-            elif trade.direction.value == "空" and trade.offset.value == "开":
+            elif trade[1] == "空" and trade[4] == "开":
                 point_list.append(opts.MarkPointItem(
                     name="开空",
-                    coord=[trade_datetime, trade.price],
+                    coord=[trade_datetime, trade[6]],
                     value="开空",
                     itemstyle_opts=opts.ItemStyleOpts(color="#ef232a")
                 ))
             # 平多
-            elif trade.direction.value == "多" and \
-                (trade.offset.value == "平" or trade.offset.value == "平今" or trade.offset.value == "平昨"):
+            elif trade[1] == "多" and (trade[4] == "平" or trade[4] == "平今" or trade[4] == "平昨"):
                 point_list.append(opts.MarkPointItem(
                     name="平空",
-                    coord=[trade_datetime, trade.price],
+                    coord=[trade_datetime, trade[6]],
                     value="平空",
                     itemstyle_opts=opts.ItemStyleOpts(color="#14b143")
                 ))
             # 平空
-            elif trade.direction.value == "空" and \
-                 (trade.offset.value == "平" or trade.offset.value == "平今" or trade.offset.value == "平昨"):
+            elif trade[1] == "空" and (trade[4] == "平" or trade[4] == "平今" or trade[4] == "平昨"):
                 point_list.append(opts.MarkPointItem(
                     name="平多",
-                    coord=[trade_datetime, trade.price],
+                    coord=[trade_datetime, trade[6]],
                     value="平多",
                     itemstyle_opts=opts.ItemStyleOpts(color="#14b143")
                 ))
+
+        datetime_array = df.datetime.tolist()
+        volume_array = df.volume.tolist()
+        # open close low high
+        kline_data = df[["open", "close", "low", "high"]].values.tolist()
 
         kline = (
             Kline()
@@ -360,7 +411,7 @@ class KLineChart(object):
             )
         )
 
-        if len(self.extend_field) > 0:
+        if len(extend_field) > 0:
             line = (
                 Line()
                 .add_xaxis(xaxis_data=datetime_array)
@@ -371,8 +422,8 @@ class KLineChart(object):
                     ),
                 )
             )
-            for field in self.extend_field:
-                field_value_array = self.df[field].tolist()
+            for field in extend_field:
+                field_value_array = df[field].tolist()
                 line.add_yaxis(
                     series_name=field,
                     y_axis=field_value_array,
