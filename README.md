@@ -9,13 +9,15 @@
 ```
 2. [回测]扩展回测功能，可选保存每次回测结果。
 ``` 
-- 保存回测过程数据到csv，包括：daily_results.csv(逐日盯市数据)、trades.csv(成交记录)、orders.csv(委托记录)、output.log(日志)
+- 保存回测过程数据到csv，包括：
+    daily_results.csv(逐日盯市数据)、trades.csv(成交记录)、orders.csv(委托记录)、output.log(日志)
 - 资金曲线图可视化：daily_results.html
 - 绘制K线图，可视化买卖点，支持自定义指标：KLineChart.html
 ```
 3. [策略实盘监控/评估]保存每个策略实例交易数据，并可视化。
 ``` 
-- 实盘数据trade data捕获和保存到csv：daily_results.csv(逐日盯市数据)、trades.csv(成交记录)、orders.csv(委托记录)、output.log(日志)
+- 实盘数据trade data捕获和保存到csv：
+    daily_results.csv(逐日盯市数据)、trades.csv(成交记录)、orders.csv(委托记录)、output.log(日志)
 - 资金曲线图可视化：daily_results.html
 - 绘制K线图，可视化买卖点，支持自定义指标：KLineChart.html
 - 计算策略实例实盘评估指标/参数并保存：statistics.json
