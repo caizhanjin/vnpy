@@ -148,7 +148,7 @@ class KLineChart(object):
         self.chart_dict = KLineChart(extend_field=["MA5", "BBI"])  # 添加extend_field
         self.chart_dict.update_bar(bar, MA5=self.am.sma(5), BBI=self.am.sma(10))  # 更新bar，出来bar外，还需传入扩展字段的数据
     """
-    def __init__(self, extend_field=None, is_fixed_size=False, fixed_size: int = 200):
+    def __init__(self, extend_field=None, is_fixed_size=False, fixed_size: int = 200, max_bars=8000):
         if extend_field is None:
             extend_field = []
         self.extend_field = extend_field
@@ -156,6 +156,7 @@ class KLineChart(object):
         self.default_field = ["datetime", "open", "high", "low", "close", "volume"]
         self.all_field = self.default_field if len(self.extend_field) == 0 else self.default_field + self.extend_field
 
+        self.max_bars = max_bars
         self.is_fixed_size = is_fixed_size
         self.fixed_size = fixed_size
 
@@ -219,6 +220,7 @@ class KLineChart(object):
 
     @chart_data_to_df
     def update_csv(self, save_path):
+        """该方法数据量大时会影响速度，实盘中不用，实盘采用增量添加(不去重)"""
         if len(self.list_dict["datetime"]) == 0:
             return
         save_file = os.path.join(save_path, "KLineChart.csv")
@@ -233,18 +235,27 @@ class KLineChart(object):
         self.df = pd.DataFrame()
         self.init_list_dict()
 
-    def read_csv_to_df(self, path: str):
-        self.df = pd.read_csv(path)
-
     @chart_data_to_df
     def draw_chart_backtest(self, save_path="", trade_list=None, kline_title="买卖点K线图"):
+        # K线图最大bars限制，过大会无展示
+        if self.df.shape[0] > self.max_bars:
+            self.df = self.df[-self.max_bars:]
         self.draw_chart(self.df, self.extend_field, save_path, trade_list, kline_title)
 
     def draw_chart_from_csv(self, save_path, kline_title):
-        df = pd.read_csv(os.path.join(save_path, "KLineChart.csv"))
+        save_file = os.path.join(save_path, "KLineChart.csv")
+        if not os.path.exists(save_file):
+            return
+        df = pd.read_csv(save_file)
+        df.sort_values(by="datetime", inplace=True, ascending=True)
+        df.drop_duplicates(subset=["datetime"], keep='last', inplace=True)
+        # K线图最大bars限制，过大会无展示
+        if df.shape[0] > self.max_bars:
+            df = df[-self.max_bars:]
         trade_list_df = pd.read_csv(os.path.join(save_path, "trades.csv"))
-        trade_list_df.sort_values(by="datetime", inplace=True, ascending=True)
-        trade_list_df.drop_duplicates(keep='last', inplace=True)
+        # trades实盘不用考虑重复问题
+        # trade_list_df.sort_values(by="datetime", inplace=True, ascending=True)
+        # trade_list_df.drop_duplicates(keep='last', inplace=True)
         trade_list = trade_list_df.values.tolist()
         self.draw_chart(
             df=df,
@@ -256,8 +267,10 @@ class KLineChart(object):
 
     @staticmethod
     def draw_chart(df, extend_field, save_path="", trade_list=None, kline_title="买卖点K线图"):
-        df.sort_values(by="datetime", inplace=True, ascending=True)
-        df.drop_duplicates(subset=["datetime"], keep='last', inplace=True)
+        datetime_array = df.datetime.tolist()
+        volume_array = df.volume.tolist()
+        # open close low high
+        kline_data = df[["open", "close", "low", "high"]].values.tolist()
 
         point_list = []
         if trade_list is None:
@@ -268,6 +281,9 @@ class KLineChart(object):
                 trade_datetime = trade[0]
             else:
                 trade_datetime = trade[0].strftime("%Y-%m-%d %H:%M:%S")
+
+            if trade_datetime < datetime_array[0]:
+                continue
 
             if trade[1] == "多" and trade[4] == "开":
                 point_list.append(opts.MarkPointItem(
@@ -300,11 +316,6 @@ class KLineChart(object):
                     value="平多",
                     itemstyle_opts=opts.ItemStyleOpts(color="#14b143")
                 ))
-
-        datetime_array = df.datetime.tolist()
-        volume_array = df.volume.tolist()
-        # open close low high
-        kline_data = df[["open", "close", "low", "high"]].values.tolist()
 
         kline = (
             Kline()

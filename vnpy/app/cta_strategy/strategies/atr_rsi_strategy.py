@@ -8,9 +8,11 @@ from vnpy.app.cta_strategy import (
     BarGenerator,
     ArrayManager,
 )
+from vnpy_pro.app.cta_strategy.template import CtaTemplatePro
+from vnpy_pro.tools.chart import KLineChart
 
 
-class AtrRsiStrategy(CtaTemplate):
+class AtrRsiStrategy(CtaTemplatePro):
     """"""
 
     author = "用Python的交易员"
@@ -54,6 +56,8 @@ class AtrRsiStrategy(CtaTemplate):
         self.bg = BarGenerator(self.on_bar)
         self.am = ArrayManager()
 
+        self.chart_dict = KLineChart(extend_field=["MA5", "BBI"])
+
     def on_init(self):
         """
         Callback when strategy is inited.
@@ -63,7 +67,7 @@ class AtrRsiStrategy(CtaTemplate):
         self.rsi_buy = 50 + self.rsi_entry
         self.rsi_sell = 50 - self.rsi_entry
 
-        self.load_bar(10)
+        self.load_bar(50)
 
     def on_start(self):
         """
@@ -78,18 +82,15 @@ class AtrRsiStrategy(CtaTemplate):
         self.write_log("策略停止")
 
     def on_tick(self, tick: TickData):
-        """
-        Callback of new tick data update.
-        """
+        super().on_tick(tick)
         self.bg.update_tick(tick)
 
     def on_bar(self, bar: BarData):
-        """
-        Callback of new bar data update.
-        """
+        super().on_bar(bar)
         self.cancel_all()
 
         am = self.am
+
         am.update_bar(bar)
         if not am.inited:
             return
@@ -98,6 +99,8 @@ class AtrRsiStrategy(CtaTemplate):
         self.atr_value = atr_array[-1]
         self.atr_ma = atr_array[-self.atr_ma_length:].mean()
         self.rsi_value = am.rsi(self.rsi_length)
+
+        self.chart_dict.update_bar(bar, MA5=self.am.sma(5), BBI=self.am.sma(10))
 
         if self.pos == 0:
             self.intra_trade_high = bar.high_price
@@ -125,18 +128,18 @@ class AtrRsiStrategy(CtaTemplate):
                 (1 + self.trailing_percent / 100)
             self.cover(short_stop, abs(self.pos), stop=True)
 
+        if len(self.trade_list) > 10:
+            self.save_trade_data("TEST")
+            self.calculate_and_chart_daily_results("TEST")
+
         self.put_event()
 
     def on_order(self, order: OrderData):
-        """
-        Callback of new order data update.
-        """
-        pass
+        super().on_order(order)
 
     def on_trade(self, trade: TradeData):
-        """
-        Callback of new trade data update.
-        """
+        super().on_trade(trade)
+        self.chart_dict.trade_list.append(trade)
         self.put_event()
 
     def on_stop_order(self, stop_order: StopOrder):

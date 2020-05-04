@@ -18,7 +18,7 @@ engine = BacktestingEnginePro()
 engine.set_parameters(
     vt_symbol="RB99.SHFE",
     interval=Interval.MINUTE,
-    start=datetime(2020, 1, 1),
+    start=datetime(2019, 1, 1),
     end=datetime(2020, 4, 30),
     rate=0.3/10000,
     slippage=0,
@@ -35,5 +35,5 @@ engine.calculate_result()
 engine.calculate_statistics()
 
 # engine.show_chart()
-# engine.export_all()
+engine.export_all()
 

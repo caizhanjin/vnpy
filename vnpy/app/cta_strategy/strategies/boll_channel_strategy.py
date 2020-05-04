@@ -8,9 +8,10 @@ from vnpy.app.cta_strategy import (
     BarGenerator,
     ArrayManager,
 )
+from vnpy_pro.app.cta_strategy.template import CtaTemplatePro
 
 
-class BollChannelStrategy(CtaTemplate):
+class BollChannelStrategy(CtaTemplatePro):
     """"""
 
     author = "用Python的交易员"

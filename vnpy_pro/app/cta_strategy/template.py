@@ -34,7 +34,7 @@ class CtaTemplatePro(CtaTemplate):
     ):
         super().__init__(cta_engine, strategy_name, vt_symbol, setting)
         # 回测不保存数据
-        strategy_name = "TEST1"
+        # strategy_name = "TEST1"
         if strategy_name == self.__class__.__name__:
             self.instance_name = None
         else:
@@ -156,7 +156,21 @@ class CtaTemplatePro(CtaTemplate):
             pre_close_dict.update(self.daily_close_dict)
             save_json(daily_close_file, pre_close_dict)
 
-        self.KLine_chart_dict.update_csv(self.save_path)
+        list_dict = self.KLine_chart_dict.list_dict
+        if len(list_dict) != 0:
+            KLine_list = []
+            for i in range(len(list_dict["datetime"])):
+                row = []
+                for field in self.KLine_chart_dict.all_field:
+                    row.append(list_dict[field][i])
+                KLine_list.append(row)
+            csv_add_rows(
+                data_list=KLine_list,
+                header=self.KLine_chart_dict.all_field,
+                csv_path=os.path.join(self.save_path, "KLineChart.csv")
+            )
+            # self.draw_k_line()
+            # self.calculate_and_chart_daily_results()
 
     def calculate_and_chart_daily_results(self, capital=10_000):
         """update daily_results，并绘制资金曲线图"""
