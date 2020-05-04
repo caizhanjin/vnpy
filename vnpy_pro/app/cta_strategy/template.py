@@ -11,11 +11,13 @@ import numpy as np
 
 from vnpy.app.cta_strategy import CtaTemplate
 from vnpy.trader.object import BarData, TickData, TradeData, OrderData
-from vnpy.trader.utility import get_folder_path, TEMP_DIR, get_file_logger, load_json, save_json
+from vnpy.trader.utility import get_folder_path, TEMP_DIR, get_file_logger, load_json, save_json, BarGenerator, \
+    ArrayManager
 
 from vnpy_pro.tools.widget import csv_add_rows
 from vnpy_pro.data.tdx.tdx_common import get_future_contracts
 from vnpy_pro.app.cta_strategy.backtesting import DailyResultPro
+from vnpy_pro.tools.chart import draw_daily_results_chart
 
 
 class CtaTemplatePro(CtaTemplate):
@@ -28,6 +30,8 @@ class CtaTemplatePro(CtaTemplate):
         setting: dict,
     ):
         super().__init__(cta_engine, strategy_name, vt_symbol, setting)
+        # self.bg = BarGenerator(self.on_bar)
+        # self.am = ArrayManager()
 
         self.order_list = []
         self.trade_list = []
@@ -85,7 +89,8 @@ class CtaTemplatePro(CtaTemplate):
         self.output_list.append(msg)
 
     def update_daily_close(self, last_price):
-        self.daily_close_dict[self.last_datetime.strftime("%Y-%m-%d")] = last_price
+        if self.trading:
+            self.daily_close_dict[self.last_datetime.strftime("%Y-%m-%d")] = last_price
 
     def save_trade_data(self, instance_name):
         """保存策略实盘数据
@@ -129,14 +134,16 @@ class CtaTemplatePro(CtaTemplate):
             pre_close_dict.update(self.daily_close_dict)
             save_json(daily_close_file, pre_close_dict)
 
-        self.update_daily_results(instance_name)
-
-    def update_daily_results(self, instance_name, capital=10_000):
+    def calculate_and_chart_daily_results(self, instance_name, capital=10_000):
+        """逐日盯市，并绘制资金曲线图"""
         save_path = os.path.join(
             TEMP_DIR,
             "trade_data",
             instance_name + "_" + self.strategy_name + "_" + self.vt_symbol.split(".")[0]
         )
+        if not os.path.exists(save_path):
+            self.write_log(f"{instance_name} 不存在交易数据，无法绘制资金曲线图")
+            return
         daily_results_file = os.path.join(save_path, "daily_results.csv")
         trades_df = pd.read_csv(os.path.join(save_path, "trades.csv"))
         trades_dict = trades_df.to_dict(orient="records")
@@ -181,6 +188,8 @@ class CtaTemplatePro(CtaTemplate):
             daily_df = DataFrame.from_dict(results).set_index("date")
             self.calculate_statistics_and_save(daily_df, save_path, capital)
             daily_df.to_csv(daily_results_file, encoding="utf_8_sig")
+            draw_daily_results_chart(daily_df=daily_df, save_path=save_path)
+            self.write_log(f"逐日盯市，并绘制资金曲线图成功")
 
     @staticmethod
     def calculate_statistics_and_save(df, save_path, capital):
@@ -269,7 +278,6 @@ class CtaTemplatePro(CtaTemplate):
         }
 
         for key, value in statistics.items():
-            print(type(value))
             if type(value) is int or type(value) is np.int64:
                 statistics[key] = float(value)
             elif type(value) is np.float64:

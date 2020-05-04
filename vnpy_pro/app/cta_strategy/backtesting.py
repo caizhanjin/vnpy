@@ -13,6 +13,8 @@ from vnpy.trader.constant import (Direction, Offset, Exchange,
 from vnpy.app.cta_strategy.base import BacktestingMode
 from vnpy.trader.utility import get_file_logger
 
+from vnpy_pro.tools.chart import draw_daily_results_chart
+
 
 class DailyResultPro(DailyResult):
     def __init__(self, date: date, close_price: float):
@@ -241,125 +243,7 @@ class BacktestingEnginePro(BacktestingEngine):
     def save_daily_chart(self):
         if self.daily_df is None:
             return
-
-        date_list = self.daily_df.index.values.tolist()
-        balance_list = self.daily_df.balance.values.tolist()
-        draw_down_list = self.daily_df.drawdown.values.tolist()
-        net_pnl_list = self.daily_df.net_pnl.values.tolist()
-
-        line1 = (
-            Line()
-            .add_xaxis(xaxis_data=date_list)
-            .add_yaxis(
-                series_name="Balance",
-                y_axis=balance_list,
-                label_opts=opts.LabelOpts(is_show=False),
-                linestyle_opts=opts.LineStyleOpts(width=2),
-            )
-            .set_global_opts(
-                title_opts=opts.TitleOpts(title="回测资金曲线", pos_left="center"),
-                tooltip_opts=opts.TooltipOpts(
-                    trigger="axis",
-                    axis_pointer_type="cross",
-                    background_color="rgba(245, 245, 245, 0.8)",
-                    border_width=1,
-                    border_color="#ccc",
-                    textstyle_opts=opts.TextStyleOpts(color="#000"),
-                ),
-                xaxis_opts=opts.AxisOpts(
-                    type_="category",
-                    boundary_gap=False,
-                    axisline_opts=opts.AxisLineOpts(is_on_zero=True),
-                ),
-                legend_opts=opts.LegendOpts(pos_left="1%"),
-                yaxis_opts=opts.AxisOpts(
-                    type_="value",
-                    is_scale=True,
-                    splitline_opts=opts.SplitLineOpts(is_show=True),
-                ),
-                axispointer_opts=opts.AxisPointerOpts(
-                    is_show=True,
-                    link=[{"xAxisIndex": "all"}],
-                    label=opts.LabelOpts(background_color="#777"),
-                ),
-                datazoom_opts=[
-                    opts.DataZoomOpts(range_start=0, range_end=100),
-                    opts.DataZoomOpts(type_="inside", range_start=0, range_end=100, xaxis_index=[0, 1, 2]),
-                ],
-            )
-        )
-
-        line2 = (
-            Line()
-            .set_global_opts(
-                tooltip_opts=opts.TooltipOpts(trigger="axis", axis_pointer_type="cross"),
-                xaxis_opts=opts.AxisOpts(
-                    type_="category",
-                    boundary_gap=False,
-                    axisline_opts=opts.AxisLineOpts(is_on_zero=True),
-                    position="top",
-                    axislabel_opts=opts.LabelOpts(is_show=False),
-                ),
-                legend_opts=opts.LegendOpts(pos_left="9%"),
-                yaxis_opts=opts.AxisOpts(
-                    type_="value",
-                    is_scale=True,
-                    splitline_opts=opts.SplitLineOpts(is_show=True),
-                ),
-                axispointer_opts=opts.AxisPointerOpts(
-                    is_show=True,
-                    link=[{"xAxisIndex": "all"}],
-                    label=opts.LabelOpts(background_color="#777"),
-                ),
-            )
-            .add_xaxis(xaxis_data=date_list)
-            .add_yaxis(
-                series_name="Draw Down",
-                y_axis=draw_down_list,
-                label_opts=opts.LabelOpts(is_show=False),
-                areastyle_opts=opts.AreaStyleOpts(opacity=0.5),
-            )
-        )
-
-        bar3 = (
-            Bar()
-            .set_global_opts(
-                tooltip_opts=opts.TooltipOpts(trigger="axis", axis_pointer_type="cross"),
-                xaxis_opts=opts.AxisOpts(
-                    type_="category",
-                    boundary_gap=False,
-                    axisline_opts=opts.AxisLineOpts(is_on_zero=True),
-                    axislabel_opts=opts.LabelOpts(is_show=False),
-                ),
-                legend_opts=opts.LegendOpts(pos_left="19%"),
-                yaxis_opts=opts.AxisOpts(
-                    type_="value",
-                    is_scale=True,
-                    splitline_opts=opts.SplitLineOpts(is_show=True),
-                ),
-                axispointer_opts=opts.AxisPointerOpts(
-                    is_show=True,
-                    link=[{"xAxisIndex": "all"}],
-                    label=opts.LabelOpts(background_color="#777"),
-                ),
-            )
-            .add_xaxis(xaxis_data=date_list)
-            .add_yaxis(series_name="Daily Pnl", yaxis_data=net_pnl_list, label_opts=opts.LabelOpts(is_show=False))
-        )
-
-        (
-            Grid(init_opts=opts.InitOpts(width="100%", height="720px"))
-            .add(chart=line1, grid_opts=opts.GridOpts(pos_left=50, pos_right=50, height="35%"))
-            .add(
-                chart=line2,
-                grid_opts=opts.GridOpts(pos_left=50, pos_right=50, pos_top="48%", height="20%"),
-            )
-            .add(
-                chart=bar3,
-                grid_opts=opts.GridOpts(pos_left=50, pos_right=50, pos_top="71%", height="20%"),
-            )
-            .render(os.path.join(self.backtest_log_path, "daily_results.html"))
-        )
+        draw_daily_results_chart(self.daily_df, self.backtest_log_path)
 
     @add_log_path_wrapper
     def save_k_line_chart(self):

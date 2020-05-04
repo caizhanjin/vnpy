@@ -6,6 +6,128 @@ import os
 from functools import wraps
 
 
+def draw_daily_results_chart(daily_df, save_path):
+    """绘制资金曲线图"""
+    date_list = daily_df.index.values.tolist()
+    balance_list = daily_df.balance.values.tolist()
+    draw_down_list = daily_df.drawdown.values.tolist()
+    net_pnl_list = daily_df.net_pnl.values.tolist()
+
+    line1 = (
+        Line()
+        .add_xaxis(xaxis_data=date_list)
+        .add_yaxis(
+            series_name="Balance",
+            y_axis=balance_list,
+            label_opts=opts.LabelOpts(is_show=False),
+            linestyle_opts=opts.LineStyleOpts(width=2),
+        )
+        .set_global_opts(
+            title_opts=opts.TitleOpts(title="回测资金曲线", pos_left="center"),
+            tooltip_opts=opts.TooltipOpts(
+                trigger="axis",
+                axis_pointer_type="cross",
+                background_color="rgba(245, 245, 245, 0.8)",
+                border_width=1,
+                border_color="#ccc",
+                textstyle_opts=opts.TextStyleOpts(color="#000"),
+            ),
+            xaxis_opts=opts.AxisOpts(
+                type_="category",
+                boundary_gap=False,
+                axisline_opts=opts.AxisLineOpts(is_on_zero=True),
+            ),
+            legend_opts=opts.LegendOpts(pos_left="1%"),
+            yaxis_opts=opts.AxisOpts(
+                type_="value",
+                is_scale=True,
+                splitline_opts=opts.SplitLineOpts(is_show=True),
+            ),
+            axispointer_opts=opts.AxisPointerOpts(
+                is_show=True,
+                link=[{"xAxisIndex": "all"}],
+                label=opts.LabelOpts(background_color="#777"),
+            ),
+            datazoom_opts=[
+                opts.DataZoomOpts(range_start=0, range_end=100),
+                opts.DataZoomOpts(type_="inside", range_start=0, range_end=100, xaxis_index=[0, 1, 2]),
+            ],
+        )
+    )
+
+    line2 = (
+        Line()
+        .set_global_opts(
+            tooltip_opts=opts.TooltipOpts(trigger="axis", axis_pointer_type="cross"),
+            xaxis_opts=opts.AxisOpts(
+                type_="category",
+                boundary_gap=False,
+                axisline_opts=opts.AxisLineOpts(is_on_zero=True),
+                position="top",
+                axislabel_opts=opts.LabelOpts(is_show=False),
+            ),
+            legend_opts=opts.LegendOpts(pos_left="9%"),
+            yaxis_opts=opts.AxisOpts(
+                type_="value",
+                is_scale=True,
+                splitline_opts=opts.SplitLineOpts(is_show=True),
+            ),
+            axispointer_opts=opts.AxisPointerOpts(
+                is_show=True,
+                link=[{"xAxisIndex": "all"}],
+                label=opts.LabelOpts(background_color="#777"),
+            ),
+        )
+        .add_xaxis(xaxis_data=date_list)
+        .add_yaxis(
+            series_name="Draw Down",
+            y_axis=draw_down_list,
+            label_opts=opts.LabelOpts(is_show=False),
+            areastyle_opts=opts.AreaStyleOpts(opacity=0.5),
+        )
+    )
+
+    bar3 = (
+        Bar()
+        .set_global_opts(
+            tooltip_opts=opts.TooltipOpts(trigger="axis", axis_pointer_type="cross"),
+            xaxis_opts=opts.AxisOpts(
+                type_="category",
+                boundary_gap=False,
+                axisline_opts=opts.AxisLineOpts(is_on_zero=True),
+                axislabel_opts=opts.LabelOpts(is_show=False),
+            ),
+            legend_opts=opts.LegendOpts(pos_left="19%"),
+            yaxis_opts=opts.AxisOpts(
+                type_="value",
+                is_scale=True,
+                splitline_opts=opts.SplitLineOpts(is_show=True),
+            ),
+            axispointer_opts=opts.AxisPointerOpts(
+                is_show=True,
+                link=[{"xAxisIndex": "all"}],
+                label=opts.LabelOpts(background_color="#777"),
+            ),
+        )
+        .add_xaxis(xaxis_data=date_list)
+        .add_yaxis(series_name="Daily Pnl", yaxis_data=net_pnl_list, label_opts=opts.LabelOpts(is_show=False))
+    )
+
+    (
+        Grid(init_opts=opts.InitOpts(width="100%", height="720px"))
+        .add(chart=line1, grid_opts=opts.GridOpts(pos_left=50, pos_right=50, height="35%"))
+        .add(
+            chart=line2,
+            grid_opts=opts.GridOpts(pos_left=50, pos_right=50, pos_top="48%", height="20%"),
+        )
+        .add(
+            chart=bar3,
+            grid_opts=opts.GridOpts(pos_left=50, pos_right=50, pos_top="71%", height="20%"),
+        )
+        .render(os.path.join(save_path, "daily_results.html"))
+    )
+
+
 def chart_data_to_df(func):
     """获取df"""
     @wraps(func)
@@ -118,18 +240,18 @@ class KLineChart(object):
             elif trade.direction.value == "多" and \
                 (trade.offset.value == "平" or trade.offset.value == "平今" or trade.offset.value == "平昨"):
                 point_list.append(opts.MarkPointItem(
-                    name="平多",
+                    name="平空",
                     coord=[trade_datetime, trade.price],
-                    value="平多",
+                    value="平空",
                     itemstyle_opts=opts.ItemStyleOpts(color="#14b143")
                 ))
             # 平空
             elif trade.direction.value == "空" and \
                  (trade.offset.value == "平" or trade.offset.value == "平今" or trade.offset.value == "平昨"):
                 point_list.append(opts.MarkPointItem(
-                    name="平空",
+                    name="平多",
                     coord=[trade_datetime, trade.price],
-                    value="平空",
+                    value="平多",
                     itemstyle_opts=opts.ItemStyleOpts(color="#14b143")
                 ))
 
