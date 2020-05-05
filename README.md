@@ -1,5 +1,5 @@
 # By Traders, For Traders.
-### 基于官方vnpy扩展功能如下（保持兼容官方最新版）：
+### 基于官方vnpy扩展功能如下（保持兼容官方最新版）
 1. [数据源] 增加tdx免费数据源，引用自大佳老师改进版vnpy。[>>传送](https://github.com/msincenselee/vnpy)
 ``` 
 期货模块已兼容到vnpy ui，和官方数据源rqdata使用效果一样。
@@ -29,7 +29,7 @@
 ```
 5. [运维] no ui脚本自动化运维。
 
-### 后续计划：
+### 后续计划
 ``` 
 - K线图绘制存在一个bug：当交易不在k线上时怎么办
 - 组合回测？
@@ -40,12 +40,15 @@
 - 异步录制交易合约行情数据，并清洗
 - 盘中重启使用录制数据初始化，防止数据源数据更新不及时
 - 数据存储改为mongodb
+- web服务端使用tornado？
 - web可视化展示回测、实盘策略详情
 - 实时监控：web实时资金曲线、K线图；
 - web端管理策略 ？？？能否实现
 ```
-
-### 部分图片展示：
-
 ### 联系方式
 caizhanjin WeChat/phone：18813937194
+
+### 部分图片展示
+![K线图](./vnpy_pro/docs/barchat.png)
+
+![资金曲线图](./vnpy_pro/docs/capital.png)
