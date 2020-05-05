@@ -1,10 +1,8 @@
 # flake8: noqa
 import os
 import sys
-# 1 添加项目路径到sys，作为根目录运行
-ROOT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+ROOT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 sys.path.append(ROOT_PATH)
-# 2 兼容多账号，当前文件夹创建 .vntrader
 if not os.path.exists(".vntrader"):
     os.mkdir(".vntrader")
 
