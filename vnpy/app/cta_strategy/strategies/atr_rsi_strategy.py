@@ -56,7 +56,7 @@ class AtrRsiStrategy(CtaTemplatePro):
         self.bg = BarGenerator(self.on_bar)
         self.am = ArrayManager()
 
-        self.chart_dict = KLineChart(extend_field=["MA5", "BBI"])
+        self.KLine_chart_dict = KLineChart(extend_field=["MA5", "BBI"])
 
     def on_init(self):
         """
@@ -100,7 +100,8 @@ class AtrRsiStrategy(CtaTemplatePro):
         self.atr_ma = atr_array[-self.atr_ma_length:].mean()
         self.rsi_value = am.rsi(self.rsi_length)
 
-        self.chart_dict.update_bar(bar, MA5=self.am.sma(5), BBI=self.am.sma(10))
+        if self.trading:
+            self.KLine_chart_dict.update_bar(bar, MA5=self.am.sma(5), BBI=self.am.sma(10))
 
         if self.pos == 0:
             self.intra_trade_high = bar.high_price
@@ -128,9 +129,10 @@ class AtrRsiStrategy(CtaTemplatePro):
                 (1 + self.trailing_percent / 100)
             self.cover(short_stop, abs(self.pos), stop=True)
 
-        if len(self.trade_list) > 10:
-            self.save_trade_data("TEST")
-            self.calculate_and_chart_daily_results("TEST")
+        if len(self.trade_list) > 500:
+            self.save_trade_data()
+            # self.calculate_and_chart_daily_results()
+            # self.chart_dict.draw_chart(save_path=)
 
         self.put_event()
 
@@ -139,7 +141,6 @@ class AtrRsiStrategy(CtaTemplatePro):
 
     def on_trade(self, trade: TradeData):
         super().on_trade(trade)
-        self.chart_dict.trade_list.append(trade)
         self.put_event()
 
     def on_stop_order(self, stop_order: StopOrder):

@@ -51,28 +51,49 @@ def run_child():
     main_engine.connect(ctp_setting, "CTP")
     main_engine.write_log("连接CTP接口")
 
-    # sleep(10)
-    sleep(5)
+    # sleep(20)
+    sleep(5)  # 开发用
 
     cta_engine.init_engine()
     main_engine.write_log("CTA策略初始化完成")
 
     cta_engine.init_all_strategies()
-    sleep(5)
+    sleep(5)  # 开发用
     # sleep(60)   # Leave enough time to complete strategy initialization
     main_engine.write_log("CTA策略全部初始化")
 
     cta_engine.start_all_strategies()
     main_engine.write_log("CTA策略全部启动")
 
-    # cta_engine.send_report_email("账号1初始化早报")
+    # cta_engine.send_run_report_email("账号1监控报表")  # 完成启动后，发送监控报表
 
-    # cta_engine.save_all_trade_data()
-    # main_engine.write_log("CTA策略实例交易数据保存成功")
-    # cta_engine.update_all_daily_results()
-    # main_engine.write_log("CTA策略实例资金曲线绘制成功")
-
+    close_time1 = time(15, 32)
+    close_time2 = time(15, 35)
+    close_time3 = time(15, 36)
+    lock1 = False
+    lock2 = False
+    lock3 = False
     while True:
+        current_time = datetime.now().time()
+        # 实例交易数据保存；资金曲线&策略评估指标更新
+        if current_time == close_time1 and not lock1:
+            cta_engine.save_all_trade_data()
+            main_engine.write_log("实例交易数据保存成功")
+            cta_engine.update_all_daily_results()
+            main_engine.write_log("实例资金曲线&策略评估指标更新成功")
+            lock1 = True
+
+        # 发送实例评估报表
+        if current_time == close_time2 and not lock2:
+            cta_engine.send_evaluate_report_email("账号1实例评估报表")
+            lock2 = True
+
+        # 发送实例评估报表
+        if current_time == close_time3 and not lock3:
+            cta_engine.update_all_k_line()
+            main_engine.write_log("CTA更新K线图完毕")
+            lock3 = True
+
         sleep(1)
 
 
@@ -80,7 +101,7 @@ def run_parent():
     default_logger.info("[主进程]启动CTA策略守护父进程")
 
     DAY_START = time(8, 45)
-    DAY_END = time(15, 30)
+    DAY_END = time(15, 40)
 
     NIGHT_START = time(20, 45)
     NIGHT_END = time(2, 45)

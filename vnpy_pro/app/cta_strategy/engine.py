@@ -41,7 +41,7 @@ class CtaEnginePro(CtaEngine):
                 param_body += f"<td>{param_value}</td>"
             for variate_name, variate_value in self.strategy_data[key].items():
                 variate_header += f"<th>{variate_name}</th>"
-                variate_body += f"<td>{range(variate_value, 2)}</td>"
+                variate_body += f"<td>{'%.2f' % variate_value}</td>"
             strategy_content += f"""
             <div style="margin-top: 10px;">
                 {strategy_title}:
@@ -202,8 +202,19 @@ class CtaEnginePro(CtaEngine):
             try:
                 self.save_trade_data(strategy_name)
             except Exception as error:
-                self.write_log(f"{strategy_name}策略交易数据保存失败，error：{error}")
+                self.write_log(f"{strategy_name}策略daily_results保存失败，error：{error}")
 
     def update_daily_results(self, strategy_name):
         strategy = self.strategies[strategy_name]
         strategy.calculate_and_chart_daily_results()
+
+    def update_all_k_line(self):
+        for strategy_name in self.strategies.keys():
+            try:
+                self.update_k_line(strategy_name)
+            except Exception as error:
+                self.write_log(f"{strategy_name}策略K线图绘制失败，error：{error}")
+
+    def update_k_line(self, strategy_name):
+        strategy = self.strategies[strategy_name]
+        strategy.draw_k_line()

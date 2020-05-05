@@ -157,7 +157,7 @@ class CtaTemplatePro(CtaTemplate):
             save_json(daily_close_file, pre_close_dict)
 
         list_dict = self.KLine_chart_dict.list_dict
-        if len(list_dict) != 0:
+        if len(list_dict["datetime"]) != 0:
             KLine_list = []
             for i in range(len(list_dict["datetime"])):
                 row = []
