@@ -24,3 +24,5 @@ pyzmq
 wmi
 QScintilla
 openpyxl
+pytdx
+pyecharts
