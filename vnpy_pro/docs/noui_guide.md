@@ -18,6 +18,7 @@ conda create -n vnpy python=3.7
 source activate vnpy  # 进入vnpy环境
 ```
 3、上传项目代码，推荐使用pycharm的远程功能
+
 4、安装依赖包
 ``` 
 sudo apt-get update
@@ -30,17 +31,28 @@ apt search postgresql-server-dev
 sudo apt-get install postgresql-server-dev
 sudo apt-get install postgresql
 
+# 安装talib
+conda install -chttps://conda.anaconda.org/quantopian ta-lib
+
 # 如果requirements.txt存在wmi，需先删除，该包是在win底下使用的
-# 然后在项目根目录下编译安装vnpy和依赖包。包括talib
+# 然后在项目根目录下编译安装vnpy和依赖包。
+# 如果失败，多跑几次
 pip install .
 
 # 编译结束后，前往删除多转移的包即可
+# 如果遇到字体编码问题，跑下面命令：
+locale-gen zh_CN.GB18030
 
+# 后面就是缺啥安装啥
 ```
 5、系统后台运行
 ``` 
 # run_noui.py为提前写好的运维脚本，脚本控制台数据内容会输出到当前目录下nohup.out
 nohup python run_noui.py & 
+# 查看进程
+ps -aux | grep "run_noui.py"
+# 杀死进程
+kill [进程号]
 ```
 
 -----------------------

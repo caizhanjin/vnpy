@@ -65,7 +65,7 @@ def run_child():
     cta_engine.start_all_strategies()
     main_engine.write_log("CTA策略全部启动")
 
-    # cta_engine.send_run_report_email("账号1监控报表")  # 完成启动后，发送监控报表
+    cta_engine.send_run_report_email("账号1监控报表")  # 完成启动后，发送监控报表
 
     close_time1 = time(15, 32)
     close_time2 = time(15, 35)

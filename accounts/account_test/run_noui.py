@@ -62,16 +62,23 @@ def run_child():
 
     cta_engine.send_run_report_email("账号1监控报表")  # 完成启动后，发送监控报表
 
-    close_time1 = time(15, 32)
-    close_time2 = time(15, 35)
-    close_time3 = time(15, 36)
+    day_close_time1 = time(15, 32)
+    day_close_time2 = time(15, 35)
+    day_close_time3 = time(15, 36)
+    day_close_time4 = time(15, 40)
+
+    night_close_time1 = time(2, 40)
+    night_close_time2 = time(2, 45)
+
     lock1 = False
     lock2 = False
     lock3 = False
     while True:
-        current_time = datetime.now().time()
+        current_time1 = datetime.now().time()
         # 实例交易数据保存；资金曲线&策略评估指标更新
-        if current_time == close_time1 and not lock1:
+        if ((day_close_time1 <= current_time1 <= day_close_time4) or
+            (night_close_time1 <= current_time1 <= night_close_time2)) \
+                and not lock1:
             cta_engine.save_all_trade_data()
             main_engine.write_log("实例交易数据保存成功")
             cta_engine.update_all_daily_results()
@@ -79,12 +86,12 @@ def run_child():
             lock1 = True
 
         # 发送实例评估报表
-        if current_time == close_time2 and not lock2:
+        if (day_close_time2 <= current_time1 <= day_close_time4) and not lock2:
             cta_engine.send_evaluate_report_email("账号1实例评估报表")
             lock2 = True
 
-        # 发送实例评估报表
-        if current_time == close_time3 and not lock3:
+        # 更新K线图完毕
+        if (day_close_time3 <= current_time1 <= day_close_time4) and not lock3:
             cta_engine.update_all_k_line()
             main_engine.write_log("CTA更新K线图完毕")
             lock3 = True

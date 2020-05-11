@@ -14,6 +14,34 @@ class CtaEnginePro(CtaEngine):
 
     def send_run_report_email(self, subject="监控报表"):
         """策略运行/监控报表"""
+        accounts = self.main_engine.get_all_accounts()
+        positions = self.main_engine.get_all_positions()
+
+        if len(accounts) != 0:
+            account = accounts[0]
+            account_html = f"""
+            <td>{account.accountid}</td>
+            <td>{account.balance}</td>
+            <td>{account.available}</td>
+            """
+        else:
+            account_html = f"""
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            """
+        positions_html = ""
+        if len(positions) != 0:
+            for item in positions:
+                positions_html += f"""
+                <tr>
+                  <td>{item.symbol}</td>
+                  <td>{item.direction.value}</td>
+                  <td>{item.volume}</td>
+                  <td>{item.price}</td>
+                  <td>{item.pnl}</td>
+                </tr>
+                """
         subject = subject + datetime.now().strftime("%Y-%m-%d %H:%M")
 
         log_content = ""
@@ -61,14 +89,12 @@ class CtaEnginePro(CtaEngine):
             <strong>账号详情：</strong>
             <table border="1px">
                 <tr>
+                  <th>账号</th>
                   <th>余额</th>
-                  <th>冻结</th>
                   <th>可用</th>
                 </tr>
                 <tr>
-                  <td>100000</td>
-                  <td>100000</td>
-                  <td>100000</td>
+                  {account_html}
                 </tr>
             </table>
             <table border="1px">
@@ -76,20 +102,10 @@ class CtaEnginePro(CtaEngine):
                   <th>合约</th>
                   <th>方向</th>
                   <th>数量</th>
+                  <th>价格</th>
                   <th>盈亏</th>
                 </tr>
-                <tr>
-                  <td>100000</td>
-                  <td>100000</td>
-                  <td>100000</td>
-                  <td>100000</td>
-                </tr>
-                <tr>
-                  <td>100000</td>
-                  <td>100000</td>
-                  <td>100000</td>
-                  <td>100000</td>
-                </tr>
+                {positions_html}
             </table>
         </div>
         <br>
