@@ -216,7 +216,7 @@ class CtaEnginePro(CtaEngine):
     def update_all_daily_results(self):
         for strategy_name in self.strategies.keys():
             try:
-                self.save_trade_data(strategy_name)
+                self.update_daily_results(strategy_name)
             except Exception as error:
                 self.write_log(f"{strategy_name}策略daily_results保存失败，error：{error}")
 

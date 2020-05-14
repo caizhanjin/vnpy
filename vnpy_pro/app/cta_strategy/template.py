@@ -180,9 +180,12 @@ class CtaTemplatePro(CtaTemplate):
             self.write_log(f"实例{self.instance_name} 不存在交易数据，无法update daily_results，并绘制资金曲线图")
             return
         daily_results_file = os.path.join(self.save_path, "daily_results.csv")
-        trades_df = pd.read_csv(os.path.join(self.save_path, "trades.csv"))
-        trades_dict = trades_df.to_dict(orient="records")
         close_dict = load_json(os.path.join(self.save_path, "daily_close.json"))
+        trades_file = os.path.join(self.save_path, "trades.csv")
+        trades_dict = {}
+        if os.path.exists(trades_file):
+            trades_df = pd.read_csv()
+            trades_dict = trades_df.to_dict(orient="records")
 
         daily_results = {}
         for daily_date, daily_close in close_dict.items():

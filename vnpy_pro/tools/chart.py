@@ -252,11 +252,14 @@ class KLineChart(object):
         # K线图最大bars限制，过大会无展示
         if df.shape[0] > self.max_bars:
             df = df[-self.max_bars:]
-        trade_list_df = pd.read_csv(os.path.join(save_path, "trades.csv"))
-        # trades实盘不用考虑重复问题
-        # trade_list_df.sort_values(by="datetime", inplace=True, ascending=True)
-        # trade_list_df.drop_duplicates(keep='last', inplace=True)
-        trade_list = trade_list_df.values.tolist()
+        trade_list = []
+        trades_file = os.path.join(save_path, "trades.csv")
+        if os.path.exists(trades_file):
+            trade_list_df = pd.read_csv(trades_file)
+            # trades实盘不用考虑重复问题
+            # trade_list_df.sort_values(by="datetime", inplace=True, ascending=True)
+            # trade_list_df.drop_duplicates(keep='last', inplace=True)
+            trade_list = trade_list_df.values.tolist()
         self.draw_chart(
             df=df,
             extend_field=self.extend_field,
