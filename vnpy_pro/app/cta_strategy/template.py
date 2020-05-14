@@ -182,10 +182,10 @@ class CtaTemplatePro(CtaTemplate):
         daily_results_file = os.path.join(self.save_path, "daily_results.csv")
         close_dict = load_json(os.path.join(self.save_path, "daily_close.json"))
         trades_file = os.path.join(self.save_path, "trades.csv")
-        trades_dict = {}
-        if os.path.exists(trades_file):
-            trades_df = pd.read_csv()
-            trades_dict = trades_df.to_dict(orient="records")
+        if not os.path.exists(trades_file):
+            return
+        trades_df = pd.read_csv(trades_file)
+        trades_dict = trades_df.to_dict(orient="records")
 
         daily_results = {}
         for daily_date, daily_close in close_dict.items():
