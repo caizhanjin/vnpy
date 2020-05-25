@@ -57,6 +57,8 @@ class CtaEnginePro(CtaEngine):
 
         strategy_content = ""
         for key, value in self.strategy_setting.items():
+            if key not in self.strategy_data.keys():
+                continue
             strategy_title = key + "_" + value["class_name"] + "_" + value["vt_symbol"].split(".")[0]
             param_header = ""
             param_body = ""

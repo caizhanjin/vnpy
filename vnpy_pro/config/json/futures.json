@@ -11,7 +11,7 @@
     "name": "沥青",
     "exchange_name": "上期所",
     "exchange_code": "SHFE",
-    "margin_rate": 1.0,
+    "margin_rate": 0.1,
     "symbol_size": 10,
     "price_tick": 1.0
   },
