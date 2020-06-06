@@ -1,5 +1,6 @@
 import os
 import sys
+
 ROOT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 sys.path.append(ROOT_PATH)
 if not os.path.exists(".vntrader"):
@@ -20,7 +21,6 @@ from vnpy.app.cta_strategy.base import EVENT_CTA_LOG
 
 from vnpy_pro.app.cta_strategy import CtaStrategyAppPro
 from vnpy_pro.tools.widget import get_logger
-
 
 SETTINGS["log.active"] = True
 SETTINGS["log.level"] = INFO
@@ -54,7 +54,7 @@ def run_child():
     main_engine.write_log("CTA策略初始化完成")
 
     cta_engine.init_all_strategies()
-    sleep(60)   # Leave enough time to complete strategy initialization
+    sleep(60)  # Leave enough time to complete strategy initialization
     main_engine.write_log("CTA策略全部初始化")
 
     cta_engine.start_all_strategies()
@@ -112,12 +112,14 @@ def run_parent():
 
     while True:
         current_time = datetime.now().time()
+        week_day = datetime.now().weekday() + 1
         trading = False
 
         if (
-            (DAY_START <= current_time <= DAY_END)
-            or (current_time >= NIGHT_START)
-            or (current_time <= NIGHT_END)
+            ((DAY_START <= current_time <= DAY_END)
+             or (current_time >= NIGHT_START)
+             or (current_time <= NIGHT_END))
+            and week_day < 6
         ):
             trading = True
         # trading = True
