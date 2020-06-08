@@ -23,6 +23,24 @@ class ArrayManagerPro(ArrayManager):
     def __init__(self, size: int = 100):
         super().__init__(size)
 
+    def update_last_bar(self, bar):
+        high_price = self.high_array[-1]
+        low_price = self.low_array[-1]
+        volume = self.volume_array[-1]
+
+        self.high_array[-1] = max(high_price, bar.high_price)
+        self.low_array[-1] = min(low_price, bar.low_price)
+        self.close_array[-1] = bar.close_price
+        self.volume_array[-1] = volume + bar.volume
+
+    def kama(self, n, array=False):
+        """考夫曼的自适应移动平均线"""
+        result = talib.KAMA(self.close, n)
+
+        if array:
+            return result
+        return result
+
     def sar(self, array=False):
         result = talib.SAR(self.high, self.low)
         if array:

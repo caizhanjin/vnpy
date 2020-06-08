@@ -10,11 +10,11 @@ from worktable.strategies_storage.num3_single_trend.try_strategy import TryStrat
 from worktable.strategies.try_strategy import TryStrategy
 
 FUTURES = load_futures()
-futures = ["RB", "BU", "SR"]
+futures = ["RB", "BU", "MA", "RU"]
 interval = Interval.MINUTE
-start = datetime(2018, 1, 1)
+start = datetime(2017, 1, 1)
 end = datetime(2020, 11, 1)
-capital = 50_000
+capital = 100_000
 
 
 def run_backtesting(strategy_class, setting,

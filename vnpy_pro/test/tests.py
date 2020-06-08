@@ -21,17 +21,11 @@ def calculate_std(numpy_array, window_len, ddof=0):
 
 
 def main():
-    test = [3.0, 4.0, 6.0, 7.0, 39.0, 11.0, 3.0, 4.0, 6.0, 7.0, 3.09, 1.01]
-    test = np.array(test)
-    test1 = talib.STDDEV(test, 5)
-
-    std_list = calculate_std(test, 5)
-    std_list2 = calculate_std(test, 5, 1)
-
-    print(test1[-5:])
-    print(std_list[-5:])
-    print(std_list2[-5:])
-
+    test1 = np.array([9, 2, 4])
+    test2 = np.array([3, 4, 1])
+    test3 = test1 - test2
+    test4 = np.abs(test3)
+    test5 = sum(test4)
     pass
 
 
