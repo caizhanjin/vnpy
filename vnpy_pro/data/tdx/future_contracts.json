@@ -55,8 +55,8 @@
     },
     "BB": {
         "underlying_symbol": "BB",
-        "mi_symbol": "bb2103",
-        "full_symbol": "BB2103",
+        "mi_symbol": "bb2106",
+        "full_symbol": "BB2106",
         "exchange": "DCE",
         "margin_rate": 0.2,
         "symbol_size": 500,
@@ -334,8 +334,8 @@
     },
     "PM": {
         "underlying_symbol": "PM",
-        "mi_symbol": "PM103",
-        "full_symbol": "PM2103",
+        "mi_symbol": "PM105",
+        "full_symbol": "PM2105",
         "exchange": "CZCE",
         "margin_rate": 0.05,
         "symbol_size": 50,

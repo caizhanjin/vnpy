@@ -5,18 +5,19 @@ from vnpy.app.cta_strategy.backtesting import OptimizationSetting
 from vnpy.trader.constant import Interval
 from vnpy_pro.app.cta_strategy.backtesting import BacktestingEnginePro
 from vnpy_pro.config import load_futures
+from vnpy_pro.data.tdx.tdx_common import get_future_contracts
 
 from worktable.strategies.try_strategy import TryStrategy
 from worktable.strategies.grid_strategy import GridStrategy
-from worktable.strategies.KFM_ma_strategy import KFMMaStrategy
+# from worktable.strategies.KFM_ma_strategy import KFMMaStrategy
+from worktable.strategies.KFM_ma_strategy_v2 import KFMMaStrategy
 
+
+test_future = "AG"
 
 FUTURES = load_futures()
-
-test_future = "RU"
-
-vt_symbol = test_future.upper() + "99." + FUTURES[test_future]["exchange_code"]
-# FUTURES[test_future]["symbol_size"] * FUTURES[test_future]["margin_rate"]
+future_contracts = get_future_contracts()
+vt_symbol = test_future.upper() + "99." + future_contracts[test_future]["exchange"]
 print(vt_symbol)
 
 engine = BacktestingEnginePro()
@@ -25,10 +26,10 @@ engine.set_parameters(
     interval=Interval.MINUTE,
     start=datetime(2018, 1, 1),
     end=datetime(2020, 11, 1),
-    rate=0.1 / 100,
-    slippage=1,
-    size=10,
-    pricetick=FUTURES[test_future]["price_tick"],
+    rate=0.1 / 1000,
+    slippage=0,
+    size=future_contracts[test_future]["symbol_size"],
+    pricetick=future_contracts[test_future]["price_tick"],
     capital=50_000,
     log_path=os.path.dirname(__file__)
 )

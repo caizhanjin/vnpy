@@ -6,11 +6,14 @@ from vnpy_pro.app.cta_strategy.backtesting import BacktestingEnginePro
 from vnpy_pro.config import load_futures
 
 # from vnpy.app.cta_strategy.strategies.atr_rsi_strategy import AtrRsiStrategy
+from vnpy_pro.data.tdx.tdx_common import get_future_contracts
 from worktable.strategies_storage.num3_single_trend.try_strategy import TryStrategy
 from worktable.strategies.try_strategy import TryStrategy
 
-FUTURES = load_futures()
+# 组合回测合约填入这里
 futures = ["RB", "BU", "MA", "RU"]
+FUTURES = load_futures()
+future_contracts = get_future_contracts()
 interval = Interval.MINUTE
 start = datetime(2017, 1, 1)
 end = datetime(2020, 11, 1)
@@ -42,11 +45,11 @@ def run_backtesting(strategy_class, setting,
 
 df_p = None
 for future in futures:
-    vt_symbol = future.upper() + "99." + FUTURES[future]["exchange_code"]
+    vt_symbol = future.upper() + "99." + future_contracts[future]["exchange"]
     rate = 0.23 / 1000
     slippage = 0
-    size = 10
-    pricetick = FUTURES[future]["price_tick"]
+    size = future_contracts[future]["symbol_size"]
+    pricetick = future_contracts[future]["price_tick"]
 
     df_item = run_backtesting(
         strategy_class=TryStrategy,
