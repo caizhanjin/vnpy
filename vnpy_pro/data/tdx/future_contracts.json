@@ -190,8 +190,8 @@
     },
     "IC": {
         "underlying_symbol": "IC",
-        "mi_symbol": "IC2009",
-        "full_symbol": "IC2009",
+        "mi_symbol": "IC2012",
+        "full_symbol": "IC2012",
         "exchange": "CFFEX",
         "margin_rate": 0.1,
         "symbol_size": 200,
@@ -199,8 +199,8 @@
     },
     "IF": {
         "underlying_symbol": "IF",
-        "mi_symbol": "IF2009",
-        "full_symbol": "IF2009",
+        "mi_symbol": "IF2012",
+        "full_symbol": "IF2012",
         "exchange": "CFFEX",
         "margin_rate": 0.1,
         "symbol_size": 300,
@@ -208,8 +208,8 @@
     },
     "IH": {
         "underlying_symbol": "IH",
-        "mi_symbol": "IH2009",
-        "full_symbol": "IH2009",
+        "mi_symbol": "IH2012",
+        "full_symbol": "IH2012",
         "exchange": "CFFEX",
         "margin_rate": 0.1,
         "symbol_size": 300,
@@ -244,8 +244,8 @@
     },
     "JR": {
         "underlying_symbol": "JR",
-        "mi_symbol": "JR103",
-        "full_symbol": "JR2103",
+        "mi_symbol": "JR105",
+        "full_symbol": "JR2105",
         "exchange": "CZCE",
         "margin_rate": 0.05,
         "symbol_size": 20,
@@ -361,8 +361,8 @@
     },
     "RI": {
         "underlying_symbol": "RI",
-        "mi_symbol": "RI103",
-        "full_symbol": "RI2103",
+        "mi_symbol": "RI105",
+        "full_symbol": "RI2105",
         "exchange": "CZCE",
         "margin_rate": 0.05,
         "symbol_size": 20,
@@ -478,8 +478,8 @@
     },
     "T": {
         "underlying_symbol": "T",
-        "mi_symbol": "T2012",
-        "full_symbol": "T2012",
+        "mi_symbol": "T2103",
+        "full_symbol": "T2103",
         "exchange": "CFFEX",
         "margin_rate": 0.02,
         "symbol_size": 10000,
@@ -496,8 +496,8 @@
     },
     "TF": {
         "underlying_symbol": "TF",
-        "mi_symbol": "TF2012",
-        "full_symbol": "TF2012",
+        "mi_symbol": "TF2103",
+        "full_symbol": "TF2103",
         "exchange": "CFFEX",
         "margin_rate": 0.012,
         "symbol_size": 10000,
@@ -505,8 +505,8 @@
     },
     "TS": {
         "underlying_symbol": "TS",
-        "mi_symbol": "TS2012",
-        "full_symbol": "TS2012",
+        "mi_symbol": "TS2103",
+        "full_symbol": "TS2103",
         "exchange": "CFFEX",
         "margin_rate": 0.005,
         "symbol_size": 20000,
@@ -532,8 +532,8 @@
     },
     "WH": {
         "underlying_symbol": "WH",
-        "mi_symbol": "WH103",
-        "full_symbol": "WH2103",
+        "mi_symbol": "WH105",
+        "full_symbol": "WH2105",
         "exchange": "CZCE",
         "margin_rate": 0.05,
         "symbol_size": 20,
@@ -598,5 +598,11 @@
         "mi_symbol": "pg2103",
         "full_symbol": "PG2103",
         "exchange": "DCE"
+    },
+    "LU": {
+        "underlying_symbol": "LU",
+        "mi_symbol": "lu2101",
+        "full_symbol": "LU2101",
+        "exchange": "SHFE"
     }
 }

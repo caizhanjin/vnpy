@@ -7,7 +7,7 @@
 #    - 5min修改后freq基本正确
 #    - 1day在VNPY合成时不关心已经收到多少Bar, 所以影响也不大
 #    - 但其它分钟周期因为不好精确到每个品种, 修改后的freq可能有错
-
+import re
 import sys
 import os
 import pickle
@@ -252,6 +252,21 @@ class TdxFutureData(object):
         end_dt: 取数据的结束时间
         return_bar: 返回 第二个数据内容，True:BarData, False:dict
         """
+        # JinAdd: 兼容时区类型datetime
+        if start_dt.tzinfo is not None:
+            start_dt = start_dt.replace(tzinfo=None)
+        if end_dt.tzinfo is not None:
+            end_dt = end_dt.replace(tzinfo=None)
+
+        # JinAdd: 交易合约兼容tdx
+        pr_str = ''.join(re.findall(r'[A-Za-z]', symbol))
+        num_str = re.sub("\D", "", symbol)
+        if pr_str.isupper() and num_str[:1] == "0":
+            num_month = num_str[1:]
+            if num_month > "08":
+                symbol = pr_str + "20" + num_month
+            else:
+                symbol = pr_str + "21" + num_month
 
         ret_bars = []
         if '.' in symbol:
@@ -461,7 +476,7 @@ class TdxFutureData(object):
         count = 100
         results = []
         while (True):
-            print(u'查询{}下：{}~{}个合约'.format(exchange, index, index + count))
+            # print(u'查询{}下：{}~{}个合约'.format(exchange, index, index + count))
             result = self.api.get_instrument_quote_list(int(market_id), 3, index, count)
             results.extend(result)
             index += count
@@ -767,8 +782,8 @@ class TdxFutureData(object):
             mi_symbol = get_real_symbol_by_exchange(full_symbol, vn_exchange)
 
             # 更新登记 短合约：真实主力合约
-            self.write_log(
-                '{},{},{},{},{}'.format(tdx_market_id, full_symbol, underlying_symbol, mi_symbol, vn_exchange))
+            # self.write_log(
+            #     '{},{},{},{},{}'.format(tdx_market_id, full_symbol, underlying_symbol, mi_symbol, vn_exchange))
             if underlying_symbol in self.future_contracts:
                 info = self.future_contracts.get(underlying_symbol)
                 if mi_symbol > info.get('mi_symbol'):

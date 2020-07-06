@@ -9,8 +9,8 @@ from vnpy_pro.data.tdx.tdx_common import get_future_contracts
 
 from worktable.strategies.try_strategy import TryStrategy
 from worktable.strategies.grid_strategy import GridStrategy
-# from worktable.strategies.KFM_ma_strategy import KFMMaStrategy
-from worktable.strategies.KFM_ma_strategy_v2 import KFMMaStrategy
+from worktable.strategies.KFM_ma_strategy import KFMMaStrategy
+# from worktable.strategies.KFM_ma_strategy_v2 import KFMMaStrategy
 
 
 test_future = "AG"
@@ -24,13 +24,13 @@ engine = BacktestingEnginePro()
 engine.set_parameters(
     vt_symbol=vt_symbol,
     interval=Interval.MINUTE,
-    start=datetime(2018, 1, 1),
+    start=datetime(2016, 1, 1),
     end=datetime(2020, 11, 1),
     rate=0.1 / 1000,
     slippage=0,
     size=future_contracts[test_future]["symbol_size"],
     pricetick=future_contracts[test_future]["price_tick"],
-    capital=50_000,
+    capital=300_000,
     log_path=os.path.dirname(__file__)
 )
 engine.add_strategy(KFMMaStrategy, {})
@@ -41,7 +41,7 @@ engine.calculate_result()
 engine.calculate_statistics()
 
 # 保存结果
-# engine.show_chart()
+engine.show_chart()
 engine.export_all()
 
 

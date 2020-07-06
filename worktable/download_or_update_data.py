@@ -1,4 +1,5 @@
 from datetime import datetime
+from tzlocal import get_localzone
 
 from vnpy.trader.object import HistoryRequest
 from vnpy.trader.database import database_manager
@@ -10,6 +11,8 @@ from vnpy_pro.data.tdx.tdx_common import get_future_contracts
 # 下载合约
 futures = ["AG", "AP", "AU", "BU", "CF", "CU", "JD",
            "MA", "NI", "OI", "P", "RB", "RU", "SR", "TA"]
+# futures = ["AG", "AP", "AU", "BU", "CF", "CU", "JD",
+#            "MA", "NI", "OI", "P", "RB", "RU", "SR", "TA"]
 
 future_contracts = get_future_contracts()
 if tdxdata_client.init():

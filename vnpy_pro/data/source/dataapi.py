@@ -10,9 +10,10 @@ class SourceDataApi(ABC):
     """
 
     @abstractmethod
-    def init(self, username="", password=""):
+    def init(self, username="", password="", is_update_contracts=False):
         """
         初始化行情数据接口
+        :param is_update_contracts:
         :param username: 用户名
         :param password: 密码
         :return:

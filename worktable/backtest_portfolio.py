@@ -9,13 +9,14 @@ from vnpy_pro.config import load_futures
 from vnpy_pro.data.tdx.tdx_common import get_future_contracts
 from worktable.strategies_storage.num3_single_trend.try_strategy import TryStrategy
 from worktable.strategies.try_strategy import TryStrategy
+from worktable.strategies.KFM_ma_strategy import KFMMaStrategy
 
 # 组合回测合约填入这里
-futures = ["RB", "BU", "MA", "RU"]
+futures = ["RB", "BU", "MA", "RU", "AG"]
 FUTURES = load_futures()
 future_contracts = get_future_contracts()
 interval = Interval.MINUTE
-start = datetime(2017, 1, 1)
+start = datetime(2010, 1, 1)
 end = datetime(2020, 11, 1)
 capital = 100_000
 
@@ -52,7 +53,7 @@ for future in futures:
     pricetick = future_contracts[future]["price_tick"]
 
     df_item = run_backtesting(
-        strategy_class=TryStrategy,
+        strategy_class=KFMMaStrategy,
         setting={},
         vt_symbol1=vt_symbol,
         interval1=interval,

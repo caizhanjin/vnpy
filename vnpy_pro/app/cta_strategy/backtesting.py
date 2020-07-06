@@ -175,7 +175,7 @@ class BacktestingEnginePro(BacktestingEngine):
                 i.orderid,
                 i.price,
                 i.symbol,
-                i.time,
+                # i.time,
                 i.tradeid,
                 i.volume,
                 i.vt_orderid,
@@ -193,7 +193,7 @@ class BacktestingEnginePro(BacktestingEngine):
         trades_results_df = pd.DataFrame(
             trades_results,
             columns=["datetime", "direction", "exchange", "gateway_name", "offset", "orderid", "price",
-                     "symbol", "time", "tradeid", "volume", "vt_orderid", "vt_symbol", "vt_tradeid"]
+                     "symbol", "tradeid", "volume", "vt_orderid", "vt_symbol", "vt_tradeid"]
         ).set_index("datetime")
 
         trades_results_df.to_csv(os.path.join(self.backtest_log_path, "trades.csv"), encoding="utf_8_sig")
@@ -213,7 +213,7 @@ class BacktestingEnginePro(BacktestingEngine):
                 i.price,
                 i.status.value,
                 i.symbol,
-                i.time,
+                # i.time,
                 i.traded,
                 i.type.value,
                 i.volume,
@@ -225,7 +225,7 @@ class BacktestingEnginePro(BacktestingEngine):
         trades_orders_df = pd.DataFrame(
             trades_orders,
             columns=["datetime", "direction", "exchange", "gateway_name", "offset", "orderid", "price",
-                     "status", "symbol", "time", "traded", "type", "volume", "vt_orderid", "vt_symbol"]
+                     "status", "symbol", "traded", "type", "volume", "vt_orderid", "vt_symbol"]
         ).set_index("datetime")
 
         trades_orders_df.to_csv(os.path.join(self.backtest_log_path, "orders.csv"), encoding="utf_8_sig")

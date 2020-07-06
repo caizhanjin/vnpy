@@ -1,6 +1,5 @@
 import os
 import sys
-
 ROOT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 sys.path.append(ROOT_PATH)
 if not os.path.exists(".vntrader"):
@@ -21,6 +20,7 @@ from vnpy.app.cta_strategy.base import EVENT_CTA_LOG
 
 from vnpy_pro.app.cta_strategy import CtaStrategyAppPro
 from vnpy_pro.tools.widget import get_logger
+
 
 SETTINGS["log.active"] = True
 SETTINGS["log.level"] = INFO
@@ -48,19 +48,29 @@ def run_child():
 
     main_engine.connect(ctp_setting, "CTP")
     main_engine.write_log("连接CTP接口")
-    sleep(20)
+    sleep(5)
 
     cta_engine.init_engine()
     main_engine.write_log("CTA策略初始化完成")
 
     cta_engine.init_all_strategies()
-    sleep(360)  # Leave enough time to complete strategy initialization
+    sleep(10)   # Leave enough time to complete strategy initialization
     main_engine.write_log("CTA策略全部初始化")
 
     cta_engine.start_all_strategies()
     main_engine.write_log("CTA策略全部启动")
 
     cta_engine.send_run_report_email("账号1监控报表")  # 完成启动后，发送监控报表
+
+    cta_engine.save_all_trade_data()
+    main_engine.write_log("实例交易数据保存成功")
+    cta_engine.update_all_daily_results()
+    main_engine.write_log("实例资金曲线&策略评估指标更新成功")
+
+    # cta_engine.send_evaluate_report_email("账号1实例评估报表")
+
+    cta_engine.update_all_k_line()
+    main_engine.write_log("CTA更新K线图完毕")
 
     day_close_time1 = time(15, 32)
     day_close_time2 = time(15, 35)
@@ -112,17 +122,15 @@ def run_parent():
 
     while True:
         current_time = datetime.now().time()
-        week_day = datetime.now().weekday() + 1
         trading = False
 
         if (
-            ((DAY_START <= current_time <= DAY_END)
-             or (current_time >= NIGHT_START)
-             or (current_time <= NIGHT_END))
-            and week_day < 6
+            (DAY_START <= current_time <= DAY_END)
+            or (current_time >= NIGHT_START)
+            or (current_time <= NIGHT_END)
         ):
             trading = True
-        # trading = True
+        trading = True
 
         if trading and child_process is None:
             default_logger.info("[主进程]启动子进程")

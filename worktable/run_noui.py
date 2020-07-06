@@ -1,9 +1,8 @@
 import os
 import sys
-# 1 添加项目路径到sys，作为根目录运行
+
 ROOT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 sys.path.append(ROOT_PATH)
-# 2 兼容多账号，当前文件夹创建 .vntrader
 if not os.path.exists(".vntrader"):
     os.mkdir(".vntrader")
 
@@ -18,7 +17,6 @@ from vnpy.trader.setting import SETTINGS
 from vnpy.trader.engine import MainEngine
 
 from vnpy.gateway.ctp import CtpGateway
-from vnpy.app.cta_strategy import CtaStrategyApp
 from vnpy.app.cta_strategy.base import EVENT_CTA_LOG
 
 from vnpy_pro.app.cta_strategy import CtaStrategyAppPro
@@ -50,16 +48,13 @@ def run_child():
 
     main_engine.connect(ctp_setting, "CTP")
     main_engine.write_log("连接CTP接口")
-
-    # sleep(20)
-    sleep(5)  # 开发用
+    sleep(20)
 
     cta_engine.init_engine()
     main_engine.write_log("CTA策略初始化完成")
 
     cta_engine.init_all_strategies()
-    sleep(5)  # 开发用
-    # sleep(60)   # Leave enough time to complete strategy initialization
+    sleep(60)  # Leave enough time to complete strategy initialization
     main_engine.write_log("CTA策略全部初始化")
 
     cta_engine.start_all_strategies()
@@ -67,16 +62,23 @@ def run_child():
 
     cta_engine.send_run_report_email("账号1监控报表")  # 完成启动后，发送监控报表
 
-    close_time1 = time(15, 32)
-    close_time2 = time(15, 35)
-    close_time3 = time(15, 36)
+    day_close_time1 = time(15, 32)
+    day_close_time2 = time(15, 35)
+    day_close_time3 = time(15, 36)
+    day_close_time4 = time(15, 40)
+
+    night_close_time1 = time(2, 40)
+    night_close_time2 = time(2, 45)
+
     lock1 = False
     lock2 = False
     lock3 = False
     while True:
-        current_time = datetime.now().time()
+        current_time1 = datetime.now().time()
         # 实例交易数据保存；资金曲线&策略评估指标更新
-        if current_time == close_time1 and not lock1:
+        if ((day_close_time1 <= current_time1 <= day_close_time4) or
+            (night_close_time1 <= current_time1 <= night_close_time2)) \
+                and not lock1:
             cta_engine.save_all_trade_data()
             main_engine.write_log("实例交易数据保存成功")
             cta_engine.update_all_daily_results()
@@ -84,12 +86,12 @@ def run_child():
             lock1 = True
 
         # 发送实例评估报表
-        if current_time == close_time2 and not lock2:
+        if (day_close_time2 <= current_time1 <= day_close_time4) and not lock2:
             cta_engine.send_evaluate_report_email("账号1实例评估报表")
             lock2 = True
 
-        # 发送实例评估报表
-        if current_time == close_time3 and not lock3:
+        # 更新K线图完毕
+        if (day_close_time3 <= current_time1 <= day_close_time4) and not lock3:
             cta_engine.update_all_k_line()
             main_engine.write_log("CTA更新K线图完毕")
             lock3 = True
@@ -110,15 +112,17 @@ def run_parent():
 
     while True:
         current_time = datetime.now().time()
+        week_day = datetime.now().weekday() + 1
         trading = False
 
         if (
-            (DAY_START <= current_time <= DAY_END)
-            or (current_time >= NIGHT_START)
-            or (current_time <= NIGHT_END)
+            ((DAY_START <= current_time <= DAY_END)
+             or (current_time >= NIGHT_START)
+             or (current_time <= NIGHT_END))
+            and week_day < 6
         ):
             trading = True
-        trading = True
+        # trading = True
 
         if trading and child_process is None:
             default_logger.info("[主进程]启动子进程")

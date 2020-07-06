@@ -26,10 +26,18 @@ class TdxdataClient(SourceDataApi):
     def __init__(self):
         self.tdx_api = TdxFutureData()
 
-    def init(self, username="", password=""):
+    def init(self, username="", password="", is_update_contracts=False):
+        """
+        is_update_contracts: 需不需要更新contracts
+        """
         if self.tdx_api.connection_status:
-            return True
-        return self.tdx_api.connect()
+            result = True
+        else:
+            result = self.tdx_api.connect()
+
+        if is_update_contracts:
+            self.tdx_api.update_mi_contracts()
+        return result
 
     def query_history(self, req: HistoryRequest):
         symbol = req.symbol
