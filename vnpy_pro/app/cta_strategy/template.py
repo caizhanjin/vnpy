@@ -129,7 +129,7 @@ class CtaTemplatePro(CtaTemplate):
             csv_add_rows(
                 data_list=self.order_list,
                 header=["datetime", "direction", "exchange", "gateway_name", "offset", "orderid", "price",
-                        "status", "symbol", "time", "traded", "type", "volume", "vt_orderid", "vt_symbol"],
+                        "status", "symbol", "traded", "type", "volume", "vt_orderid", "vt_symbol"],
                 csv_path=os.path.join(self.save_path, "orders.csv")
             )
             self.order_list = []
@@ -138,7 +138,7 @@ class CtaTemplatePro(CtaTemplate):
             csv_add_rows(
                 data_list=self.trade_list,
                 header=["datetime", "direction", "exchange", "gateway_name", "offset", "orderid", "price",
-                        "symbol", "time", "tradeid", "volume", "vt_orderid", "vt_symbol", "vt_tradeid"],
+                        "symbol", "tradeid", "volume", "vt_orderid", "vt_symbol", "vt_tradeid"],
                 csv_path=os.path.join(self.save_path, "trades.csv")
             )
             self.trade_list = []

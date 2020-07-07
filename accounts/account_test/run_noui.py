@@ -62,10 +62,10 @@ def run_child():
 
     cta_engine.send_run_report_email("账号1监控报表")  # 完成启动后，发送监控报表
 
-    day_close_time1 = time(15, 32)
-    day_close_time2 = time(15, 35)
-    day_close_time3 = time(15, 36)
-    day_close_time4 = time(15, 40)
+    day_close_time1 = time(15, 2)
+    day_close_time2 = time(15, 5)
+    day_close_time3 = time(15, 6)
+    day_close_time4 = time(15, 10)
 
     night_close_time1 = time(2, 40)
     night_close_time2 = time(2, 45)
@@ -102,10 +102,10 @@ def run_child():
 def run_parent():
     default_logger.info("[主进程]启动CTA策略守护父进程")
 
-    DAY_START = time(8, 45)
-    DAY_END = time(15, 40)
+    DAY_START = time(8, 50)
+    DAY_END = time(15, 20)
 
-    NIGHT_START = time(20, 45)
+    NIGHT_START = time(20, 50)
     NIGHT_END = time(2, 45)
 
     child_process = None

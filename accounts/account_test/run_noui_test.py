@@ -52,13 +52,13 @@ def run_child():
 
     cta_engine.init_engine()
     main_engine.write_log("CTA策略初始化完成")
-    #
-    # cta_engine.init_all_strategies()
-    # sleep(10)   # Leave enough time to complete strategy initialization
-    # main_engine.write_log("CTA策略全部初始化")
-    #
-    # cta_engine.start_all_strategies()
-    # main_engine.write_log("CTA策略全部启动")
+
+    cta_engine.init_all_strategies()
+    sleep(120)   # Leave enough time to complete strategy initialization
+    main_engine.write_log("CTA策略全部初始化")
+
+    cta_engine.start_all_strategies()
+    main_engine.write_log("CTA策略全部启动")
 
     # cta_engine.send_run_report_email("账号1监控报表")  # 完成启动后，发送监控报表
 
