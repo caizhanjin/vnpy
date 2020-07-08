@@ -17,13 +17,17 @@ from vnpy.trader.utility import (
 )
 
 from vnpy_pro.tools.widget import csv_add_rows
-from vnpy_pro.data.tdx.tdx_common import get_future_contracts
+from vnpy_pro.data.tdx.tdx_common import get_future_contracts, get_cache_json
 from vnpy_pro.app.cta_strategy.backtesting import DailyResultPro
 from vnpy_pro.tools.chart import draw_daily_results_chart
 from vnpy_pro.tools.chart import KLineChart
 
 
 class CtaTemplatePro(CtaTemplate):
+
+    fixed_size = 1
+    trade_amount = 0
+    lever = 0
 
     def __init__(
         self,
@@ -51,7 +55,17 @@ class CtaTemplatePro(CtaTemplate):
         self.last_datetime = None
         self.KLine_chart_dict = KLineChart()
 
+        # 固定资金计算交易手数
+        if self.trade_amount:
+            future_contracts = get_cache_json('future_contracts.json')
+            contracts = future_contracts[''.join(re.findall(r'[A-Za-z]', vt_symbol[:3].upper()))]
+            self.lever = contracts["margin_rate"] * contracts["symbol_size"]
+
     def on_bar(self, bar: BarData):
+        # 固定资金计算交易手数
+        if self.lever:
+            self.fixed_size = self.trade_amount // (bar.close_price * self.lever)
+
         self.last_datetime = bar.datetime
         if self.instance_name is None:
             return
