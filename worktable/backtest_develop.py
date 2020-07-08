@@ -24,7 +24,7 @@ engine = BacktestingEnginePro()
 engine.set_parameters(
     vt_symbol=vt_symbol,
     interval=Interval.MINUTE,
-    start=datetime(2020, 1, 1),
+    start=datetime(2019, 1, 1),
     end=datetime(2020, 11, 1),
     rate=0.1 / 1000,
     slippage=0,
