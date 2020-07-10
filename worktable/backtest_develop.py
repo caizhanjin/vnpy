@@ -41,7 +41,7 @@ engine.calculate_result()
 engine.calculate_statistics()
 
 # 保存结果
-engine.show_chart()
+# engine.show_chart()
 engine.export_all()
 
 
