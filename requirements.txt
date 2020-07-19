@@ -21,7 +21,6 @@ ta-lib
 ibapi
 deap
 pyzmq
-wmi
 QScintilla
 openpyxl
 pytdx

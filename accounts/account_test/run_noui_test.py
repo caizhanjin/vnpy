@@ -46,9 +46,9 @@ def run_child():
     event_engine.register(EVENT_CTA_LOG, log_engine.process_log_event)
     main_engine.write_log("注册日志事件监听")
 
-    main_engine.connect(ctp_setting, "CTP")
-    main_engine.write_log("连接CTP接口")
-    sleep(5)
+    # main_engine.connect(ctp_setting, "CTP")
+    # main_engine.write_log("连接CTP接口")
+    # sleep(5)
 
     cta_engine.init_engine()
     main_engine.write_log("CTA策略初始化完成")

@@ -55,8 +55,8 @@
     },
     "BB": {
         "underlying_symbol": "BB",
-        "mi_symbol": "bb2106",
-        "full_symbol": "BB2106",
+        "mi_symbol": "bb2107",
+        "full_symbol": "BB2107",
         "exchange": "DCE",
         "margin_rate": 0.2,
         "symbol_size": 500,
@@ -244,8 +244,8 @@
     },
     "JR": {
         "underlying_symbol": "JR",
-        "mi_symbol": "JR105",
-        "full_symbol": "JR2105",
+        "mi_symbol": "JR107",
+        "full_symbol": "JR2107",
         "exchange": "CZCE",
         "margin_rate": 0.05,
         "symbol_size": 20,
@@ -262,8 +262,8 @@
     },
     "LR": {
         "underlying_symbol": "LR",
-        "mi_symbol": "LR007",
-        "full_symbol": "LR2007",
+        "mi_symbol": "LR107",
+        "full_symbol": "LR2107",
         "exchange": "CZCE",
         "margin_rate": 0.05,
         "symbol_size": 20,
@@ -532,8 +532,8 @@
     },
     "WH": {
         "underlying_symbol": "WH",
-        "mi_symbol": "WH105",
-        "full_symbol": "WH2105",
+        "mi_symbol": "WH107",
+        "full_symbol": "WH2107",
         "exchange": "CZCE",
         "margin_rate": 0.05,
         "symbol_size": 20,

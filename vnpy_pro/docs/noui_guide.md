@@ -53,6 +53,18 @@ nohup python run_noui.py &
 ps -aux | grep "run_noui.py"
 # 杀死进程
 kill [进程号]
+
+# 杀死所有“run_noui”进程
+ps -ef|grep run_noui|grep -v grep|cut -c 9-15|xargs kill -9
+```
+
+注意：每次更新vnpy源文件时，需要重新编译，不然不会生效。
+因为vnpy会编译安装到python包中，而不是用项目根目录，
+但是多余的包也会编译过去，需要删掉。
+```
+pip uninstall vnpy
+pip install .
+最后，删除多余的包
 ```
 
 -----------------------

@@ -7,13 +7,14 @@ from vnpy_pro.app.cta_strategy.backtesting import BacktestingEnginePro
 from vnpy_pro.config import load_futures
 from vnpy_pro.data.tdx.tdx_common import get_future_contracts
 
-from worktable.strategies.try_strategy import TryStrategy
 from worktable.strategies.grid_strategy import GridStrategy
 from worktable.strategies.KFM_ma_strategy import KFMMaStrategy
 # from worktable.strategies.KFM_ma_strategy_v2 import KFMMaStrategy
+# from worktable.strategies.KFM_ma_strategy_v3 import KFMMaStrategy
+from worktable.strategies.break_strategy import BreakStrategy
 
 
-test_future = "AG"
+test_future = "SR"
 
 FUTURES = load_futures()
 future_contracts = get_future_contracts()
@@ -24,16 +25,16 @@ engine = BacktestingEnginePro()
 engine.set_parameters(
     vt_symbol=vt_symbol,
     interval=Interval.MINUTE,
-    start=datetime(2020, 1, 1),
+    start=datetime(2018, 1, 1),
     end=datetime(2020, 11, 1),
-    rate=0.1 / 1000,
+    rate=1 / 10000,
     slippage=0,
     size=future_contracts[test_future]["symbol_size"],
     pricetick=future_contracts[test_future]["price_tick"],
-    capital=300_000,
+    capital=50_000,
     log_path=os.path.dirname(__file__)
 )
-engine.add_strategy(KFMMaStrategy, {})
+engine.add_strategy(BreakStrategy, {})
 
 engine.load_data()
 engine.run_backtesting()

@@ -298,6 +298,12 @@ class BarGenerator:
                         finished = True
                         self.interval_count = 0
 
+        # JinAdd: 扩展天周期
+        elif self.interval == Interval.DAILY:
+            if self.last_bar and bar.datetime.hour == 14 and bar.datetime.minute == 59:
+                finished = True
+                self.interval_count = 0
+
         if finished:
             self.on_window_bar(self.window_bar)
             self.window_bar = None
