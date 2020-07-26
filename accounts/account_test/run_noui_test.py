@@ -20,6 +20,7 @@ from vnpy.app.cta_strategy.base import EVENT_CTA_LOG
 
 from vnpy_pro.app.cta_strategy import CtaStrategyAppPro
 from vnpy_pro.tools.widget import get_logger
+from vnpy_pro.data.download_data import download_data_from_tdx
 
 
 SETTINGS["log.active"] = True
@@ -31,6 +32,9 @@ default_logger = get_logger(
     is_console=SETTINGS["log.console"]
 )
 ctp_setting = load_json("connect_ctp.json")
+
+trade_data = load_json("trade_data.json")
+futures = trade_data["trade_futures"]
 
 
 def run_child():
@@ -48,7 +52,9 @@ def run_child():
 
     # main_engine.connect(ctp_setting, "CTP")
     # main_engine.write_log("连接CTP接口")
-    # sleep(5)
+    # 更新交易合约数据
+    # download_data_from_tdx(futures, back_days=5)
+    sleep(10)
 
     cta_engine.init_engine()
     main_engine.write_log("CTA策略初始化完成")

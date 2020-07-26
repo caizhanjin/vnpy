@@ -18,9 +18,11 @@ from vnpy.trader.engine import MainEngine
 
 from vnpy.gateway.ctp import CtpGateway
 from vnpy.app.cta_strategy.base import EVENT_CTA_LOG
+from vnpy.app.data_recorder import DataRecorderApp
 
 from vnpy_pro.app.cta_strategy import CtaStrategyAppPro
 from vnpy_pro.tools.widget import get_logger
+from vnpy_pro.data.download_data import download_data_from_tdx
 
 SETTINGS["log.active"] = True
 SETTINGS["log.level"] = INFO
@@ -32,6 +34,9 @@ default_logger = get_logger(
 )
 ctp_setting = load_json("connect_ctp.json")
 
+trade_data = load_json("trade_data.json")
+futures = trade_data["trade_futures"]
+
 
 def run_child():
     SETTINGS["log.file"] = True
@@ -40,21 +45,22 @@ def run_child():
     main_engine = MainEngine(event_engine)
     main_engine.add_gateway(CtpGateway)
     cta_engine = main_engine.add_app(CtaStrategyAppPro)
-    main_engine.write_log("主引擎创建成功")
 
     log_engine = main_engine.get_engine("log")
     event_engine.register(EVENT_CTA_LOG, log_engine.process_log_event)
-    main_engine.write_log("注册日志事件监听")
 
     main_engine.connect(ctp_setting, "CTP")
-    main_engine.write_log("连接CTP接口")
-    sleep(20)
+    sleep(5)
+
+    # 录制行情和数据下来部分
+    download_data_from_tdx(futures, back_days=5)
+    main_engine.add_app(DataRecorderApp)
+    main_engine.write_log("启动数据录制")
+    sleep(60)
 
     cta_engine.init_engine()
-    main_engine.write_log("CTA策略初始化完成")
-
     cta_engine.init_all_strategies()
-    sleep(360)  # Leave enough time to complete strategy initialization
+    sleep(360)
     main_engine.write_log("CTA策略全部初始化")
 
     cta_engine.start_all_strategies()
@@ -100,7 +106,7 @@ def run_child():
 
 
 def run_parent():
-    default_logger.info("[主进程]启动CTA策略守护父进程")
+    default_logger.info("[主进程]启动守护父进程")
 
     DAY_START = time(8, 50)
     DAY_END = time(15, 20)
@@ -125,18 +131,16 @@ def run_parent():
         # trading = True
 
         if trading and child_process is None:
-            default_logger.info("[主进程]启动子进程")
             child_process = multiprocessing.Process(target=run_child)
             child_process.start()
-            default_logger.info("[主进程]子进程启动成功")
+            default_logger.info("[主进程]启动子进程")
 
         # 非记录时间则退出子进程
         if not trading and child_process is not None:
-            default_logger.info("[主进程]关闭子进程")
             child_process.terminate()
             child_process.join()
             child_process = None
-            default_logger.info("[主进程]子进程关闭成功")
+            default_logger.info("[主进程]关闭子进程")
 
         sleep(5)
 

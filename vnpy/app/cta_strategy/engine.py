@@ -544,12 +544,50 @@ class CtaEngine(BaseEngine):
         symbol, exchange = extract_vt_symbol(vt_symbol)
         end = datetime.now(get_localzone())
         start = end - timedelta(days)
-        bars = []
 
-        data_source = ""
-        # Pass gateway and RQData if use_database set to True
-        if not use_database:
-            # Query bars from gateway if available
+        # bars = []
+        # data_source = ""
+        # # Pass gateway and RQData if use_database set to True
+        # if not use_database:
+        #     # Query bars from gateway if available
+        #     contract = self.main_engine.get_contract(vt_symbol)
+        #
+        #     if contract and contract.history_data:
+        #         data_source = "行情服务器"
+        #         req = HistoryRequest(
+        #             symbol=symbol,
+        #             exchange=exchange,
+        #             interval=interval,
+        #             start=start,
+        #             end=end
+        #         )
+        #         bars = self.main_engine.query_history(req, contract.gateway_name)
+        #
+        #     # Try to query bars from RQData, if not found, load from database.
+        #     else:
+        #         data_source = "tdx数据源"
+        #         bars = self.query_bar_from_rq(symbol, exchange, interval, start, end)
+        #
+        # if not bars:
+        #     data_source = "本地数据库"
+        #     bars = database_manager.load_bar_data(
+        #         symbol=symbol,
+        #         exchange=exchange,
+        #         interval=interval,
+        #         start=start,
+        #         end=end,
+        #     )
+
+        # JinAdd : 优先从本地加载数据
+        data_source = "本地数据库"
+        bars = database_manager.load_bar_data(
+            symbol=symbol,
+            exchange=exchange,
+            interval=interval,
+            start=start,
+            end=end,
+        )
+        if not bars:
             contract = self.main_engine.get_contract(vt_symbol)
 
             if contract and contract.history_data:
@@ -567,16 +605,6 @@ class CtaEngine(BaseEngine):
             else:
                 data_source = "tdx数据源"
                 bars = self.query_bar_from_rq(symbol, exchange, interval, start, end)
-
-        if not bars:
-            data_source = "本地数据库"
-            bars = database_manager.load_bar_data(
-                symbol=symbol,
-                exchange=exchange,
-                interval=interval,
-                start=start,
-                end=end,
-            )
 
         # JinAdd : 添加日志
         self.write_log(f"从{data_source}加载{len(bars)}条数据")

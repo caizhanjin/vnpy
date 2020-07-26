@@ -154,8 +154,8 @@
     },
     "FG": {
         "underlying_symbol": "FG",
-        "mi_symbol": "FG103",
-        "full_symbol": "FG2103",
+        "mi_symbol": "FG105",
+        "full_symbol": "FG2105",
         "exchange": "CZCE",
         "margin_rate": 0.05,
         "symbol_size": 20,
@@ -334,8 +334,8 @@
     },
     "PM": {
         "underlying_symbol": "PM",
-        "mi_symbol": "PM105",
-        "full_symbol": "PM2105",
+        "mi_symbol": "PM107",
+        "full_symbol": "PM2107",
         "exchange": "CZCE",
         "margin_rate": 0.05,
         "symbol_size": 50,
@@ -361,8 +361,8 @@
     },
     "RI": {
         "underlying_symbol": "RI",
-        "mi_symbol": "RI105",
-        "full_symbol": "RI2105",
+        "mi_symbol": "RI107",
+        "full_symbol": "RI2107",
         "exchange": "CZCE",
         "margin_rate": 0.05,
         "symbol_size": 20,
@@ -541,8 +541,8 @@
     },
     "WR": {
         "underlying_symbol": "WR",
-        "mi_symbol": "wr2106",
-        "full_symbol": "WR2106",
+        "mi_symbol": "wr2107",
+        "full_symbol": "WR2107",
         "exchange": "SHFE",
         "margin_rate": 0.2,
         "symbol_size": 10,
