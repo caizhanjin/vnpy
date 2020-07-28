@@ -345,8 +345,9 @@ class TdxFutureData(object):
                     'trade': 'volume',
                 })
             if len(data) == 0:
-                print('{} Handling {}, len2={}..., continue'.format(
-                    str(datetime.now()), tdx_symbol, len(data)))
+                # print('{} Handling {}, len2={}..., continue'.format(
+                #     str(datetime.now()), tdx_symbol, len(data)))
+                print("Can't find data.")
                 return False, ret_bars
 
             data['total_turnover'] = data['volume'] * data['close']
@@ -409,7 +410,7 @@ class TdxFutureData(object):
                                 freq = NUM_MINUTE_MAPPING[period] - int((index - current_datetime).total_seconds() / 60)
                         callback(add_bar, bar_is_completed, freq)
             else:
-                self.write_log('dataframe => [ dict ]')
+                # self.write_log('dataframe => [ dict ]')
                 ret_bars = list(data.T.to_dict().values())
             return True, ret_bars
         except Exception as ex:

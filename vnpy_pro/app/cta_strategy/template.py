@@ -57,7 +57,7 @@ class CtaTemplatePro(CtaTemplate):
 
         # 固定资金计算交易手数
         if self.trade_amount:
-            future_contracts = get_cache_json('future_contracts.json')
+            future_contracts = get_cache_json('self_maintain_contracts.json')
             contracts = future_contracts[''.join(re.findall(r'[A-Za-z]', vt_symbol[:3].upper()))]
             self.lever = contracts["margin_rate"] * contracts["symbol_size"]
 
@@ -186,8 +186,12 @@ class CtaTemplatePro(CtaTemplate):
             # self.draw_k_line()
             # self.calculate_and_chart_daily_results()
 
-    def calculate_and_chart_daily_results(self, capital=10_000):
+    def calculate_and_chart_daily_results(self, capital=None):
         """update daily_results，并绘制资金曲线图"""
+        if not capital and self.trade_amount:
+            capital = self.trade_amount
+        elif not capital and not self.trade_amount:
+            capital = 10000
         if self.instance_name is None:
             return
         if not os.path.exists(self.save_path):
@@ -299,7 +303,10 @@ class CtaTemplatePro(CtaTemplate):
         else:
             sharpe_ratio = 0
 
-        return_drawdown_ratio = -total_return / max_ddpercent
+        if max_ddpercent:
+            return_drawdown_ratio = -total_return / max_ddpercent
+        else:
+            return_drawdown_ratio = 0
 
         statistics = {
             "start_date": start_date,
