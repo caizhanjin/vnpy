@@ -9,10 +9,9 @@ from vnpy_pro.data.source.tdxdata import tdxdata_client
 from vnpy_pro.data.tdx.tdx_common import get_future_contracts
 
 # 下载合约
+# futures = ["AG"]
 futures = ["AG", "AP", "AU", "BU", "CF", "CU", "JD",
            "MA", "NI", "OI", "P", "RB", "RU", "SR", "TA"]
-# futures = ["AG", "AP", "AU", "BU", "CF", "CU", "JD",
-#            "MA", "NI", "OI", "P", "RB", "RU", "SR", "TA"]
 
 future_contracts = get_future_contracts()
 if tdxdata_client.init():

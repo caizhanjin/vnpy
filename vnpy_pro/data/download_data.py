@@ -54,6 +54,8 @@ def download_data_from_tdx(download_futures, from_date=None, back_days=None):
             database_manager.save_bar_data(data)
             print(f"{symbol}更新完成：{data[0].datetime} -- {data[-1].datetime}")
 
+    print("数据全部更新完毕")
+
 # 更新contracts字典
 # tdxdata_client.tdx_api.update_mi_contracts()
 

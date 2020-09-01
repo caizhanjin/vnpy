@@ -1,20 +1,19 @@
 from datetime import datetime
 import os
 
-from vnpy.app.cta_strategy.backtesting import OptimizationSetting
 from vnpy.trader.constant import Interval
 from vnpy_pro.app.cta_strategy.backtesting import BacktestingEnginePro
 from vnpy_pro.config import load_futures
 from vnpy_pro.data.tdx.tdx_common import get_future_contracts
 
-from worktable.strategies.grid_strategy import GridStrategy
-from worktable.strategies.KFM_ma_strategy import KFMMaStrategy
-# from worktable.strategies.KFM_ma_strategy_v2 import KFMMaStrategy
-# from worktable.strategies.KFM_ma_strategy_v3 import KFMMaStrategy
+from worktable.strategies.KFM_strategy import KFMStrategy
 from worktable.strategies.break_strategy import BreakStrategy
+from worktable.strategies_storage.num1_breaker.break_strategy_1 import BreakStrategy
+from worktable.strategies_storage.num1_breaker.break_strategy_long import BreakStrategy
+from worktable.strategies_storage.num3_try.try_strategy_v2 import TryStrategy
 
 
-test_future = "SR"
+test_future = "P"
 
 FUTURES = load_futures()
 future_contracts = get_future_contracts()
@@ -34,7 +33,7 @@ engine.set_parameters(
     capital=50_000,
     log_path=os.path.dirname(__file__)
 )
-engine.add_strategy(BreakStrategy, {})
+engine.add_strategy(KFMStrategy, {})
 
 engine.load_data()
 engine.run_backtesting()

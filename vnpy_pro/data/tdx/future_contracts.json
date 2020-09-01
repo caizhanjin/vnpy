@@ -190,8 +190,8 @@
     },
     "IC": {
         "underlying_symbol": "IC",
-        "mi_symbol": "IC2103",
-        "full_symbol": "IC2103",
+        "mi_symbol": "IC500",
+        "full_symbol": "IC500",
         "exchange": "CFFEX",
         "margin_rate": 0.1,
         "symbol_size": 200,
@@ -199,8 +199,8 @@
     },
     "IF": {
         "underlying_symbol": "IF",
-        "mi_symbol": "IF2103",
-        "full_symbol": "IF2103",
+        "mi_symbol": "IF300",
+        "full_symbol": "IF300",
         "exchange": "CFFEX",
         "margin_rate": 0.1,
         "symbol_size": 300,

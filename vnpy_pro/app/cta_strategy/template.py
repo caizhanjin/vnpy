@@ -228,7 +228,7 @@ class CtaTemplatePro(CtaTemplate):
                 daily_result.calculate_pnl2(
                     pre_close,
                     start_pos,
-                    symbol_info.get("symbol_size", 1) * symbol_info.get("margin_rate", 1),
+                    symbol_info.get("symbol_size", 1),
                     0,
                     0,
                     False
@@ -352,3 +352,42 @@ class CtaTemplatePro(CtaTemplate):
             save_path=self.save_path,
             kline_title=self.instance_name
         )
+
+
+class StopManage(object):
+
+    long_stop = 0
+    short_stop = 0
+    move_diff = 0
+
+    signal = 0
+
+    def __init__(self, am, atr_count, fixed_pre, move_pre):
+        self.am = am
+
+        self.atr_count = atr_count
+        self.fixed_pre = fixed_pre
+        self.move_pre = move_pre
+
+    def open_long(self, trade):
+        atr = self.am.atr(self.atr_count)
+        self.long_stop = trade.price - atr * self.fixed_pre
+        self.move_diff = atr * self.move_pre
+        self.signal = 1
+
+    def open_short(self, trade):
+        atr = self.am.atr(self.atr_count)
+        self.short_stop = trade.price + atr * self.fixed_pre
+        self.move_diff = atr * self.move_pre
+        self.signal = -1
+
+    def on_bar(self, bar, pos):
+        if pos > 0:
+            self.long_stop = max(self.long_stop, bar.high_price - self.move_diff)
+            if bar.low_price <= self.long_stop:
+                self.signal = 0
+
+        elif pos < 0:
+            self.short_stop = min(self.short_stop, bar.low_price + self.move_diff)
+            if bar.high_price >= self.short_stop:
+                self.signal = 0

@@ -5,22 +5,24 @@ from vnpy.trader.constant import Interval
 from vnpy_pro.app.cta_strategy.backtesting import BacktestingEnginePro
 from vnpy_pro.config import load_futures
 
-# from vnpy.app.cta_strategy.strategies.atr_rsi_strategy import AtrRsiStrategy
 from vnpy_pro.data.tdx.tdx_common import get_future_contracts
-from worktable.strategies_storage.num3_single_trend.try_strategy import TryStrategy
+from worktable.strategies.try_strategy import TryStrategy
+from worktable.strategies.KFM_strategy import KFMStrategy
 from worktable.strategies.try_strategy_v2 import TryStrategy
-from worktable.strategies.KFM_ma_strategy import KFMMaStrategy
+from worktable.strategies.break_strategy import BreakStrategy
+from worktable.strategies_storage.num1_breaker.break_strategy_1 import BreakStrategy
+from worktable.strategies_storage.num1_breaker.dual_thrust_strategy import DualThrustStrategy
 
 # 组合回测合约填入这里
-futures = ["RB", "BU", "MA", "RU", "AG"]
+futures = ["RB", "BU", "AG", "P"]
 # futures = ["RB", "BU", "MA", "RU", "AG"]
 is_save_result = True
 FUTURES = load_futures()
 future_contracts = get_future_contracts()
 interval = Interval.MINUTE
-start = datetime(2016, 1, 1)
+start = datetime(2017, 8, 1)
 end = datetime(2020, 11, 1)
-capital = 250_000
+capital = 200_000
 
 
 def run_backtesting(strategy_class, setting,
@@ -63,7 +65,7 @@ for future in futures:
     pricetick = future_contracts[future]["price_tick"]
 
     df_item = run_backtesting(
-        strategy_class=TryStrategy,
+        strategy_class=KFMStrategy,
         setting={},
         vt_symbol1=vt_symbol,
         interval1=interval,

@@ -53,14 +53,14 @@ def run_child():
     # main_engine.connect(ctp_setting, "CTP")
     # main_engine.write_log("连接CTP接口")
     # 更新交易合约数据
-    download_data_from_tdx(futures, back_days=5)
+    # download_data_from_tdx(futures, back_days=5)
     # sleep(10)
 
-    # cta_engine.init_engine()
+    cta_engine.init_engine()
     # main_engine.write_log("CTA策略初始化完成")
 
-    # cta_engine.init_all_strategies()
-    # sleep(120)   # Leave enough time to complete strategy initialization
+    cta_engine.init_all_strategies()
+    sleep(200)   # Leave enough time to complete strategy initialization
     # main_engine.write_log("CTA策略全部初始化")
     #
     # cta_engine.start_all_strategies()
@@ -68,12 +68,13 @@ def run_child():
 
     # cta_engine.send_run_report_email("账号1监控报表")  # 完成启动后，发送监控报表
 
-    # cta_engine.save_all_trade_data()
-    # main_engine.write_log("实例交易数据保存成功")
-    # cta_engine.update_all_daily_results()
-    # main_engine.write_log("实例资金曲线&策略评估指标更新成功")
+    cta_engine.save_all_trade_data()
+    main_engine.write_log("实例交易数据保存成功")
+    cta_engine.update_all_daily_results()
+    main_engine.write_log("实例资金曲线&策略评估指标更新成功")
+    sleep(30)
 
-    # cta_engine.send_evaluate_report_email("账号1实例评估报表")
+    cta_engine.send_evaluate_report_email("账号1实例评估报表")
 
     # cta_engine.update_all_k_line()
     # main_engine.write_log("CTA更新K线图完毕")
