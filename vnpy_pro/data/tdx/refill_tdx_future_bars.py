@@ -18,9 +18,9 @@ from vnpy_pro.data.tdx.tdx_future_data import *
 
 # 保存的1分钟指数 bar目录
 # bar_data_folder = os.path.abspath(os.path.join(vnpy_root, 'bar_data'))
-bar_data_folder = r"E:\vnpy\bar_data_test"
+bar_data_folder = r"D:\vnpy\vnpy2_pro\history_data"
 # 开始日期（每年大概需要几分钟）
-start_date = '20200320'
+start_date = '20100101'
 
 # 创建API对象
 api_01 = TdxFutureData()

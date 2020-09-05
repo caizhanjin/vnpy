@@ -253,9 +253,9 @@ class TdxFutureData(object):
         return_bar: 返回 第二个数据内容，True:BarData, False:dict
         """
         # JinAdd: 兼容时区类型datetime
-        if start_dt.tzinfo is not None:
+        if start_dt and start_dt.tzinfo is not None:
             start_dt = start_dt.replace(tzinfo=None)
-        if end_dt.tzinfo is not None:
+        if end_dt and end_dt.tzinfo is not None:
             end_dt = end_dt.replace(tzinfo=None)
 
         # JinAdd: 交易合约兼容tdx
