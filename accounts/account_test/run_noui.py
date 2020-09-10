@@ -2,6 +2,7 @@ import os
 import sys
 
 ROOT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+print(ROOT_PATH)
 sys.path.append(ROOT_PATH)
 if not os.path.exists(".vntrader"):
     os.mkdir(".vntrader")

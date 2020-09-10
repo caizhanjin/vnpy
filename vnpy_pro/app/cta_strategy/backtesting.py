@@ -251,7 +251,7 @@ class BacktestingEnginePro(BacktestingEngine):
 
     @add_log_path_wrapper
     def save_k_line_chart(self):
-        if len(self.strategy.KLine_chart_dict.list_dict) == 0:
+        if not hasattr(self.strategy, "KLine_chart_dict") or len(self.strategy.KLine_chart_dict.list_dict) == 0:
             return
         trades_results = self.get_trades_list()
         self.strategy.KLine_chart_dict.draw_chart_backtest(
