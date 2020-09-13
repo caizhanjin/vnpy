@@ -388,8 +388,8 @@
     },
     "RS": {
         "underlying_symbol": "RS",
-        "mi_symbol": "RS107",
-        "full_symbol": "RS2107",
+        "mi_symbol": "RS108",
+        "full_symbol": "RS2108",
         "exchange": "CZCE",
         "margin_rate": 0.05,
         "symbol_size": 10,
