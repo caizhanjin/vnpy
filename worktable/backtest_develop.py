@@ -25,16 +25,23 @@ future_contracts = get_future_contracts()
 vt_symbol = test_future.upper() + "99." + future_contracts[test_future]["exchange"]
 print(vt_symbol)
 
+# symbol_size = future_contracts[test_future]["symbol_size"]
+# price_tick = future_contracts[test_future]["price_tick"]
+
+vt_symbol = "ETHUSDT.BINANCE"
+symbol_size = 0.001
+price_tick = 0.01
+
 engine = BacktestingEnginePro()
 engine.set_parameters(
     vt_symbol=vt_symbol,
     interval=Interval.MINUTE,
-    start=datetime(2019, 1, 1),
-    end=datetime(2020, 11, 1),
+    start=datetime(2020, 7, 13),
+    end=datetime(2020, 9, 12),
     rate=1 / 10000,
     slippage=0,
-    size=future_contracts[test_future]["symbol_size"],
-    pricetick=future_contracts[test_future]["price_tick"],
+    size=symbol_size,
+    pricetick=price_tick,
     capital=50_000,
     log_path=os.path.dirname(__file__)
 )

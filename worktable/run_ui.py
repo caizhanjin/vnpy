@@ -14,6 +14,7 @@ from vnpy.event import EventEngine
 from vnpy.trader.engine import MainEngine
 from vnpy.trader.ui import MainWindow, create_qapp
 
+from vnpy.gateway.binances import BinancesGateway
 # from vnpy.gateway.binance import BinanceGateway
 # from vnpy.gateway.bitmex import BitmexGateway
 # from vnpy.gateway.futu import FutuGateway
@@ -72,7 +73,7 @@ def main():
 
     main_engine = MainEngine(event_engine)
 
-    # main_engine.add_gateway(BinanceGateway)
+    # main_engine.add_gateway(BinancesGateway)
     main_engine.add_gateway(CtpGateway)
     # main_engine.add_gateway(CtptestGateway)
     # main_engine.add_gateway(MiniGateway)

@@ -55,8 +55,8 @@
     },
     "BB": {
         "underlying_symbol": "BB",
-        "mi_symbol": "bb2108",
-        "full_symbol": "BB2108",
+        "mi_symbol": "bb2109",
+        "full_symbol": "BB2109",
         "exchange": "DCE",
         "margin_rate": 0.2,
         "symbol_size": 500,
@@ -361,8 +361,8 @@
     },
     "RI": {
         "underlying_symbol": "RI",
-        "mi_symbol": "RI107",
-        "full_symbol": "RI2107",
+        "mi_symbol": "RI109",
+        "full_symbol": "RI2109",
         "exchange": "CZCE",
         "margin_rate": 0.05,
         "symbol_size": 20,
@@ -388,8 +388,8 @@
     },
     "RS": {
         "underlying_symbol": "RS",
-        "mi_symbol": "RS108",
-        "full_symbol": "RS2108",
+        "mi_symbol": "RS109",
+        "full_symbol": "RS2109",
         "exchange": "CZCE",
         "margin_rate": 0.05,
         "symbol_size": 10,

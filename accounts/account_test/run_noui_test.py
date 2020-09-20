@@ -1,5 +1,8 @@
 import os
 import sys
+
+from app.data_recorder import DataRecorderAppPro
+
 ROOT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 sys.path.append(ROOT_PATH)
 if not os.path.exists(".vntrader"):
@@ -52,9 +55,12 @@ def run_child():
 
     # main_engine.connect(ctp_setting, "CTP")
     # main_engine.write_log("连接CTP接口")
-    # 更新交易合约数据
-    # download_data_from_tdx(futures, back_days=5)
-    # sleep(10)
+
+    # 录制行情和从数据源下载数据
+    download_data_from_tdx(futures, back_days=5)
+    main_engine.add_app(DataRecorderAppPro)
+    main_engine.write_log("启动数据录制")
+    sleep(60)
 
     cta_engine.init_engine()
     # main_engine.write_log("CTA策略初始化完成")

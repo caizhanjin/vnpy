@@ -2,7 +2,6 @@ import os
 import sys
 
 ROOT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-print(ROOT_PATH)
 sys.path.append(ROOT_PATH)
 if not os.path.exists(".vntrader"):
     os.mkdir(".vntrader")
@@ -21,6 +20,7 @@ from vnpy.gateway.ctp import CtpGateway
 from vnpy.app.cta_strategy.base import EVENT_CTA_LOG
 from vnpy.app.data_recorder import DataRecorderApp
 
+from vnpy_pro.app.data_recorder import DataRecorderAppPro
 from vnpy_pro.app.cta_strategy import CtaStrategyAppPro
 from vnpy_pro.tools.widget import get_logger
 from vnpy_pro.data.download_data import download_data_from_tdx
@@ -53,9 +53,9 @@ def run_child():
     main_engine.connect(ctp_setting, "CTP")
     sleep(5)
 
-    # 录制行情和数据下来部分
+    # 录制行情和从数据源下载数据
     download_data_from_tdx(futures, back_days=5)
-    main_engine.add_app(DataRecorderApp)
+    main_engine.add_app(DataRecorderAppPro)
     main_engine.write_log("启动数据录制")
     sleep(60)
 

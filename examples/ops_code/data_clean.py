@@ -24,6 +24,7 @@ path = get_file_path(SETTINGS["database.database"])
 # 创建数据库对象
 db = SqliteDatabase(path)
 
+
 # 创建数据ORM的类
 class DbBarData(Model):
     """
