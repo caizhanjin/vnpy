@@ -264,7 +264,7 @@ class XtpMdApi(MdApi):
         """"""
         timestamp = str(data["data_time"])
         dt = datetime.strptime(timestamp, "%Y%m%d%H%M%S%f")
-        dt = dt.replace(tzinfo=CHINA_TZ)
+        dt = CHINA_TZ.localize(dt)
 
         tick = TickData(
             symbol=data["ticker"],
@@ -430,6 +430,8 @@ class XtpMdApi(MdApi):
             path = str(get_folder_path(self.gateway_name.lower()))
             self.createQuoteApi(self.client_id, path)
             self.login_server()
+        else:
+            self.gateway.write_log("行情接口已登录，请勿重复操作")
 
     def login_server(self) -> None:
         """"""
@@ -527,7 +529,7 @@ class XtpTdApi(TdApi):
         if orderid not in self.orders:
             timestamp = str(data["insert_time"])
             dt = datetime.strptime(timestamp, "%Y%m%d%H%M%S%f")
-            dt = dt.replace(tzinfo=CHINA_TZ)
+            dt = CHINA_TZ.localize(dt)
 
             order = OrderData(
                 symbol=symbol,
@@ -562,7 +564,7 @@ class XtpTdApi(TdApi):
 
         timestamp = str(data["trade_time"])
         dt = datetime.strptime(timestamp, "%Y%m%d%H%M%S%f")
-        dt = dt.replace(tzinfo=CHINA_TZ)
+        dt = CHINA_TZ.localize(dt)
 
         trade = TradeData(
             symbol=symbol,
@@ -647,12 +649,15 @@ class XtpTdApi(TdApi):
             frozen=data["withholding_amount"],
             gateway_name=self.gateway_name
         )
-        self.gateway.on_account(account)
 
         if data["account_type"] == 1:
             self.margin_trading = True
         elif data["account_type"] == 2:
+            account.available = data["buying_power"]
+            account.frozen = account.balance - account.available
             self.option_trading = True
+
+        self.gateway.on_account(account)
 
     def onQueryStructuredFund(self, data: dict, error: dict, last: bool, session: int) -> None:
         """"""
@@ -707,7 +712,9 @@ class XtpTdApi(TdApi):
         contract.option_type = OPTIONTYPE_XTP2VT.get(data["call_or_put"], None)
 
         contract.option_strike = data["exercise_price"]
-        contract.option_expiry = datetime.strptime(str(data["delivery_day"]), "%Y%m%d")
+        contract.option_expiry = datetime.strptime(
+            str(data["last_trade_date"]), "%Y%m%d"
+        )
         contract.option_index = get_option_index(
             contract.option_strike, data["contract_id"]
         )
@@ -776,6 +783,8 @@ class XtpTdApi(TdApi):
             self.setSoftwareKey(self.software_key)
             self.subscribePublicTopic(0)
             self.login_server()
+        else:
+            self.gateway.write_log("交易接口已登录，请勿重复操作")
 
     def login_server(self) -> None:
         """"""

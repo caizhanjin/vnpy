@@ -82,6 +82,12 @@ class RqdataClient:
                 rq_symbol = f"{symbol}.XSHG"
             else:
                 rq_symbol = f"{symbol}.XSHE"
+        # Spot
+        elif exchange in [Exchange.SGE]:
+            for char in ["(", ")", "+"]:
+                symbol = symbol.replace(char, "")
+            symbol = symbol.upper()
+            rq_symbol = f"{symbol}.SGEX"
         # Futures and Options
         elif exchange in [Exchange.SHFE, Exchange.CFFEX, Exchange.DCE, Exchange.CZCE, Exchange.INE]:
             for count, word in enumerate(symbol):
@@ -174,7 +180,7 @@ class RqdataClient:
         if df is not None:
             for ix, row in df.iterrows():
                 dt = row.name.to_pydatetime() - adjustment
-                dt = dt.replace(tzinfo=CHINA_TZ)
+                dt = CHINA_TZ.localize(dt)
 
                 bar = BarData(
                     symbol=symbol,

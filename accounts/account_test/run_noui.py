@@ -129,7 +129,7 @@ def run_parent():
             and week_day < 6
         ):
             trading = True
-        # trading = True
+        trading = True
 
         if trading and child_process is None:
             child_process = multiprocessing.Process(target=run_child)
