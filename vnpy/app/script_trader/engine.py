@@ -26,8 +26,11 @@ from vnpy.trader.object import (
     LogData,
     BarData
 )
-from vnpy.trader.rqdata import rqdata_client
 
+# from vnpy.trader.rqdata import rqdata_client
+# JinAdd:增加数据源
+from vnpy_pro.data.source import data_client
+from vnpy.trader.setting import SETTINGS
 
 APP_NAME = "ScriptTrader"
 
@@ -49,9 +52,13 @@ class ScriptEngine(BaseEngine):
         """
         Start script engine.
         """
-        result = rqdata_client.init()
+        # JinAdd:增加数据源
+        result = data_client.init(is_update_contracts=True)
         if result:
-            self.write_log("RQData数据接口初始化成功")
+            self.write_log(f"{SETTINGS['data.source']}数据接口初始化成功")
+        # result = rqdata_client.init()
+        # if result:
+        #     self.write_log("RQData数据接口初始化成功")
 
     def start_strategy(self, script_path: str):
         """
@@ -256,8 +263,9 @@ class ScriptEngine(BaseEngine):
             end=end,
             interval=interval
         )
-
-        return get_data(rqdata_client.query_history, arg=req, use_df=use_df)
+        # JinAdd:增加数据源
+        # return get_data(rqdata_client.query_history, arg=req, use_df=use_df)
+        return get_data(data_client.query_history, arg=req, use_df=use_df)
 
     def write_log(self, msg: str) -> None:
         """"""

@@ -25,6 +25,7 @@ class TdxdataClient(SourceDataApi):
 
     def __init__(self):
         self.tdx_api = TdxFutureData()
+        self.inited = False
 
     def init(self, username="", password="", is_update_contracts=False):
         """
@@ -37,6 +38,8 @@ class TdxdataClient(SourceDataApi):
 
         if is_update_contracts:
             self.tdx_api.update_mi_contracts()
+
+        self.inited = result
         return result
 
     def query_history(self, req: HistoryRequest):

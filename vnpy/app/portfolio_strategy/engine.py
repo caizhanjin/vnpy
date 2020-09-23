@@ -39,7 +39,11 @@ from vnpy.trader.constant import (
 )
 from vnpy.trader.utility import load_json, save_json, extract_vt_symbol, round_to
 from vnpy.trader.database import database_manager
-from vnpy.trader.rqdata import rqdata_client
+# from vnpy.trader.rqdata import rqdata_client
+# JinAdd:增加数据源
+from vnpy_pro.data.source import data_client
+from vnpy.trader.setting import SETTINGS
+
 from vnpy.trader.converter import OffsetConverter
 
 from .base import (
@@ -99,9 +103,13 @@ class StrategyEngine(BaseEngine):
         """
         Init RQData client.
         """
-        result = rqdata_client.init()
+        # JinAdd:增加数据源
+        result = data_client.init(is_update_contracts=True)
         if result:
-            self.write_log("RQData数据接口初始化成功")
+            self.write_log(f"{SETTINGS['data.source']}数据接口初始化成功")
+        # result = rqdata_client.init()
+        # if result:
+        #     self.write_log("RQData数据接口初始化成功")
 
     def query_bar_from_rq(
         self, symbol: str, exchange: Exchange, interval: Interval, start: datetime, end: datetime
@@ -116,7 +124,9 @@ class StrategyEngine(BaseEngine):
             start=start,
             end=end
         )
-        data = rqdata_client.query_history(req)
+        # JinAdd:增加数据源
+        data = data_client.query_history(req)
+        # data = rqdata_client.query_history(req)
         return data
 
     def process_tick_event(self, event: Event):
