@@ -28,3 +28,4 @@ pytdx
 pyecharts
 plotly
 quickfix
+pyecharts==1.7.1
