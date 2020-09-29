@@ -25,9 +25,7 @@ class ChartWizardEngine(BaseEngine):
         super().__init__(main_engine, event_engine, APP_NAME)
 
         # JinAdd:增加数据源
-        result = data_client.init(is_update_contracts=True)
-        if result:
-            self.write_log(f"{SETTINGS['data.source']}数据接口初始化成功")
+        data_client.init(is_update_contracts=True)
         # rqdata_client.init()
 
     def query_history(

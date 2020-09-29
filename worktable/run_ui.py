@@ -73,8 +73,8 @@ def main():
 
     main_engine = MainEngine(event_engine)
 
-    # main_engine.add_gateway(BinancesGateway)
-    main_engine.add_gateway(CtpGateway)
+    main_engine.add_gateway(BinancesGateway)
+    # main_engine.add_gateway(CtpGateway)
     # main_engine.add_gateway(CtptestGateway)
     # main_engine.add_gateway(MiniGateway)
     # main_engine.add_gateway(SoptGateway)
