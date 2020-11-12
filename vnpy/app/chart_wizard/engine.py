@@ -25,8 +25,11 @@ class ChartWizardEngine(BaseEngine):
         super().__init__(main_engine, event_engine, APP_NAME)
 
         # JinAdd:增加数据源
-        data_client.init(is_update_contracts=True)
         # rqdata_client.init()
+        try:
+            data_client.init(is_update_contracts=True)
+        except TypeError:
+            data_client.init()
 
     def query_history(
         self,

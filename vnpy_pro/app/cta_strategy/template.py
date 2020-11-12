@@ -10,11 +10,13 @@ import pandas as pd
 import numpy as np
 
 from vnpy.app.cta_strategy import CtaTemplate
+from vnpy.app.cta_strategy.base import EngineType
 from vnpy.trader.object import BarData, TickData, TradeData, OrderData
 from vnpy.trader.utility import (
     get_folder_path, TEMP_DIR, get_file_logger, load_json, save_json, BarGenerator,
     ArrayManager
 )
+from vnpy.trader.utility import virtual
 
 from vnpy_pro.tools.widget import csv_add_rows
 from vnpy_pro.data.tdx.tdx_common import get_future_contracts, get_cache_json
@@ -352,6 +354,129 @@ class CtaTemplatePro(CtaTemplate):
             save_path=self.save_path,
             kline_title=self.instance_name
         )
+
+
+class TargetPosTemplatePro(CtaTemplatePro):
+    """"""
+    tick_add = 1
+
+    last_tick = None
+    last_bar = None
+    target_pos = 0
+
+    def __init__(self, cta_engine, strategy_name, vt_symbol, setting):
+        """"""
+        super().__init__(cta_engine, strategy_name, vt_symbol, setting)
+
+        self.active_orderids = []
+        self.cancel_orderids = []
+
+        self.variables.append("target_pos")
+
+    @virtual
+    def on_tick(self, tick: TickData):
+        super().on_tick(tick)
+        self.last_tick = tick
+
+        if self.trading:
+            self.trade()
+
+    @virtual
+    def on_bar(self, bar: BarData):
+        super().on_bar(bar)
+        self.last_bar = bar
+
+    @virtual
+    def on_order(self, order: OrderData):
+        super().on_order(order)
+        vt_orderid = order.vt_orderid
+
+        if not order.is_active():
+            if vt_orderid in self.active_orderids:
+                self.active_orderids.remove(vt_orderid)
+
+            if vt_orderid in self.cancel_orderids:
+                self.cancel_orderids.remove(vt_orderid)
+
+    def check_order_finished(self):
+        """"""
+        if self.active_orderids:
+            return False
+        else:
+            return True
+
+    def set_target_pos(self, target_pos):
+        """"""
+        self.target_pos = target_pos
+        self.trade()
+
+    def trade(self):
+        """"""
+        if not self.check_order_finished():
+            self.cancel_old_order()
+        else:
+            self.send_new_order()
+
+    def cancel_old_order(self):
+        """"""
+        for vt_orderid in self.active_orderids:
+            if vt_orderid not in self.cancel_orderids:
+                self.cancel_order(vt_orderid)
+                self.cancel_orderids.append(vt_orderid)
+
+    def send_new_order(self):
+        """"""
+        pos_change = self.target_pos - self.pos
+        if not pos_change:
+            return
+
+        long_price = 0
+        short_price = 0
+
+        if self.last_tick:
+            if pos_change > 0:
+                long_price = self.last_tick.ask_price_1 + self.tick_add
+                if self.last_tick.limit_up:
+                    long_price = min(long_price, self.last_tick.limit_up)
+            else:
+                short_price = self.last_tick.bid_price_1 - self.tick_add
+                if self.last_tick.limit_down:
+                    short_price = max(short_price, self.last_tick.limit_down)
+
+        else:
+            if pos_change > 0:
+                long_price = self.last_bar.close_price + self.tick_add
+            else:
+                short_price = self.last_bar.close_price - self.tick_add
+
+        if self.get_engine_type() == EngineType.BACKTESTING:
+            if pos_change > 0:
+                vt_orderids = self.buy(long_price, abs(pos_change))
+            else:
+                vt_orderids = self.short(short_price, abs(pos_change))
+            self.active_orderids.extend(vt_orderids)
+
+        else:
+            if self.active_orderids:
+                return
+
+            if pos_change > 0:
+                if self.pos < 0:
+                    if pos_change < abs(self.pos):
+                        vt_orderids = self.cover(long_price, pos_change)
+                    else:
+                        vt_orderids = self.cover(long_price, abs(self.pos))
+                else:
+                    vt_orderids = self.buy(long_price, abs(pos_change))
+            else:
+                if self.pos > 0:
+                    if abs(pos_change) < self.pos:
+                        vt_orderids = self.sell(short_price, abs(pos_change))
+                    else:
+                        vt_orderids = self.sell(short_price, abs(self.pos))
+                else:
+                    vt_orderids = self.short(short_price, abs(pos_change))
+            self.active_orderids.extend(vt_orderids)
 
 
 class StopManage(object):

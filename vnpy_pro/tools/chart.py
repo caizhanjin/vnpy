@@ -15,14 +15,14 @@ def draw_daily_results_chart(daily_df, save_path):
 
     line1 = (
         Line()
-        .add_xaxis(xaxis_data=date_list)
-        .add_yaxis(
+            .add_xaxis(xaxis_data=date_list)
+            .add_yaxis(
             series_name="Balance",
             y_axis=balance_list,
             label_opts=opts.LabelOpts(is_show=False),
             linestyle_opts=opts.LineStyleOpts(width=2),
         )
-        .set_global_opts(
+            .set_global_opts(
             title_opts=opts.TitleOpts(title="回测资金曲线", pos_left="center"),
             tooltip_opts=opts.TooltipOpts(
                 trigger="axis",
@@ -57,7 +57,7 @@ def draw_daily_results_chart(daily_df, save_path):
 
     line2 = (
         Line()
-        .set_global_opts(
+            .set_global_opts(
             tooltip_opts=opts.TooltipOpts(trigger="axis", axis_pointer_type="cross"),
             xaxis_opts=opts.AxisOpts(
                 type_="category",
@@ -78,8 +78,8 @@ def draw_daily_results_chart(daily_df, save_path):
                 label=opts.LabelOpts(background_color="#777"),
             ),
         )
-        .add_xaxis(xaxis_data=date_list)
-        .add_yaxis(
+            .add_xaxis(xaxis_data=date_list)
+            .add_yaxis(
             series_name="Draw Down",
             y_axis=draw_down_list,
             label_opts=opts.LabelOpts(is_show=False),
@@ -89,7 +89,7 @@ def draw_daily_results_chart(daily_df, save_path):
 
     bar3 = (
         Bar()
-        .set_global_opts(
+            .set_global_opts(
             tooltip_opts=opts.TooltipOpts(trigger="axis", axis_pointer_type="cross"),
             xaxis_opts=opts.AxisOpts(
                 type_="category",
@@ -109,33 +109,35 @@ def draw_daily_results_chart(daily_df, save_path):
                 label=opts.LabelOpts(background_color="#777"),
             ),
         )
-        .add_xaxis(xaxis_data=date_list)
-        .add_yaxis(series_name="Daily Pnl", yaxis_data=net_pnl_list, label_opts=opts.LabelOpts(is_show=False))
+            .add_xaxis(xaxis_data=date_list)
+            .add_yaxis(series_name="Daily Pnl", yaxis_data=net_pnl_list, label_opts=opts.LabelOpts(is_show=False))
     )
 
     (
         Grid(init_opts=opts.InitOpts(width="100%", height="720px"))
-        .add(chart=line1, grid_opts=opts.GridOpts(pos_left=50, pos_right=50, height="35%"))
-        .add(
+            .add(chart=line1, grid_opts=opts.GridOpts(pos_left=50, pos_right=50, height="35%"))
+            .add(
             chart=line2,
             grid_opts=opts.GridOpts(pos_left=50, pos_right=50, pos_top="48%", height="20%"),
         )
-        .add(
+            .add(
             chart=bar3,
             grid_opts=opts.GridOpts(pos_left=50, pos_right=50, pos_top="71%", height="20%"),
         )
-        .render(os.path.join(save_path, "daily_results.html"))
+            .render(os.path.join(save_path, "daily_results.html"))
     )
 
 
 def chart_data_to_df(func):
     """获取df"""
+
     @wraps(func)
     def inner(self, *args, **kwargs):
         if self.df.empty:
             columns = ["datetime", "open", "high", "low", "close", "volume"].extend(self.extend_field)
             self.df = pd.DataFrame(self.list_dict, columns=columns)
         return func(self, *args, **kwargs)
+
     return inner
 
 
@@ -148,7 +150,9 @@ class KLineChart(object):
         self.chart_dict = KLineChart(extend_field=["MA5", "BBI"])  # 添加extend_field
         self.chart_dict.update_bar(bar, MA5=self.am.sma(5), BBI=self.am.sma(10))  # 更新bar，出来bar外，还需传入扩展字段的数据
     """
-    def __init__(self, extend_field=None, is_fixed_size=False, fixed_size: int = 200, max_bars=8000):
+
+    def __init__(self, extend_field=None, is_fixed_size=False, fixed_size: int = 200, max_bars=8000,
+                 is_smooth=True, is_connect_nones=False):
         if extend_field is None:
             extend_field = []
         self.extend_field = extend_field
@@ -163,6 +167,11 @@ class KLineChart(object):
         self.df = pd.DataFrame()
         self.list_dict = {}
         self.init_list_dict()
+
+        self.area_list = []
+        self.point_list = []
+        self.is_smooth = is_smooth
+        self.is_connect_nones = is_connect_nones
 
     def init_list_dict(self):
         if self.is_fixed_size:
@@ -240,7 +249,17 @@ class KLineChart(object):
         # K线图最大bars限制，过大会无展示
         if self.df.shape[0] > self.max_bars:
             self.df = self.df[-self.max_bars:]
-        self.draw_chart(self.df, self.extend_field, save_path, trade_list, kline_title)
+        self.draw_chart(
+            df=self.df,
+            extend_field=self.extend_field,
+            save_path=save_path,
+            trade_list=trade_list,
+            kline_title=kline_title,
+            area_list=self.area_list,
+            point_list=self.point_list,
+            is_smooth=self.is_smooth,
+            is_connect_nones=self.is_connect_nones
+        )
 
     def draw_chart_from_csv(self, save_path, kline_title):
         save_file = os.path.join(save_path, "KLineChart.csv")
@@ -265,59 +284,92 @@ class KLineChart(object):
             extend_field=self.extend_field,
             trade_list=trade_list,
             save_path=save_path,
-            kline_title=kline_title
+            kline_title=kline_title,
+            is_smooth=self.is_smooth,
+            is_connect_nones=self.is_connect_nones
         )
 
     @staticmethod
-    def draw_chart(df, extend_field, save_path="", trade_list=None, kline_title="买卖点K线图"):
+    def draw_chart(df, extend_field, save_path="",
+                   trade_list=None, point_list=None, area_list=None,
+                   kline_title="买卖点K线图",
+                   is_smooth=True, is_connect_nones=False):
         datetime_array = df.datetime.tolist()
         volume_array = df.volume.tolist()
         # open close low high
         kline_data = df[["open", "close", "low", "high"]].values.tolist()
 
-        point_list = []
-        if trade_list is None:
-            trade_list = []
-        for trade in trade_list:
-            # 开多
-            if type(trade[0]) == str:
-                trade_datetime = trade[0]
-            else:
-                trade_datetime = trade[0].strftime("%Y-%m-%d %H:%M:%S")
+        # 绘制买卖点
+        _point_list = []
+        if trade_list is not None and len(trade_list) > 1:
+            for trade in trade_list:
+                # 开多
+                if type(trade[0]) == str:
+                    trade_datetime = trade[0]
+                else:
+                    trade_datetime = trade[0].strftime("%Y-%m-%d %H:%M:%S")
 
-            if trade_datetime < datetime_array[0]:
-                continue
+                if trade_datetime < datetime_array[0]:
+                    continue
 
-            if trade[1] == "多" and trade[4] == "开":
-                point_list.append(opts.MarkPointItem(
-                    name="开多",
-                    coord=[trade_datetime, trade[6]],
-                    value="开多",
-                    itemstyle_opts=opts.ItemStyleOpts(color="#ef232a")
+                if trade[1] == "多" and trade[4] == "开":
+                    _point_list.append(opts.MarkPointItem(
+                        name="开多",
+                        coord=[trade_datetime, trade[6]],
+                        value="开多",
+                        itemstyle_opts=opts.ItemStyleOpts(color="#ef232a")
+                    ))
+                # 开空
+                elif trade[1] == "空" and trade[4] == "开":
+                    _point_list.append(opts.MarkPointItem(
+                        name="开空",
+                        coord=[trade_datetime, trade[6]],
+                        value="开空",
+                        itemstyle_opts=opts.ItemStyleOpts(color="#ef232a")
+                    ))
+                # 平多
+                elif trade[1] == "多" and (trade[4] == "平" or trade[4] == "平今" or trade[4] == "平昨"):
+                    _point_list.append(opts.MarkPointItem(
+                        name="平空",
+                        coord=[trade_datetime, trade[6]],
+                        value="平空",
+                        itemstyle_opts=opts.ItemStyleOpts(color="#14b143")
+                    ))
+                # 平空
+                elif trade[1] == "空" and (trade[4] == "平" or trade[4] == "平今" or trade[4] == "平昨"):
+                    _point_list.append(opts.MarkPointItem(
+                        name="平多",
+                        coord=[trade_datetime, trade[6]],
+                        value="平多",
+                        itemstyle_opts=opts.ItemStyleOpts(color="#14b143")
+                    ))
+
+        # 绘制标志点
+        if point_list is not None and len(point_list) > 1:
+            for point in point_list:
+                if type(point["datetime"]) == str:
+                    point_datetime = point["datetime"]
+                else:
+                    point_datetime = point["datetime"].strftime("%Y-%m-%d %H:%M:%S")
+
+                point_name = point.get("name", "")
+                _point_list.append(opts.MarkPointItem(
+                    name=point_name,
+                    coord=[point_datetime, point["y"]],
+                    value=point_name if point_name else point["y"],
+                    itemstyle_opts=opts.ItemStyleOpts(color=point.get("color", "#ef232a"))
                 ))
-            # 开空
-            elif trade[1] == "空" and trade[4] == "开":
-                point_list.append(opts.MarkPointItem(
-                    name="开空",
-                    coord=[trade_datetime, trade[6]],
-                    value="开空",
-                    itemstyle_opts=opts.ItemStyleOpts(color="#ef232a")
-                ))
-            # 平多
-            elif trade[1] == "多" and (trade[4] == "平" or trade[4] == "平今" or trade[4] == "平昨"):
-                point_list.append(opts.MarkPointItem(
-                    name="平空",
-                    coord=[trade_datetime, trade[6]],
-                    value="平空",
-                    itemstyle_opts=opts.ItemStyleOpts(color="#14b143")
-                ))
-            # 平空
-            elif trade[1] == "空" and (trade[4] == "平" or trade[4] == "平今" or trade[4] == "平昨"):
-                point_list.append(opts.MarkPointItem(
-                    name="平多",
-                    coord=[trade_datetime, trade[6]],
-                    value="平多",
-                    itemstyle_opts=opts.ItemStyleOpts(color="#14b143")
+
+        # 绘制矩形
+        _area_list = []
+        if area_list is not None and len(area_list) > 1:
+            for item in area_list:
+                _area_list.append(opts.MarkAreaItem(
+                    x=item["x"],
+                    y=item["y"],
+                    itemstyle_opts=opts.ItemStyleOpts(color="transparent",
+                                                      border_color=item.get("border_color", "#4D0099"),
+                                                      border_width=3, border_type="dashed"),
                 ))
 
         kline = (
@@ -333,8 +385,13 @@ class KLineChart(object):
                     border_color0="#14b143",
                 ),
                 markpoint_opts=opts.MarkPointOpts(
-                    data=point_list
+                    data=_point_list
                 ),
+            )
+            .set_series_opts(
+                markarea_opts=opts.MarkAreaOpts(
+                    data=_area_list,
+                )
             )
             .set_global_opts(
                 title_opts=opts.TitleOpts(title=kline_title, pos_left="2%", pos_top="1%"),
@@ -393,7 +450,7 @@ class KLineChart(object):
             .add_xaxis(xaxis_data=datetime_array)
             .add_yaxis(
                 series_name="Volume",
-                yaxis_data=volume_array,
+                y_axis=volume_array,
                 xaxis_index=1,
                 yaxis_index=1,
                 label_opts=opts.LabelOpts(is_show=False),
@@ -432,8 +489,9 @@ class KLineChart(object):
                 .set_global_opts(
                     xaxis_opts=opts.AxisOpts(type_="category"),
                     legend_opts=opts.LegendOpts(
-                       is_show=True
+                        is_show=True
                     ),
+
                 )
             )
             for field in extend_field:
@@ -441,10 +499,11 @@ class KLineChart(object):
                 line.add_yaxis(
                     series_name=field,
                     y_axis=field_value_array,
-                    is_smooth=True,
+                    is_smooth=is_smooth,
                     is_hover_animation=False,
                     linestyle_opts=opts.LineStyleOpts(width=2, opacity=0.8),
                     label_opts=opts.LabelOpts(is_show=False),
+                    is_connect_nones=is_connect_nones,
                 )
 
             # Kline And Line
