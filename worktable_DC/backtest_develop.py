@@ -34,7 +34,7 @@ future_contracts = get_future_contracts()
 # symbol_size = future_contracts[test_future]["symbol_size"]
 # price_tick = future_contracts[test_future]["price_tick"]
 
-vt_symbol = "BTC-USD.HUOBI"
+vt_symbol = "btcusd.HUOBI"
 symbol_size = 0.001
 price_tick = 0.01
 
@@ -42,16 +42,16 @@ engine = BacktestingEnginePro()
 engine.set_parameters(
     vt_symbol=vt_symbol,
     interval=Interval.MINUTE,
-    start=datetime(2020, 10, 15),
-    end=datetime(2020, 10, 17),
+    start=datetime(2020, 4, 1),
+    end=datetime(2020, 12, 1),
     rate=1 / 10000,
     slippage=0,
     size=symbol_size,
     pricetick=price_tick,
     capital=50_000,
     log_path=os.path.dirname(__file__),
-    # mode=BacktestingMode.BAR,
-    mode=BacktestingMode.TICK,
+    mode=BacktestingMode.BAR,
+    # mode=BacktestingMode.TICK,
 )
 engine.add_strategy(TwineStrategy, {})
 

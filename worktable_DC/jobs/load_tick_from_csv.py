@@ -3,8 +3,8 @@ import sys
 
 ROOT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.append(ROOT_PATH)
-if not os.path.exists(".vntrader"):
-    os.mkdir(".vntrader")
+if not os.path.exists("../.vntrader"):
+    os.mkdir("../.vntrader")
 
 import csv
 from datetime import datetime
@@ -72,7 +72,7 @@ def run_load_csv():
     """
     遍历同一文件夹内所有csv文件，并且载入到数据库中
     """
-    for _file in os.listdir("."):
+    for _file in os.listdir(".."):
         if not _file.endswith(".csv"):
             continue
         print(f"载入文件：{_file}")
@@ -82,7 +82,7 @@ def run_load_csv():
 if __name__ == "__main__":
     # run_load_csv()
 
-    corpus_path = r"D:\vnpy\vnpy2_pro\history_data\tick-btc2"
+    corpus_path = r"/history_data/tick-btc2"
 
     for _file in os.listdir(corpus_path):
         full_path = os.path.join(corpus_path, _file)

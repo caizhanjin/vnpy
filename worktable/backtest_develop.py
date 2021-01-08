@@ -12,6 +12,7 @@ from vnpy_pro.data.tdx.tdx_common import get_future_contracts
 from worktable.strategies_storage.num10_twine.twine_strategy import TwineStrategy
 from worktable.strategies_storage.num8_tools.tradedays import TradeDaysStrategy
 # from worktable.strategies_storage.num10_twine.twine_strategy_v1 import TwineStrategy
+from worktable.strategies_storage.num10_twine.renko_strategy import RenkoStrategy
 
 
 test_future = "SR"
@@ -31,8 +32,8 @@ engine = BacktestingEnginePro()
 engine.set_parameters(
     vt_symbol=vt_symbol,
     interval=Interval.MINUTE,
-    start=datetime(2020, 8, 1),
-    end=datetime(2020, 9, 12),
+    start=datetime(2020, 5, 1),
+    end=datetime(2020, 11, 1),
     rate=1 / 10000,
     slippage=0,
     size=symbol_size,

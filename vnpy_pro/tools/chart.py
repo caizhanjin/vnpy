@@ -206,7 +206,10 @@ class KLineChart(object):
             self.list_dict["close"][:-1] = self.list_dict["close"][1:]
             self.list_dict["volume"][:-1] = self.list_dict["volume"][1:]
 
-            self.list_dict["datetime"][-1] = bar.datetime.strftime("%Y-%m-%d %H:%M:%S")
+            if kwargs.get("datetime_str"):
+                self.list_dict["datetime"][-1] = kwargs.get("datetime_str")
+            else:
+                self.list_dict["datetime"][-1] = bar.datetime.strftime("%Y-%m-%d %H:%M:%S")
             self.list_dict["open"][-1] = bar.open_price
             self.list_dict["high"][-1] = bar.high_price
             self.list_dict["low"][-1] = bar.low_price
@@ -217,7 +220,11 @@ class KLineChart(object):
                 self.list_dict[field][:-1] = self.list_dict[field][1:]
                 self.list_dict[field][-1] = kwargs[field]
         else:
-            self.list_dict["datetime"].append(bar.datetime.strftime("%Y-%m-%d %H:%M:%S"))
+            if kwargs.get("datetime_str"):
+                self.list_dict["datetime"].append(kwargs.get("datetime_str"))
+            else:
+                self.list_dict["datetime"].append(bar.datetime.strftime("%Y-%m-%d %H:%M:%S"))
+
             self.list_dict["open"].append(bar.open_price)
             self.list_dict["high"].append(bar.high_price)
             self.list_dict["low"].append(bar.low_price)

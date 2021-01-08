@@ -2,6 +2,8 @@
 import os
 import sys
 # 1 添加项目路径到sys，作为根目录运行
+from vnpy.app.rpc_service import RpcServiceApp
+
 ROOT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(ROOT_PATH)
 print(sys.path)
@@ -106,6 +108,7 @@ def main():
     # main_engine.add_gateway(OkexoGateway)
     # main_engine.add_gateway(BinancefGateway)
 
+    main_engine.add_app(RpcServiceApp)
     main_engine.add_app(CtaStrategyApp)
     main_engine.add_app(CtaBacktesterApp)
     # main_engine.add_app(CsvLoaderApp)

@@ -49,3 +49,4 @@ nohup.out
 /history_data/
 __pycache__
 /.ipynb_checkpoints
+/jq_stock/

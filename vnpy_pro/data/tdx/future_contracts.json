@@ -55,8 +55,8 @@
     },
     "BB": {
         "underlying_symbol": "BB",
-        "mi_symbol": "bb2109",
-        "full_symbol": "BB2109",
+        "mi_symbol": "bb2111",
+        "full_symbol": "BB2111",
         "exchange": "DCE",
         "margin_rate": 0.2,
         "symbol_size": 500,
@@ -262,8 +262,8 @@
     },
     "LR": {
         "underlying_symbol": "LR",
-        "mi_symbol": "LR107",
-        "full_symbol": "LR2107",
+        "mi_symbol": "LR111",
+        "full_symbol": "LR2111",
         "exchange": "CZCE",
         "margin_rate": 0.05,
         "symbol_size": 20,
@@ -271,8 +271,8 @@
     },
     "M": {
         "underlying_symbol": "M",
-        "mi_symbol": "m2103",
-        "full_symbol": "M2103",
+        "mi_symbol": "m2105",
+        "full_symbol": "M2105",
         "exchange": "DCE",
         "margin_rate": 0.05,
         "symbol_size": 10,
@@ -334,8 +334,8 @@
     },
     "PM": {
         "underlying_symbol": "PM",
-        "mi_symbol": "PM107",
-        "full_symbol": "PM2107",
+        "mi_symbol": "PM111",
+        "full_symbol": "PM2111",
         "exchange": "CZCE",
         "margin_rate": 0.05,
         "symbol_size": 50,
@@ -361,8 +361,8 @@
     },
     "RI": {
         "underlying_symbol": "RI",
-        "mi_symbol": "RI109",
-        "full_symbol": "RI2109",
+        "mi_symbol": "RI111",
+        "full_symbol": "RI2111",
         "exchange": "CZCE",
         "margin_rate": 0.05,
         "symbol_size": 20,
@@ -505,8 +505,8 @@
     },
     "TS": {
         "underlying_symbol": "TS",
-        "mi_symbol": "TS2103",
-        "full_symbol": "TS2103",
+        "mi_symbol": "TS2106",
+        "full_symbol": "TS2106",
         "exchange": "CFFEX",
         "margin_rate": 0.005,
         "symbol_size": 20000,
@@ -541,8 +541,8 @@
     },
     "WR": {
         "underlying_symbol": "WR",
-        "mi_symbol": "wr2108",
-        "full_symbol": "WR2108",
+        "mi_symbol": "wr2110",
+        "full_symbol": "WR2110",
         "exchange": "SHFE",
         "margin_rate": 0.2,
         "symbol_size": 10,
@@ -603,6 +603,18 @@
         "underlying_symbol": "LU",
         "mi_symbol": "lu2101",
         "full_symbol": "LU2101",
+        "exchange": "SHFE"
+    },
+    "PF": {
+        "underlying_symbol": "PF",
+        "mi_symbol": "PF105",
+        "full_symbol": "PF2105",
+        "exchange": "CZCE"
+    },
+    "BC": {
+        "underlying_symbol": "BC",
+        "mi_symbol": "bc2103",
+        "full_symbol": "BC2103",
         "exchange": "SHFE"
     }
 }
