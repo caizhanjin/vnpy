@@ -10,10 +10,9 @@ from vnpy_pro.app.cta_strategy.csv_backtesting import CsvBacktestingEngine
 from vnpy_pro.config import load_futures
 from vnpy_pro.data.tdx.tdx_common import get_future_contracts
 
-from worktable.strategies.break_strategy import BreakStrategy
 from worktable.strategies_storage.num9_macd.macd_strategy import MACDStrategy
 from worktable.strategies_storage.num9_macd.macd_strategy_v2 import MACDStrategy
-
+from worktable.strategies_storage.num10_twine.renko import RenkoStrategy
 
 test_future = "MA"
 
@@ -34,7 +33,7 @@ engine.set_parameters(
     pricetick=future_contracts[test_future]["price_tick"],
     capital=50_000,
 )
-engine.add_strategy(BreakStrategy, {})
+engine.add_strategy(MACDStrategy, {})
 
 engine.load_data()
 engine.run_backtesting()

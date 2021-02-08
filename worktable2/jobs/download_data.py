@@ -9,11 +9,10 @@ from vnpy_pro.data.source.tdxdata import tdxdata_client
 from vnpy_pro.data.tdx.tdx_common import get_future_contracts
 
 # 下载合约
-futures = ["BU"]
+futures = ["rb2105.SHFE"]
 # futures = ["AG", "AP", "AU", "BU", "CF", "CU", "JD",
 #            "MA", "NI", "OI", "P", "RB", "RU", "SR", "TA"]
 
-future_contracts = get_future_contracts()
 if tdxdata_client.init():
     print("数据服务器登录成功")
 else:
@@ -22,8 +21,9 @@ else:
     sys.exit(0)
 
 for future in futures:
-    symbol = future.upper() + "99"
-    exchange = Exchange.__dict__[future_contracts[future]["exchange"]]
+    _future = future.split(".")
+    symbol = _future[0]
+    exchange = Exchange.__dict__[_future[1]]
     interval = Interval.MINUTE
 
     # 查询数据库中的最新数据
@@ -33,7 +33,7 @@ for future in futures:
     if bar:
         start = bar.datetime
     else:
-        start = datetime(2012, 1, 1)
+        start = datetime(2020, 11, 1)
 
     # 下载数据
     req = HistoryRequest(
@@ -48,7 +48,7 @@ for future in futures:
     # 写入数据库
     if data:
         database_manager.save_bar_data(data)
-        print(f"{symbol}更新完成：{data[0].datetime} -- {data[-1].datetime}")
+        print(f"{symbol}更新完成：{data[0].datetime} -- {data[-1].datetime}，总计 {len(data)} 条...")
 
 print("数据更新完毕")
 # 更新contracts字典

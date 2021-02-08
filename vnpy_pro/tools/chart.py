@@ -13,6 +13,9 @@ def draw_daily_results_chart(daily_df, save_path):
     draw_down_list = daily_df.drawdown.values.tolist()
     net_pnl_list = daily_df.net_pnl.values.tolist()
 
+    if len(date_list) < 2:
+        return
+
     line1 = (
         Line()
             .add_xaxis(xaxis_data=date_list)
@@ -110,7 +113,7 @@ def draw_daily_results_chart(daily_df, save_path):
             ),
         )
             .add_xaxis(xaxis_data=date_list)
-            .add_yaxis(series_name="Daily Pnl", yaxis_data=net_pnl_list, label_opts=opts.LabelOpts(is_show=False))
+            .add_yaxis(series_name="Daily Pnl", y_axis=net_pnl_list, label_opts=opts.LabelOpts(is_show=False))
     )
 
     (
@@ -209,7 +212,7 @@ class KLineChart(object):
             if kwargs.get("datetime_str"):
                 self.list_dict["datetime"][-1] = kwargs.get("datetime_str")
             else:
-                self.list_dict["datetime"][-1] = bar.datetime.strftime("%Y-%m-%d %H:%M:%S")
+                self.list_dict["datetime"][-1] = bar.datetime.strftime("%Y-%m-%d %H:%M:%S.%f")
             self.list_dict["open"][-1] = bar.open_price
             self.list_dict["high"][-1] = bar.high_price
             self.list_dict["low"][-1] = bar.low_price
@@ -223,7 +226,7 @@ class KLineChart(object):
             if kwargs.get("datetime_str"):
                 self.list_dict["datetime"].append(kwargs.get("datetime_str"))
             else:
-                self.list_dict["datetime"].append(bar.datetime.strftime("%Y-%m-%d %H:%M:%S"))
+                self.list_dict["datetime"].append(bar.datetime.strftime("%Y-%m-%d %H:%M:%S.%f"))
 
             self.list_dict["open"].append(bar.open_price)
             self.list_dict["high"].append(bar.high_price)
@@ -308,56 +311,13 @@ class KLineChart(object):
 
         # 绘制买卖点
         _point_list = []
-        if trade_list is not None and len(trade_list) > 1:
-            for trade in trade_list:
-                # 开多
-                if type(trade[0]) == str:
-                    trade_datetime = trade[0]
-                else:
-                    trade_datetime = trade[0].strftime("%Y-%m-%d %H:%M:%S")
-
-                if trade_datetime < datetime_array[0]:
-                    continue
-
-                if trade[1] == "多" and trade[4] == "开":
-                    _point_list.append(opts.MarkPointItem(
-                        name="开多",
-                        coord=[trade_datetime, trade[6]],
-                        value="开多",
-                        itemstyle_opts=opts.ItemStyleOpts(color="#ef232a")
-                    ))
-                # 开空
-                elif trade[1] == "空" and trade[4] == "开":
-                    _point_list.append(opts.MarkPointItem(
-                        name="开空",
-                        coord=[trade_datetime, trade[6]],
-                        value="开空",
-                        itemstyle_opts=opts.ItemStyleOpts(color="#ef232a")
-                    ))
-                # 平多
-                elif trade[1] == "多" and (trade[4] == "平" or trade[4] == "平今" or trade[4] == "平昨"):
-                    _point_list.append(opts.MarkPointItem(
-                        name="平空",
-                        coord=[trade_datetime, trade[6]],
-                        value="平空",
-                        itemstyle_opts=opts.ItemStyleOpts(color="#14b143")
-                    ))
-                # 平空
-                elif trade[1] == "空" and (trade[4] == "平" or trade[4] == "平今" or trade[4] == "平昨"):
-                    _point_list.append(opts.MarkPointItem(
-                        name="平多",
-                        coord=[trade_datetime, trade[6]],
-                        value="平多",
-                        itemstyle_opts=opts.ItemStyleOpts(color="#14b143")
-                    ))
-
         # 绘制标志点
         if point_list is not None and len(point_list) > 1:
             for point in point_list:
                 if type(point["datetime"]) == str:
                     point_datetime = point["datetime"]
                 else:
-                    point_datetime = point["datetime"].strftime("%Y-%m-%d %H:%M:%S")
+                    point_datetime = point["datetime"].strftime("%Y-%m-%d %H:%M:%S.%f")
 
                 point_name = point.get("name", "")
                 _point_list.append(opts.MarkPointItem(
@@ -366,6 +326,50 @@ class KLineChart(object):
                     value=point_name if point_name else point["y"],
                     itemstyle_opts=opts.ItemStyleOpts(color=point.get("color", "#ef232a"))
                 ))
+
+        else:
+            if trade_list is not None and len(trade_list) > 1:
+                for trade in trade_list:
+                    # 开多
+                    if type(trade[0]) == str:
+                        trade_datetime = trade[0]
+                    else:
+                        trade_datetime = trade[0].strftime("%Y-%m-%d %H:%M:%S.%f")
+
+                    if trade_datetime < datetime_array[0]:
+                        continue
+
+                    if trade[1] == "多" and trade[4] == "开":
+                        _point_list.append(opts.MarkPointItem(
+                            name="开多",
+                            coord=[trade_datetime, trade[6]],
+                            value="开多",
+                            itemstyle_opts=opts.ItemStyleOpts(color="#ef232a")
+                        ))
+                    # 开空
+                    elif trade[1] == "空" and trade[4] == "开":
+                        _point_list.append(opts.MarkPointItem(
+                            name="开空",
+                            coord=[trade_datetime, trade[6]],
+                            value="开空",
+                            itemstyle_opts=opts.ItemStyleOpts(color="#ef232a")
+                        ))
+                    # 平多
+                    elif trade[1] == "多" and (trade[4] == "平" or trade[4] == "平今" or trade[4] == "平昨"):
+                        _point_list.append(opts.MarkPointItem(
+                            name="平空",
+                            coord=[trade_datetime, trade[6]],
+                            value="平空",
+                            itemstyle_opts=opts.ItemStyleOpts(color="#14b143")
+                        ))
+                    # 平空
+                    elif trade[1] == "空" and (trade[4] == "平" or trade[4] == "平今" or trade[4] == "平昨"):
+                        _point_list.append(opts.MarkPointItem(
+                            name="平多",
+                            coord=[trade_datetime, trade[6]],
+                            value="平多",
+                            itemstyle_opts=opts.ItemStyleOpts(color="#14b143")
+                        ))
 
         # 绘制矩形
         _area_list = []

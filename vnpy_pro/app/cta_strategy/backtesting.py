@@ -167,7 +167,7 @@ class BacktestingEnginePro(BacktestingEngine):
         trades_results = self.get_all_trades()
         trades_results = [
             [
-                i.datetime.strftime("%Y-%m-%d %H:%M:%S"),
+                i.datetime.strftime("%Y-%m-%d %H:%M:%S.%f"),
                 i.direction.value,
                 i.exchange.value,
                 i.gateway_name,
@@ -204,7 +204,7 @@ class BacktestingEnginePro(BacktestingEngine):
         trades_orders = self.get_all_orders()
         trades_orders = [
             [
-                i.datetime.strftime("%Y-%m-%d %H:%M:%S"),
+                i.datetime.strftime("%Y-%m-%d %H:%M:%S.%f"),
                 i.direction.value,
                 i.exchange.value,
                 i.gateway_name,
