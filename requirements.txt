@@ -10,8 +10,8 @@ peewee
 pymysql
 psycopg2
 mongoengine
-numpy
-pandas==0.24.2
+numpy==1.19.3
+pandas
 matplotlib
 seaborn
 futu-api
@@ -29,3 +29,4 @@ pyecharts
 plotly
 quickfix
 pyecharts==1.7.1
+trading-calendars

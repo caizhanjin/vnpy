@@ -2,7 +2,6 @@
 """
 
 import logging
-from email.mime.text import MIMEText
 from logging import Logger
 import smtplib
 import os
@@ -515,7 +514,6 @@ class EmailEngine(BaseEngine):
         self.active: bool = False
 
         self.main_engine.send_email = self.send_email
-        self.main_engine.send_email_html = self.send_email_html
 
     def send_email(self, subject: str, content: str, receiver: str = "") -> None:
         """"""

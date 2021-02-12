@@ -18,7 +18,9 @@ from vnpy.trader.setting import SETTINGS
 
 from vnpy.trader.database import database_manager
 from vnpy.app.cta_strategy import CtaTemplate
-from vnpy.app.cta_strategy.backtesting import BacktestingEngine, OptimizationSetting
+from vnpy.app.cta_strategy.backtesting import (
+    BacktestingEngine, OptimizationSetting, BacktestingMode
+)
 
 APP_NAME = "CtaBacktester"
 
@@ -155,6 +157,11 @@ class BacktesterEngine(BaseEngine):
         engine = self.backtesting_engine
         engine.clear_data()
 
+        if interval == Interval.TICK.value:
+            mode = BacktestingMode.TICK
+        else:
+            mode = BacktestingMode.BAR
+
         engine.set_parameters(
             vt_symbol=vt_symbol,
             interval=interval,
@@ -165,7 +172,8 @@ class BacktesterEngine(BaseEngine):
             size=size,
             pricetick=pricetick,
             capital=capital,
-            inverse=inverse
+            inverse=inverse,
+            mode=mode
         )
 
         strategy_class = self.classes[class_name]
@@ -280,6 +288,11 @@ class BacktesterEngine(BaseEngine):
         engine = self.backtesting_engine
         engine.clear_data()
 
+        if interval == Interval.TICK:
+            mode = BacktestingMode.TICK
+        else:
+            mode = BacktestingMode.BAR
+
         engine.set_parameters(
             vt_symbol=vt_symbol,
             interval=interval,
@@ -290,7 +303,8 @@ class BacktesterEngine(BaseEngine):
             size=size,
             pricetick=pricetick,
             capital=capital,
-            inverse=inverse
+            inverse=inverse,
+            mode=mode
         )
 
         strategy_class = self.classes[class_name]

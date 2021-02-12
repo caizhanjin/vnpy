@@ -205,13 +205,16 @@ class BarGenerator:
         if not tick.last_price:
             return
 
-        # Filter tick data with less intraday trading volume (i.e. older timestamp)
-        if self.last_tick and tick.volume and tick.volume < self.last_tick.volume:
+        # Filter tick data with older timestamp
+        if self.last_tick and tick.datetime < self.last_tick.datetime:
             return
 
         if not self.bar:
             new_minute = True
-        elif self.bar.datetime.minute != tick.datetime.minute:
+        elif (
+            (self.bar.datetime.minute != tick.datetime.minute)
+            or (self.bar.datetime.hour != tick.datetime.hour)
+        ):
             self.bar.datetime = self.bar.datetime.replace(
                 second=0, microsecond=0
             )
@@ -234,7 +237,13 @@ class BarGenerator:
             )
         else:
             self.bar.high_price = max(self.bar.high_price, tick.last_price)
+            if tick.high_price > self.last_tick.high_price:
+                self.bar.high_price = max(self.bar.high_price, tick.high_price)
+
             self.bar.low_price = min(self.bar.low_price, tick.last_price)
+            if tick.low_price < self.last_tick.low_price:
+                self.bar.low_price = min(self.bar.low_price, tick.low_price)
+
             self.bar.close_price = tick.last_price
             self.bar.open_interest = tick.open_interest
             self.bar.datetime = tick.datetime
@@ -286,19 +295,23 @@ class BarGenerator:
             if not (bar.datetime.minute + 1) % self.window:
                 finished = True
         elif self.interval == Interval.HOUR:
-            if self.last_bar and bar.datetime.hour != self.last_bar.datetime.hour:
-                # 1-hour bar
-                if self.window == 1:
-                    finished = True
-                # x-hour bar
-                else:
-                    self.interval_count += 1
+            if self.last_bar:
+                new_hour = bar.datetime.hour != self.last_bar.datetime.hour
+                last_minute = bar.datetime.minute == 59
 
-                    if not self.interval_count % self.window:
+                if new_hour or last_minute:
+                    # 1-hour bar
+                    if self.window == 1:
                         finished = True
-                        self.interval_count = 0
+                    # x-hour bar
+                    else:
+                        self.interval_count += 1
 
-        # JinAdd: 扩展天周期
+                        if not self.interval_count % self.window:
+                            finished = True
+                            self.interval_count = 0
+
+        # JinAdd: 增加合成日K
         elif self.interval == Interval.DAILY:
             if self.last_bar and bar.datetime.hour == 14 and bar.datetime.minute == 59:
                 finished = True
@@ -445,11 +458,17 @@ class ArrayManager(object):
             return result
         return result[-1]
 
-    def apo(self, n: int, array: bool = False) -> Union[float, np.ndarray]:
+    def apo(
+        self,
+        fast_period: int,
+        slow_period: int,
+        matype: int = 0,
+        array: bool = False
+    ) -> Union[float, np.ndarray]:
         """
         APO.
         """
-        result = talib.APO(self.close, n)
+        result = talib.APO(self.close, fast_period, slow_period, matype)
         if array:
             return result
         return result[-1]
@@ -472,11 +491,17 @@ class ArrayManager(object):
             return result
         return result[-1]
 
-    def ppo(self, n: int, array: bool = False) -> Union[float, np.ndarray]:
+    def ppo(
+        self,
+        fast_period: int,
+        slow_period: int,
+        matype: int = 0,
+        array: bool = False
+    ) -> Union[float, np.ndarray]:
         """
         PPO.
         """
-        result = talib.PPO(self.close, n)
+        result = talib.PPO(self.close, fast_period, slow_period, matype)
         if array:
             return result
         return result[-1]
@@ -526,16 +551,16 @@ class ArrayManager(object):
             return result
         return result[-1]
 
-    def std(self, n: int, array: bool = False) -> Union[float, np.ndarray]:
+    def std(self, n: int, nbdev: int = 1, array: bool = False) -> Union[float, np.ndarray]:
         """
         Standard deviation.
         """
-        result = talib.STDDEV(self.close, n)
+        result = talib.STDDEV(self.close, n, nbdev)
         if array:
             return result
         return result[-1]
 
-    def obv(self, n: int, array: bool = False) -> Union[float, np.ndarray]:
+    def obv(self, array: bool = False) -> Union[float, np.ndarray]:
         """
         OBV.
         """
@@ -654,11 +679,17 @@ class ArrayManager(object):
             return result
         return result[-1]
 
-    def ultosc(self, array: bool = False) -> Union[float, np.ndarray]:
+    def ultosc(
+        self,
+        time_period1: int = 7,
+        time_period2: int = 14,
+        time_period3: int = 28,
+        array: bool = False
+    ) -> Union[float, np.ndarray]:
         """
         Ultimate Oscillator.
         """
-        result = talib.ULTOSC(self.high, self.low, self.close)
+        result = talib.ULTOSC(self.high, self.low, self.close, time_period1, time_period2, time_period3)
         if array:
             return result
         return result[-1]
@@ -685,7 +716,7 @@ class ArrayManager(object):
         Bollinger Channel.
         """
         mid = self.sma(n, array)
-        std = self.std(n, array)
+        std = self.std(n, 1, array)
 
         up = mid + std * dev
         down = mid - std * dev
@@ -784,20 +815,25 @@ class ArrayManager(object):
             return result
         return result[-1]
 
-    def ad(self, n: int, array: bool = False) -> Union[float, np.ndarray]:
+    def ad(self, array: bool = False) -> Union[float, np.ndarray]:
         """
         AD.
         """
-        result = talib.AD(self.high, self.low, self.close, self.volume, n)
+        result = talib.AD(self.high, self.low, self.close, self.volume)
         if array:
             return result
         return result[-1]
 
-    def adosc(self, n: int, array: bool = False) -> Union[float, np.ndarray]:
+    def adosc(
+        self,
+        fast_period: int,
+        slow_period: int,
+        array: bool = False
+    ) -> Union[float, np.ndarray]:
         """
         ADOSC.
         """
-        result = talib.ADOSC(self.high, self.low, self.close, self.volume, n)
+        result = talib.ADOSC(self.high, self.low, self.close, self.volume, fast_period, slow_period)
         if array:
             return result
         return result[-1]

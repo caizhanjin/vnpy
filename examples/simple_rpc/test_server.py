@@ -26,20 +26,11 @@ class TestServer(RpcServer):
         return a + b
 
 
-def register_func(name):
-    print(f"你好呀，{name}")
-
-    return "打招呼成功"
-
-
 if __name__ == "__main__":
     rep_address = "tcp://*:2014"
     pub_address = "tcp://*:4102"
 
     ts = TestServer()
-
-    ts.register(register_func)
-
     ts.start(
         rep_address,
         pub_address,

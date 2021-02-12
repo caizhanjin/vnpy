@@ -37,6 +37,5 @@ if __name__ == "__main__":
     )
 
     while 1:
-        # print(tc.add(1, 3))
-        print(tc.register_func("caizhanjin"))
+        print(tc.add(1, 3))
         sleep(2)

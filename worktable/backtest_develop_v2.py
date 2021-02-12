@@ -13,7 +13,7 @@ from vnpy_pro.data.tdx.tdx_common import get_future_contracts
 from worktable.strategies.break_strategy import BreakStrategy
 from worktable.strategies_storage.num9_macd.macd_strategy import MACDStrategy
 from worktable.strategies_storage.num9_macd.macd_strategy_v2 import MACDStrategy
-
+from worktable.strategies_storage.num11_wang.turtle_strategy import TurtleStrategy
 
 test_future = "MA"
 
@@ -34,7 +34,7 @@ engine.set_parameters(
     pricetick=future_contracts[test_future]["price_tick"],
     capital=50_000,
 )
-engine.add_strategy(BreakStrategy, {})
+engine.add_strategy(TurtleStrategy, {})
 
 engine.load_data()
 engine.run_backtesting()
