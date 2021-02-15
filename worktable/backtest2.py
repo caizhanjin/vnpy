@@ -1,19 +1,13 @@
 from datetime import datetime
-import os
 
 from vnpy.app.cta_strategy.backtesting import BacktestingEngine
 from vnpy.trader.constant import Interval
 
-from vnpy_pro.app.cta_strategy.backtesting import BacktestingEnginePro
-from vnpy_pro.app.cta_strategy.csv_backtesting import CsvBacktestingEngine
-
 from vnpy_pro.config import load_futures
 from vnpy_pro.data.tdx.tdx_common import get_future_contracts
 
-from worktable.strategies.break_strategy import BreakStrategy
-from worktable.strategies_storage.num9_macd.macd_strategy import MACDStrategy
-from worktable.strategies_storage.num9_macd.macd_strategy_v2 import MACDStrategy
-from worktable.strategies_storage.num11_wang.turtle_strategy import TurtleStrategy
+from worktable.strategies_storage.num6_epiboly.num2_wang.turtle_strategy import TurtleStrategy
+from worktable.strategies_storage.num4_renko.mini_strategy import RenkoStrategy
 
 test_future = "MA"
 
@@ -34,7 +28,7 @@ engine.set_parameters(
     pricetick=future_contracts[test_future]["price_tick"],
     capital=50_000,
 )
-engine.add_strategy(TurtleStrategy, {})
+engine.add_strategy(RenkoStrategy, {})
 
 engine.load_data()
 engine.run_backtesting()

@@ -1,86 +1,48 @@
 from datetime import datetime
-import os
+from importlib import reload
 
+import vnpy.app.portfolio_strategy
+reload(vnpy.app.portfolio_strategy)
+
+from vnpy.app.portfolio_strategy import BacktestingEngine
 from vnpy.trader.constant import Interval
-from vnpy_pro.app.cta_strategy.backtesting import BacktestingEnginePro
-from vnpy_pro.config import load_futures
 
-from vnpy_pro.data.tdx.tdx_common import get_future_contracts
-from worktable.strategies.try_strategy import TryStrategy
-from worktable.strategies.KFM_strategy import KFMStrategy
-from worktable.strategies.try_strategy_v2 import TryStrategy
-from worktable.strategies.break_strategy import BreakStrategy
-from worktable.strategies_storage.num1_breaker.break_strategy_1 import BreakStrategy
-from worktable.strategies_storage.num1_breaker.dual_thrust_strategy import DualThrustStrategy
+import vnpy.app.portfolio_strategy.strategies.pair_trading_strategy as stg
+reload(stg)
+from worktable.strategies_storage.num6_epiboly.num2_wang.turtle_portfolio_strategy import TurtlePortfolioStrategy
 
-# 组合回测合约填入这里
-futures = ["RB", "BU", "AG", "P"]
-# futures = ["RB", "BU", "MA", "RU", "AG"]
-is_save_result = True
-FUTURES = load_futures()
-future_contracts = get_future_contracts()
-interval = Interval.MINUTE
-start = datetime(2017, 8, 1)
-end = datetime(2020, 11, 1)
-capital = 200_000
+# MA99.CZCE,BU99.SHFE
+engine = BacktestingEngine()
+engine.set_parameters(
+    vt_symbols=["MA99.CZCE", "BU99.SHFE"],
+    interval=Interval.MINUTE,
+    start=datetime(2020, 6, 1),
+    end=datetime(2020, 7, 1),
+    rates={
+        "MA99.CZCE": 0/10000,
+        "BU99.SHFE": 0/10000
+    },
+    slippages={
+        "MA99.CZCE": 0,
+        "BU99.SHFE": 0
+    },
+    sizes={
+        "MA99.CZCE": 10,
+        "BU99.SHFE": 10
+    },
+    priceticks={
+        "MA99.CZCE": 1,
+        "BU99.SHFE": 1
+    },
+    capital=1_000_000,
+)
 
+setting = {}
+engine.add_strategy(TurtlePortfolioStrategy, setting)
 
-def run_backtesting(strategy_class, setting,
-                    vt_symbol1, interval1, start1, end1,
-                    rate1, slippage1, size1, pricetick1, capital1):
-    print(f"开始回测{vt_symbol1}...")
-    engine = BacktestingEnginePro()
-    engine.set_parameters(
-        vt_symbol=vt_symbol1,
-        interval=interval1,
-        start=start1,
-        end=end1,
-        rate=rate1,
-        slippage=slippage1,
-        size=size1,
-        pricetick=pricetick1,
-        capital=capital1,
-        log_path=os.path.dirname(__file__)
-    )
-    engine.add_strategy(strategy_class, setting)
-    engine.load_data()
-    engine.run_backtesting()
-    df = engine.calculate_result()
-    engine.calculate_statistics()
+engine.load_data()
+engine.run_backtesting()
+engine.calculate_result()
+engine.calculate_statistics()
+engine.show_chart()
 
-    if is_save_result:
-        # engine.show_chart()
-        engine.export_all()
-        print("#####################################################")
-
-    return df
-
-
-df_p = None
-for future in futures:
-    vt_symbol = future.upper() + "99." + future_contracts[future]["exchange"]
-    rate = 0.23 / 10000
-    slippage = 0
-    size = future_contracts[future]["symbol_size"]
-    pricetick = future_contracts[future]["price_tick"]
-
-    df_item = run_backtesting(
-        strategy_class=KFMStrategy,
-        setting={},
-        vt_symbol1=vt_symbol,
-        interval1=interval,
-        start1=start,
-        end1=end,
-        rate1=rate,
-        slippage1=slippage,
-        size1=size,
-        pricetick1=pricetick,
-        capital1=capital,
-    )
-    df_p = df_item if df_p is None else (df_p + df_item)
-
-df_p = df_p.dropna()
-engine = BacktestingEnginePro()
-engine.capital = capital
-engine.calculate_statistics(df_p)
-engine.show_chart(df_p)

@@ -10,8 +10,8 @@
     },
     "AG": {
         "underlying_symbol": "AG",
-        "mi_symbol": "ag2103",
-        "full_symbol": "AG2103",
+        "mi_symbol": "ag2106",
+        "full_symbol": "AG2106",
         "exchange": "SHFE",
         "margin_rate": 0.08,
         "symbol_size": 15,
@@ -37,8 +37,8 @@
     },
     "AU": {
         "underlying_symbol": "AU",
-        "mi_symbol": "au2104",
-        "full_symbol": "AU2104",
+        "mi_symbol": "au2106",
+        "full_symbol": "AU2106",
         "exchange": "SHFE",
         "margin_rate": 0.08,
         "symbol_size": 1000,
@@ -55,8 +55,8 @@
     },
     "BB": {
         "underlying_symbol": "BB",
-        "mi_symbol": "bb2112",
-        "full_symbol": "BB2112",
+        "mi_symbol": "bb2201",
+        "full_symbol": "BB2201",
         "exchange": "DCE",
         "margin_rate": 0.2,
         "symbol_size": 500,
@@ -163,8 +163,8 @@
     },
     "FU": {
         "underlying_symbol": "FU",
-        "mi_symbol": "fu2104",
-        "full_symbol": "FU2104",
+        "mi_symbol": "fu2105",
+        "full_symbol": "FU2105",
         "exchange": "SHFE",
         "margin_rate": 0.2,
         "symbol_size": 10,
@@ -172,8 +172,8 @@
     },
     "HC": {
         "underlying_symbol": "HC",
-        "mi_symbol": "hc2103",
-        "full_symbol": "HC2103",
+        "mi_symbol": "hc2105",
+        "full_symbol": "HC2105",
         "exchange": "SHFE",
         "margin_rate": 0.1,
         "symbol_size": 10,
@@ -217,8 +217,8 @@
     },
     "J": {
         "underlying_symbol": "J",
-        "mi_symbol": "j2103",
-        "full_symbol": "J2103",
+        "mi_symbol": "j2105",
+        "full_symbol": "J2105",
         "exchange": "DCE",
         "margin_rate": 0.05,
         "symbol_size": 100,
@@ -235,8 +235,8 @@
     },
     "JM": {
         "underlying_symbol": "JM",
-        "mi_symbol": "jm2103",
-        "full_symbol": "JM2103",
+        "mi_symbol": "jm2105",
+        "full_symbol": "JM2105",
         "exchange": "DCE",
         "margin_rate": 0.05,
         "symbol_size": 60,
@@ -253,8 +253,8 @@
     },
     "L": {
         "underlying_symbol": "L",
-        "mi_symbol": "l2103",
-        "full_symbol": "L2103",
+        "mi_symbol": "l2105",
+        "full_symbol": "L2105",
         "exchange": "DCE",
         "margin_rate": 0.05,
         "symbol_size": 5,
@@ -262,8 +262,8 @@
     },
     "LR": {
         "underlying_symbol": "LR",
-        "mi_symbol": "LR111",
-        "full_symbol": "LR2111",
+        "mi_symbol": "LR201",
+        "full_symbol": "LR2201",
         "exchange": "CZCE",
         "margin_rate": 0.05,
         "symbol_size": 20,
@@ -289,8 +289,8 @@
     },
     "NI": {
         "underlying_symbol": "NI",
-        "mi_symbol": "ni2103",
-        "full_symbol": "NI2103",
+        "mi_symbol": "ni2104",
+        "full_symbol": "NI2104",
         "exchange": "SHFE",
         "margin_rate": 0.1,
         "symbol_size": 1,
@@ -298,8 +298,8 @@
     },
     "NR": {
         "underlying_symbol": "NR",
-        "mi_symbol": "nr2103",
-        "full_symbol": "NR2103",
+        "mi_symbol": "nr2104",
+        "full_symbol": "NR2104",
         "exchange": "INE",
         "margin_rate": 0.09,
         "symbol_size": 10,
@@ -316,8 +316,8 @@
     },
     "P": {
         "underlying_symbol": "P",
-        "mi_symbol": "p2103",
-        "full_symbol": "P2103",
+        "mi_symbol": "p2105",
+        "full_symbol": "P2105",
         "exchange": "DCE",
         "margin_rate": 0.05,
         "symbol_size": 10,
@@ -334,8 +334,8 @@
     },
     "PM": {
         "underlying_symbol": "PM",
-        "mi_symbol": "PM111",
-        "full_symbol": "PM2111",
+        "mi_symbol": "PM201",
+        "full_symbol": "PM2201",
         "exchange": "CZCE",
         "margin_rate": 0.05,
         "symbol_size": 50,
@@ -343,8 +343,8 @@
     },
     "PP": {
         "underlying_symbol": "PP",
-        "mi_symbol": "pp2103",
-        "full_symbol": "PP2103",
+        "mi_symbol": "pp2105",
+        "full_symbol": "PP2105",
         "exchange": "DCE",
         "margin_rate": 0.05,
         "symbol_size": 5,
@@ -352,8 +352,8 @@
     },
     "RB": {
         "underlying_symbol": "RB",
-        "mi_symbol": "rb2103",
-        "full_symbol": "RB2103",
+        "mi_symbol": "rb2105",
+        "full_symbol": "RB2105",
         "exchange": "SHFE",
         "margin_rate": 0.1,
         "symbol_size": 10,
@@ -361,8 +361,8 @@
     },
     "RI": {
         "underlying_symbol": "RI",
-        "mi_symbol": "RI111",
-        "full_symbol": "RI2111",
+        "mi_symbol": "RI201",
+        "full_symbol": "RI2201",
         "exchange": "CZCE",
         "margin_rate": 0.05,
         "symbol_size": 20,
@@ -379,8 +379,8 @@
     },
     "RR": {
         "underlying_symbol": "RR",
-        "mi_symbol": "rr2103",
-        "full_symbol": "RR2103",
+        "mi_symbol": "rr2104",
+        "full_symbol": "RR2104",
         "exchange": "DCE",
         "margin_rate": 0.05,
         "symbol_size": 10,
@@ -388,8 +388,8 @@
     },
     "RS": {
         "underlying_symbol": "RS",
-        "mi_symbol": "RS109",
-        "full_symbol": "RS2109",
+        "mi_symbol": "RS111",
+        "full_symbol": "RS2111",
         "exchange": "CZCE",
         "margin_rate": 0.05,
         "symbol_size": 10,
@@ -397,8 +397,8 @@
     },
     "RU": {
         "underlying_symbol": "RU",
-        "mi_symbol": "ru2103",
-        "full_symbol": "RU2103",
+        "mi_symbol": "ru2105",
+        "full_symbol": "RU2105",
         "exchange": "SHFE",
         "margin_rate": 0.1,
         "symbol_size": 10,
@@ -442,8 +442,8 @@
     },
     "SN": {
         "underlying_symbol": "SN",
-        "mi_symbol": "sn2103",
-        "full_symbol": "SN2103",
+        "mi_symbol": "sn2104",
+        "full_symbol": "SN2104",
         "exchange": "SHFE",
         "margin_rate": 0.09,
         "symbol_size": 1,
@@ -451,8 +451,8 @@
     },
     "SP": {
         "underlying_symbol": "SP",
-        "mi_symbol": "sp2103",
-        "full_symbol": "SP2103",
+        "mi_symbol": "sp2105",
+        "full_symbol": "SP2105",
         "exchange": "SHFE",
         "margin_rate": 0.07,
         "symbol_size": 10,
@@ -469,8 +469,8 @@
     },
     "SS": {
         "underlying_symbol": "SS",
-        "mi_symbol": "ss2103",
-        "full_symbol": "SS2103",
+        "mi_symbol": "ss2104",
+        "full_symbol": "SS2104",
         "exchange": "SHFE",
         "margin_rate": 0.08,
         "symbol_size": 5,
@@ -523,8 +523,8 @@
     },
     "V": {
         "underlying_symbol": "V",
-        "mi_symbol": "v2103",
-        "full_symbol": "V2103",
+        "mi_symbol": "v2105",
+        "full_symbol": "V2105",
         "exchange": "DCE",
         "margin_rate": 0.05,
         "symbol_size": 5,
@@ -532,8 +532,8 @@
     },
     "WH": {
         "underlying_symbol": "WH",
-        "mi_symbol": "WH107",
-        "full_symbol": "WH2107",
+        "mi_symbol": "WH109",
+        "full_symbol": "WH2109",
         "exchange": "CZCE",
         "margin_rate": 0.05,
         "symbol_size": 20,
@@ -550,8 +550,8 @@
     },
     "Y": {
         "underlying_symbol": "Y",
-        "mi_symbol": "y2103",
-        "full_symbol": "Y2103",
+        "mi_symbol": "y2105",
+        "full_symbol": "Y2105",
         "exchange": "DCE",
         "margin_rate": 0.05,
         "symbol_size": 10,
@@ -559,8 +559,8 @@
     },
     "ZC": {
         "underlying_symbol": "ZC",
-        "mi_symbol": "ZC104",
-        "full_symbol": "ZC2104",
+        "mi_symbol": "ZC105",
+        "full_symbol": "ZC2105",
         "exchange": "CZCE",
         "margin_rate": 0.05,
         "symbol_size": 100,
@@ -601,8 +601,8 @@
     },
     "LU": {
         "underlying_symbol": "LU",
-        "mi_symbol": "lu2101",
-        "full_symbol": "LU2101",
+        "mi_symbol": "lu2105",
+        "full_symbol": "LU2105",
         "exchange": "SHFE"
     },
     "PF": {
@@ -613,8 +613,20 @@
     },
     "BC": {
         "underlying_symbol": "BC",
-        "mi_symbol": "bc2103",
-        "full_symbol": "BC2103",
+        "mi_symbol": "bc2105",
+        "full_symbol": "BC2105",
         "exchange": "SHFE"
+    },
+    "PK": {
+        "underlying_symbol": "PK",
+        "mi_symbol": "PK110",
+        "full_symbol": "PK2110",
+        "exchange": "CZCE"
+    },
+    "LH": {
+        "underlying_symbol": "LH",
+        "mi_symbol": "lh2109",
+        "full_symbol": "LH2109",
+        "exchange": "DCE"
     }
 }

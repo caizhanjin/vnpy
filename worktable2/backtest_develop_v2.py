@@ -10,9 +10,9 @@ from vnpy_pro.app.cta_strategy.csv_backtesting import CsvBacktestingEngine
 from vnpy_pro.config import load_futures
 from vnpy_pro.data.tdx.tdx_common import get_future_contracts
 
-from worktable.strategies_storage.num9_macd.macd_strategy import MACDStrategy
-from worktable.strategies_storage.num9_macd.macd_strategy_v2 import MACDStrategy
-from worktable.strategies_storage.num10_twine.renko import RenkoStrategy
+from worktable.strategies_storage.num9_btb.macd_strategy import MACDStrategy
+from worktable.strategies_storage.num9_btb.macd_strategy_v2 import MACDStrategy
+from worktable.strategies_storage.num4_renko.renko import RenkoStrategy
 
 test_future = "MA"
 

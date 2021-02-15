@@ -15,11 +15,11 @@ from vnpy_pro.app.cta_strategy.csv_backtesting import CsvBacktestingEngine
 from vnpy_pro.config import load_futures
 from vnpy_pro.data.tdx.tdx_common import get_future_contracts
 
-from worktable.strategies_storage.num10_twine.twine_strategy import TwineStrategy
-from worktable.strategies_storage.num8_tools.tradedays import TradeDaysStrategy
-# from worktable.strategies_storage.num10_twine.twine_strategy_v1 import TwineStrategy
-from worktable.strategies_storage.num10_twine.renko import RenkoStrategy
-from worktable.strategies_storage.num10_twine.mini_strategy import RenkoStrategy
+from worktable.strategies_storage.num4_renko.twine_strategy import TwineStrategy
+from worktable.strategies_storage.num3_tools.tradedays import TradeDaysStrategy
+# from worktable.strategies_storage.num4_renko.twine_strategy_v1 import TwineStrategy
+from worktable.strategies_storage.num4_renko.renko import RenkoStrategy
+from worktable.strategies_storage.num4_renko.mini_strategy import RenkoStrategy
 
 
 test_future = "RB"

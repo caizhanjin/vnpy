@@ -50,3 +50,4 @@ nohup.out
 __pycache__
 /.ipynb_checkpoints
 /jq_stock/
+portfolio_strategies

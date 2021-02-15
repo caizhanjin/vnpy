@@ -4,16 +4,14 @@ import os
 from vnpy.trader.constant import Interval
 
 from vnpy_pro.app.cta_strategy.backtesting import BacktestingEnginePro
-from vnpy_pro.app.cta_strategy.csv_backtesting import CsvBacktestingEngine
 
 from vnpy_pro.config import load_futures
 from vnpy_pro.data.tdx.tdx_common import get_future_contracts
 
-from worktable.strategies.break_strategy import BreakStrategy
-from worktable.strategies_storage.num10_twine.twine_strategy import TwineStrategy
-from worktable.strategies_storage.num8_tools.tradedays import TradeDaysStrategy
-# from worktable.strategies_storage.num10_twine.twine_strategy_v1 import TwineStrategy
-from worktable.strategies_storage.num10_twine.renko import RenkoStrategy
+from worktable.strategies_storage.num2_final.break_strategy import BreakStrategy
+
+from worktable.strategies_storage.num4_renko.twine_strategy_v1 import TwineStrategy
+from worktable.strategies_storage.num4_renko.renko import RenkoStrategy
 
 
 test_future = "BU"
@@ -42,7 +40,7 @@ engine.set_parameters(
     capital=50_000,
     log_path=os.path.dirname(__file__)
 )
-engine.add_strategy(BreakStrategy, {})
+engine.add_strategy(RenkoStrategy, {})
 
 engine.load_data()
 engine.run_backtesting()
