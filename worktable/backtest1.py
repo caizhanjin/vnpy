@@ -11,10 +11,11 @@ from vnpy_pro.data.tdx.tdx_common import get_future_contracts
 from worktable.strategies_storage.num2_final.break_strategy import BreakStrategy
 
 from worktable.strategies_storage.num4_renko.twine_strategy_v1 import TwineStrategy
+from worktable.strategies_storage.num4_renko.twine_strategy import TwineStrategy
 from worktable.strategies_storage.num4_renko.renko import RenkoStrategy
 
 
-test_future = "BU"
+test_future = "MA"
 
 FUTURES = load_futures()
 future_contracts = get_future_contracts()
@@ -31,8 +32,8 @@ engine = BacktestingEnginePro()
 engine.set_parameters(
     vt_symbol=vt_symbol,
     interval=Interval.MINUTE,
-    start=datetime(2020, 5, 12),
-    end=datetime(2021, 1, 13),
+    start=datetime(2020, 1, 1),
+    end=datetime(2021, 1, 1),
     rate=1 / 10000,
     slippage=0,
     size=symbol_size,
@@ -40,7 +41,7 @@ engine.set_parameters(
     capital=50_000,
     log_path=os.path.dirname(__file__)
 )
-engine.add_strategy(RenkoStrategy, {})
+engine.add_strategy(TwineStrategy, {})
 
 engine.load_data()
 engine.run_backtesting()
